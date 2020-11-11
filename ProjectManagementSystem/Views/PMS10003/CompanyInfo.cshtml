@@ -1,0 +1,865 @@
+﻿@model ProjectManagementSystem.ViewModels.PMS10003.PMS10003CompanyInfoViewModel
+
+@using ProjectManagementSystem.Common;
+@using ProjectManagementSystem.Resources;
+@using ModelState = System.Web.WebPages.Html.ModelState
+
+@{
+    ViewBag.Title = "会社情報";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<section class="content-header">
+    <h1>
+        @ViewBag.Title
+    </h1>
+</section>
+<section class="content company_info clearfix">
+    @using (Html.BeginForm("EditCompanyInfo", "PMS10003", FormMethod.Post,
+                        new { @class = "form-horizontal", id = "frmCompanyInfoEdit", enctype = "multipart/form-data" }))
+    {
+        <div id="title"></div>
+        @Html.ValidationSummary(false)
+
+        <div class="form-group">
+            <label class="col-sm-2 control-label label-company-name bold">会社名</label>
+            <div class="col-sm-4">
+                @Html.TextBoxFor(m => m.COMPANY_INFO.company_name, new { @class = "form-control", maxlength = 50 })
+            </div>
+            <div class="col-sm-1 link-company-detail">
+                詳細設定
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-2 control-label label-company-name-kana bold">会社名（カナ）</label>
+            <div class="col-sm-4">
+                @Html.TextBoxFor(m => m.COMPANY_INFO.company_name_kana, new { @class = "form-control", maxlength = 50 })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-2 control-label label-company-name-en bold">会社名（英語）</label>
+            <div class="col-sm-4">
+                @Html.TextBoxFor(m => m.COMPANY_INFO.company_name_en, new { @class = "form-control", maxlength = 50 })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-2 control-label label-display-name bold">表示名<span class="RequiredField">*</span></label>
+            <div class="col-sm-4">
+                @Html.TextBoxFor(m => m.COMPANY_INFO.display_name, new { @class = "form-control", maxlength = 50 })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-2 control-label label-zip-code bold">郵便番号</label>
+            <div class="col-sm-2">
+                @Html.TextBoxFor(m => m.COMPANY_INFO.zip_code, new { @class = "form-control zip-code", maxlength = 8 })
+            </div>
+
+            <div class="col-sm-2">
+                <button type="button" name="btnAddressSearch" id="btnAddressSearch" class="btn light"><i class="btn-icon btn-search-dialog"></i>住所検索</button>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-2 control-label label-prefecture-code bold">都道府県</label>
+            <div class="col-sm-2">
+                @Html.DropDownListFor(m => m.COMPANY_INFO.prefecture_code, Model.PREFECTURE_LIST, new { @class = "form-control" }, true)
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-2 control-label label-city bold">市区町村</label>
+            <div class="col-sm-4">
+                @Html.TextBoxFor(m => m.COMPANY_INFO.city, new { @class = "form-control", maxlength = 50 })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-2 control-label label-address-1 bold">住所1</label>
+            <div class="col-sm-4">
+                @Html.TextBoxFor(m => m.COMPANY_INFO.address_1, new { @class = "form-control", maxlength = 100 })
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label label-address-2 bold">住所2</label>
+            <div class="col-sm-4">
+                @Html.TextBoxFor(m => m.COMPANY_INFO.address_2, new { @class = "form-control", maxlength = 100 })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-2 control-label label-tel-no bold">電話番号</label>
+            <div class="col-sm-2">
+                @Html.TextBoxFor(m => m.COMPANY_INFO.tel_no, new { @class = "form-control", maxlength = 13 })
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label label-fax-no bold">FAX番号</label>
+            <div class="col-sm-2">
+                @Html.TextBoxFor(m => m.COMPANY_INFO.fax_no, new { @class = "form-control", maxlength = 13 })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-2 control-label label-mail-address bold">メールアドレス</label>
+            <div class="col-sm-4">
+                @Html.TextBoxFor(m => m.COMPANY_INFO.mail_address, new { @class = "form-control", maxlength = 50 })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-2 control-label label-ip-address-1 bold">IPアドレス1</label>
+            <div class="col-sm-4">
+                @Html.TextBoxFor(m => m.COMPANY_INFO.ip_address_1, new { @class = "form-control", maxlength = 15 })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-2 control-label label-ip-address-2 bold">IPアドレス2</label>
+            <div class="col-sm-4">
+                @Html.TextBoxFor(m => m.COMPANY_INFO.ip_address_2, new { @class = "form-control", maxlength = 15 })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-2 control-label label-url bold">URL</label>
+            <div class="col-sm-4">
+                @Html.TextBoxFor(m => m.COMPANY_INFO.url, new { @class = "form-control", maxlength = 50 })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-2 control-label label-establishment-date bold">創立日</label>
+            <div class="col-sm-2">
+                <span class="date datepicker-days">
+                    @Html.TextBox(m => m.COMPANY_INFO.establishment_date, "{0:yyyy/MM/dd}", new { @class = "ime-mode", maxlength = 10 })
+                    <button type="button" class="btn light btn-date"><i class="btn-icon btn-calendar"></i></button>
+                </span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-2 control-label label-capital bold">資本金</label>
+            <div class="col-sm-2">
+                @Html.TextBox(m => m.COMPANY_INFO.capital, new { @class = "form-control ime-mode right money", maxlength = 9 })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-2 control-label label-representative bold">代表者</label>
+            <div class="col-sm-2">
+                @Html.TextBox(m => m.COMPANY_INFO.representative, new { @class = "form-control", maxlength = 50 })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-2 control-label label-employee-number bold">従業員数</label>
+            <div class="col-sm-2">
+                @Html.TextBox(m => m.COMPANY_INFO.employee_number, new { @class = "form-control right", maxlength = 4 })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-2 control-label label-image-company-logo bold">ロゴ画像</label>
+            <div class="col-sm-4">
+                @if (string.IsNullOrEmpty(Model.COMPANY_INFO.logo_image_file_path))
+                {
+                    <div class="box-img">
+                        <img class="no_image_company_logo" id="image_company_logo" src="~/Images/img_building.png" />
+                    </div>
+                }
+                else
+                {
+                    <img class="image_company_logo" id="image_company_logo" src="" />
+                }
+                <input type="file" id="file" name="file" />
+
+                @if (!string.IsNullOrEmpty(Model.COMPANY_INFO.logo_image_file_path))
+                {
+                    <div class="clearImage">クリア</div>
+                }
+                @Html.HiddenFor(m => m.Clear)
+                @Html.HiddenFor(m => m.TypeUpload)
+                @Html.HiddenFor(m => m.COMPANY_INFO.logo_image_file_path)
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-2 control-label label-remarks bold">備考</label>
+            <div class="col-sm-4">
+                @Html.TextAreaFor(m => m.COMPANY_INFO.remarks, new { @class = "form-control candy-textArea", maxlength = 200, rows = 5 })
+                <input type="hidden" class="set-max-width" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-2 control-label bold">登録日時</label>
+            @Html.Label("", !string.IsNullOrEmpty(@Model.COMPANY_INFO.ins_date.ToString()) ? @Model.COMPANY_INFO.ins_date.ToString("yyyy/MM/dd HH:mm") : "", new { @class = "font-normal control-label col-sm-4", id = "insDate" })
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-2 control-label bold">登録者</label>
+            @Html.Label("", @Model.COMPANY_INFO.user_regist, new { @class = "col-sm-8 control-label", id = "insUser" })
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label bold">更新日時</label>
+            @Html.Label("", !string.IsNullOrEmpty(@Model.COMPANY_INFO.upd_date.ToString()) ? @Model.COMPANY_INFO.upd_date.ToString("yyyy/MM/dd HH:mm") : "", new { @class = "font-normal control-label col-sm-4", id = "updDate" })
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-2 control-label bold">更新者</label>
+            @Html.Label("", @Model.COMPANY_INFO.user_update, new { @class = "col-sm-8 control-label", id = "updUser" })
+        </div>
+        <div class="form-group btn-group-edit">
+            <div class="col-sm-4">
+                @Html.AntiForgeryToken()
+                @Html.Hidden("hdnUserChangeValue", false)
+                <button type="button" id="btnSubmit" class="btn green"><i class="btn-icon btn-regist"></i> 登録</button>
+            </div>
+        </div>
+    }
+</section>
+
+<script type="text/javascript">
+    var fileDrag = null;
+    var maxWidth = $(".set-max-width").css("max-width").slice(0, $(".set-max-width").css("max-width").length - 2); // set max-width of textarea
+    $(document).ready(function () {
+        $(".content-wrapper").addClass("content-edit-wrapper");
+        $(":file").filestyle({ buttonBefore: true, buttonName: "dark", buttonText: "ファイル選択" });
+        $('.btn-clip').parent().find('span').removeClass('glyphicon');
+        $(".bootstrap-filestyle").find('input').val('選択されていません');
+        $("span.glyphicon").remove();
+
+        // get max-width of textarea when resize manu bar left
+        window.addEventListener('resize', function (event) {
+            maxWidth = $(".set-max-width").css("max-width").slice(0, $(".set-max-width").css("max-width").length - 2);
+            //handle change textare when resize menu bar left
+            if ($('body').hasClass('sidebar-collapse') === true) {
+                // case close when page first load
+                $(".candy-textArea").css("max-width", (parseInt(maxWidth, 10) + 115) + "px");
+            }
+            else {
+                $(".candy-textArea").css("max-width", parseInt(maxWidth, 10) + "px");
+            }
+        });
+        //end get max-width of textarea when resize manu bar left
+    });
+
+    $(function () {
+        //handle change textare when resize menu bar left
+        if ($('body').hasClass('sidebar-collapse') === true) {
+            // case close when page first load
+            $(".candy-textArea").css("max-width", (parseInt(maxWidth, 10) + 115) + "px");
+        }
+        $(document).off('a.sidebar-toggle i');
+        $(document).on('click', 'a.sidebar-toggle i', function () {
+            if ($('body').hasClass('sidebar-collapse') === true) {
+                // close
+                $(".candy-textArea").css("max-width", (parseInt(maxWidth, 10) + 115) + "px");
+            } else {
+                // open
+                $(".candy-textArea").css("max-width", (parseInt($(".candy-textArea").css("max-width").slice(0, $(".candy-textArea").css("max-width").length - 2), 10) - 115) + "px");
+            }
+        });
+        //end handle change textare when resize menu bar left
+
+        PMS.utility.validFullHalfSize($("#COMPANY_INFO_company_name_en"));
+        PMS.utility.checkInputPhone($("#COMPANY_INFO_zip_code"));
+        PMS.utility.checkInputPhone($("#COMPANY_INFO_tel_no"));
+        PMS.utility.checkInputPhone($("#COMPANY_INFO_fax_no"));
+        PMS.utility.checkInputIpAddress($("#COMPANY_INFO_ip_address_1"));
+        PMS.utility.checkInputIpAddress($("#COMPANY_INFO_ip_address_2"));
+        PMS.utility.validFullHalfSize($("#COMPANY_INFO_mail_address"));
+        PMS.utility.validFullHalfSize($("#COMPANY_INFO_url"));
+
+        PMS.utility.imeControl($("#COMPANY_INFO_company_name, #COMPANY_INFO_company_name_kana, #COMPANY_INFO_display_name, #COMPANY_INFO_city, #COMPANY_INFO_address_1, #COMPANY_INFO_address_2, #COMPANY_INFO_remarks, #COMPANY_INFO_representative"), 'active');
+        PMS.utility.imeControl($("#COMPANY_INFO_company_name_en, #COMPANY_INFO_zip_code, #COMPANY_INFO_tel_no, #COMPANY_INFO_fax_no, #COMPANY_INFO_mail_address, #COMPANY_INFO_ip_address_1, #COMPANY_INFO_ip_address_2, #COMPANY_INFO_employee_number"), 'disable');
+        PMS.utility.imeControl($("#COMPANY_INFO_url"), 'inactive');
+
+        PMS.utility.formatMoney();
+        PMS.utility.focusTextbox();
+
+        var zip_code = $("#COMPANY_INFO_zip_code").val();
+        if (zip_code.length >= 4) {
+            $("#COMPANY_INFO_zip_code").val(zip_code.slice(0, 3) + '-' + zip_code.slice(3, zip_code.length));
+        }
+
+        var file_drop = document.body;
+        file_drop.addEventListener(
+          'dragover',
+          function handleDragOver(evt) {
+              evt.stopPropagation()
+              evt.preventDefault()
+              evt.dataTransfer.dropEffect = 'copy'
+              evt.dataTransfer.effectAllowed = "all";
+          },
+          false
+        )
+        file_drop.addEventListener(
+          'drop',
+          function (evt) {
+              evt.stopPropagation()
+              evt.preventDefault()
+              var files = evt.dataTransfer.files
+              var file = files[0]
+              fileDrag = file
+
+              if (typeof (file) !== 'undefined' && file !== null) {
+                  if ($('.box-img').length > 0) {
+                      var img = '<img class="image_company_logo" id="image_company_logo" src=""/>';
+                      $(".bootstrap-filestyle").before(img);
+
+                  }
+
+                  var $imgElement = $('.image_company_logo');
+                  if (typeof (file) !== 'undefined') {
+                      var reader = new FileReader();
+
+                      reader.onload = function (e) {
+                          $imgElement.attr('src', e.target.result).attr('title', file.name);
+                      };
+
+                      reader.readAsDataURL(file);
+                  }
+                  $(".bootstrap-filestyle").find('input').val(file.name);
+
+                  if ($(".bootstrap-filestyle").find('input').val() !== '選択されていません' && $('.clearImage').length === 0) {
+                      var clearImage = '<div class="clearImage">クリア</div>';
+                      $(".bootstrap-filestyle").after(clearImage);
+                  }
+                  $('.box-img').remove();
+              }
+          },
+          false
+        )
+
+        $(document).off('#btnAddressSearch');
+        $(document).on('click', '#btnAddressSearch', function () {
+            var zip_code = $('#COMPANY_INFO_zip_code').val().replace('-', '');
+            if (zip_code.length === 0) {
+                PMS.utility.showMessageDialog(PMS.utility.htmlDecode('@Constant.DialogType.WARNING'), "@string.Format(Messages.I015)");
+                return false;
+            } else if (zip_code.length !== 7) {
+                PMS.utility.showMessageDialog(PMS.utility.htmlDecode('@Constant.DialogType.WARNING'), "@string.Format(Messages.I016)");
+                return false;
+            }
+            $("#onloadDiv").show();
+
+            $('#hdnUserChangeValue').val(true);
+            var dataToSend = JSON.stringify({
+                zipcode: zip_code
+            });
+
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("ImportZipCode", "PMS02001")',
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                data: dataToSend,
+                success: function (result) {
+                    if (typeof (result) == 'object') {
+                        var prefectures = result.prefectures;
+
+                        if ($('#COMPANY_INFO_city').val().length > 0 || $('#COMPANY_INFO_address_1').val().length > 0 || $('#COMPANY_INFO_prefecture_code').find(":selected").val() != "") {
+                            PMS.utility.showSubmitConfirmDialog("@Messages.I010", null, null, function (action) {
+                                if (action) {
+                                    $("#COMPANY_INFO_prefecture_code option").each(function () {
+                                        if ($(this).text() === prefectures) {
+                                            $('#COMPANY_INFO_prefecture_code option[value="' + $(this).val() + '"]').attr('selected', 'selected');
+                                            return false;
+                                        } else {
+                                            $('#COMPANY_INFO_prefecture_code option[value=""]').attr('selected', 'selected');
+                                        }
+                                    });
+
+                                    $('#COMPANY_INFO_city').val(result.city);
+                                    $('#COMPANY_INFO_address_1').val(result.address);
+                                    BootstrapDialog.closeAll();
+                                }
+                            });
+                        } else {
+                            $("#COMPANY_INFO_prefecture_code option").each(function () {
+                                if ($(this).text() === prefectures) {
+                                    $('#COMPANY_INFO_prefecture_code option[value="' + $(this).val() + '"]').attr('selected', 'selected');
+                                    $('#COMPANY_INFO_prefecture_code option[value=""]').removeAttr('selected', 'selected');
+                                    return false;
+                                } else {
+                                    $('#COMPANY_INFO_prefecture_code option[value=""]').attr('selected', 'selected');
+                                }
+                            });
+                            $('#COMPANY_INFO_city').val(result.city);
+                            $('#COMPANY_INFO_address_1').val(result.address);
+                        }
+                    } else {
+                        PMS.utility.showMessageDialog(PMS.utility.htmlDecode('@Constant.DialogType.INFORMATION'), "@string.Format(Messages.I012)");
+                    }
+                    $("#onloadDiv").hide();
+                },
+                error: function (error) {
+                    if (error.status == 419) { //419: Authentication Timeout
+                        window.location.href = '/PMS01001/Login/timeout';
+                    } else if (error.status == 420) { // out of date license
+                        window.location.href = '/ErrorOutOfDate';
+                    }
+                    else {
+                        window.location.href = '/Error';
+                    }
+                }
+            });
+        });
+
+        $(document).off('.clearImage');
+        $(document).on('click', '.clearImage', function () {
+            var img = '<div class="box-img">'
+                    + '<img class="no_image_company_logo" id="image_company_logo" src="/Images/img_building.png">'
+                    + '</div>';
+            if ($(this).parent().children('.box-img').length == 0) {
+                $(".image_company_logo").after(img).remove();
+            }
+            $(this).remove();
+            $(':file').val('');
+            $(".bootstrap-filestyle").find('input').val('選択されていません');
+            $('#hdnUserChangeValue').val(true);
+            $('.box-img').parent().find('br').remove();
+            $('.image_company_logo').remove();
+            fileDrag = null;
+        });
+
+        $(document).off('.link-company-detail');
+        $(document).on('click', '.link-company-detail', function () {
+            var urlRedirect = '/PMS10003/CompanyDetail';
+            if ($('#hdnUserChangeValue').val() == 'true') {
+                PMS.utility.IsAuthenticateTimeoutRedirect('@string.Format(Messages.I010)', urlRedirect);
+            } else {
+                window.location.href = urlRedirect;
+            }
+        });
+
+        $(document).on('change', ':file', function () {
+            if ($('.box-img').length > 0) {
+                var img = '<img class="image_company_logo" id="image_company_logo" src=""/>';
+                $(".bootstrap-filestyle").before(img);
+
+            }
+
+            var $imgElement = $(this).siblings('.image_company_logo');
+            var file = $(this).prop('files')[0];
+            if (typeof (file) !== 'undefined') {
+                var reader = new FileReader();
+
+                reader.onload = function (e) {
+                    $imgElement.attr('src', e.target.result).attr('title', file.name);
+                };
+
+                reader.readAsDataURL(file);
+            }
+
+            if ($(".bootstrap-filestyle").find('input').val() !== '選択されていません' && $('.clearImage').length === 0) {
+                var clearImage = '<div class="clearImage">クリア</div>';
+                $(".bootstrap-filestyle").after(clearImage);
+            }
+            $('#hdnUserChangeValue').val(true);
+            $('.box-img').remove();
+            $('#TypeUpload').val('file');
+            fileDrag = null;
+        });
+
+        $(document).on('change', 'input, textarea, select', function () {
+            $('#hdnUserChangeValue').val(true);
+        });
+
+        $(document).on('focusout', '.zip-code', function () {
+            $('#hdnUserChangeValue').val(true);
+        });
+
+        $(document).on('click', 'button#btnSubmit', function () {
+            PMS.utility.removeValidationError();
+            var invalidMess = validateData();
+            if (invalidMess.length > 0) {
+                PMS.utility.showClientError(invalidMess);
+                return false;
+            }
+
+            if ($('.clearImage').length !== 0) {
+                $('#Clear').val('0');
+            } else {
+                $('#Clear').val('1');
+            }
+
+            if (fileDrag !== null) {
+                $('#TypeUpload').val('fileDrag');
+            }
+
+            PMS.utility.IsAuthenticateTimeout('@string.Format(Messages.I006)', '#frmCompanyInfoEdit');
+        });
+
+        $("#frmCompanyInfoEdit").submit(function (e) {
+            var formData = new FormData(this);
+
+            if (PMS.utility.isSecurityUpdatedSafariVersion()) { // if browser is Safari Vesion 11.1+
+                try {
+                    eval('for (var pair of formData.entries()) {\
+                        if (pair[1] instanceof File && pair[1].name === \'\' && pair[1].size === 0) {\
+                            formData.delete(pair[0]);\
+                        }\
+                    }');
+                } catch (e) { }
+            }
+
+            if (fileDrag !== null) {
+                formData.append("fileDrag", fileDrag);
+                $('#TypeUpload').val('fileDrag');
+            }
+            $.ajax({
+                url: $(this).attr("action"),
+                type: 'POST',
+                data: formData,
+                mimeType: "multipart/form-data",
+                contentType: false,
+                cache: false,
+                processData: false,
+                success: function (response) {
+                    var data = JSON.parse(response);
+
+                    BootstrapDialog.closeAll();
+
+                    if (data.statusCode == 201) { // update success
+                        $("#frmCompanyInfoEdit").css('visibility', 'hidden');
+                        PMS.utility.showMessageDialog(PMS.utility.htmlDecode('@Constant.DialogType.INFORMATION'), data.message, null, null, function () {
+                            $('#insDate').text(data.insDate);
+                            $('#insUser').text(PMS.utility.nvl(data.insUser));
+                            $('#updDate').text(data.updDate);
+                            $('#updUser').text(data.updUser);
+                            $('#COMPANY_INFO_logo_image_file_path').val(data.logoImageFilePath);
+                            $(':file').val('');
+                            $(".bootstrap-filestyle").find('input').val('選択されていません');
+                            getAvatar();
+                            $('#hdnUserChangeValue').val(false);
+                            if ($('span.session-company-name').text() !== data.companyNameSesssion) {
+                                $('span.session-company-name').text(data.companyNameSesssion);
+                            }
+                            $("#frmCompanyInfoEdit").css('visibility', '');
+                        });
+                    }
+
+                    if (data.statusCode == 500) { // Exception
+                        $("#frmCompanyInfoEdit").css('visibility', 'hidden');
+                        PMS.utility.showMessageDialog(PMS.utility.htmlDecode('@Constant.DialogType.WARNING'), data.message, '/PMS01003/CompanyInfo');
+                    }
+
+                    if (typeof (data.ErrorMessages) !== 'undefined') // invalid data
+                        PMS.utility.showClientError(data.ErrorMessages);
+                },
+                error: function (error) {
+                    if (error.status == 419) {//419: Authentication Timeout
+                        $("#frmCompanyInfoEdit").css('visibility', 'hidden');
+                        window.location.href = '/PMS01001/Login/timeout';
+                    }
+                }
+            });
+
+            e.preventDefault(); // prevent Default action
+        });
+
+        function validateData() {
+            var invalidMess = [];
+
+            // check max length of customer_name
+            if ($('#COMPANY_INFO_company_name').val().length > 50) {
+                invalidMess.push("@string.Format(Messages.E020, "会社名", "50")");
+                $('.label-company-name').addClass('label-validation-error');
+            }
+
+            // check max length of customer_name_kana
+            if ($('#COMPANY_INFO_company_name_kana').val().length > 50) {
+                invalidMess.push("@string.Format(Messages.E020, "会社名（カナ）", "50")");
+                $('.label-company-name-kana').addClass('label-validation-error');
+            }
+
+            // check max length of customer_name_en
+            if ($('#COMPANY_INFO_company_name_en').val().length > 50) {
+                invalidMess.push("@string.Format(Messages.E020, "会社名(英語)", "50")");
+                $('.label-company-name-en').addClass('label-validation-error');
+            }
+
+            // check required of display_name
+            if ($('#COMPANY_INFO_display_name').val().length === 0) {
+                invalidMess.push("@string.Format(Messages.E002, "表示名")");
+                $('.label-display-name').addClass('label-validation-error');
+            }
+
+            // check max length of display_name
+            if ($('#COMPANY_INFO_display_name').val().length > 50) {
+                invalidMess.push("@string.Format(Messages.E020, "表示名", "50")");
+                $('.label-display-name').addClass('label-validation-error');
+            }
+
+            // check number of zip_code
+            var zipCode = $('#COMPANY_INFO_zip_code').val().replace('-', '');
+            if (zipCode.length > 0) {
+
+                // check max length of zip_code
+                if (zipCode.length > 7) {
+                    invalidMess.push("@string.Format(Messages.E020, "郵便番号", "7")");
+                    $('.label-zip-code').addClass('label-validation-error');
+                }
+
+                // check numberic
+                if (!PMS.utility.validNumeric(zipCode)) {
+                    invalidMess.push("@string.Format(Messages.E003, "郵便番号")");
+                    $('.label-zip-code').addClass('label-validation-error');
+                }
+            }
+
+            // check max length of city
+            if ($('#COMPANY_INFO_city').val().length > 50) {
+                invalidMess.push("@string.Format(Messages.E020, "市区町村", "50")");
+                $('.label-city').addClass('label-validation-error');
+            }
+
+            // check max length of address 1
+            if ($('#COMPANY_INFO_address_1').val().length > 100) {
+                invalidMess.push("@string.Format(Messages.E020, "住所1", "100")");
+                $('.label-address-1').addClass('label-validation-error');
+            }
+
+            // check max length of address 2
+            if ($('#COMPANY_INFO_address_2').val().length > 100) {
+                invalidMess.push("@string.Format(Messages.E020, "住所2", "100")");
+                $('.label-address-2').addClass('label-validation-error');
+            }
+
+            // check number of tel_no
+            var telNo = $('#COMPANY_INFO_tel_no').val();
+            if (telNo.length > 0) {
+
+                // check max length of tel_no
+                if (telNo.length > 13) {
+                    invalidMess.push("@string.Format(Messages.E020, "電話番号", "13")");
+                    $('.label-tel-no').addClass('label-validation-error');
+                }
+
+                // check phone
+                if (!PMS.utility.validPhone(telNo)) {
+                    invalidMess.push("@string.Format(Messages.E003, "電話番号")");
+                    $('.label-tel-no').addClass('label-validation-error');
+                }
+            }
+
+            // check number of fax
+            var fax = $('#COMPANY_INFO_fax_no').val();
+            if (fax.length > 0) {
+                // check max length of fax
+                if (fax.length > 13) {
+                    invalidMess.push("@string.Format(Messages.E020, "FAX番号", "13")");
+                    $('.label-fax-no').addClass('label-validation-error');
+                }
+                // check phone
+                if (!PMS.utility.validPhone(fax)) {
+                    invalidMess.push("@string.Format(Messages.E003, "FAX番号")");
+                    $('.label-fax-no').addClass('label-validation-error');
+                }
+            }
+
+            //check email
+            var email = $('#COMPANY_INFO_mail_address').val();
+            if (email.length > 0) {
+                // check max length of email
+                if (email.length > 50) {
+                    invalidMess.push("@string.Format(Messages.E020, "メールアドレス", "50")");
+                    $('.label-mail-address').addClass('label-validation-error');
+                }
+                // check email
+                if (!PMS.utility.validEmail(email)) {
+                    invalidMess.push("@string.Format(Messages.E003, "メールアドレス")");
+                    $('.label-mail-address').addClass('label-validation-error');
+                }
+            }
+
+            // TODO: check valid IP address
+            // COMPANY_INFO_ip_address_1
+            // COMPANY_INFO_ip_address_2
+            var ip_addr_1 = $('#COMPANY_INFO_ip_address_1').val();
+            if (ip_addr_1.length > 0) {
+                // check max length of IP address 1
+                if (ip_addr_1.length > 15) {
+                    invalidMess.push("@string.Format(Messages.E020, "IPアドレス1", "15")");
+                    $('.label-ip-address-1').addClass('label-validation-error');
+                }
+                // check IP address 2
+                if (!PMS.utility.validIpAddress(ip_addr_1)) {
+                    invalidMess.push("@string.Format(Messages.E003, "IPアドレス1")");
+                    $('.label-ip-address-1').addClass('label-validation-error');
+                }
+            }
+
+            var ip_addr_1 = $('#COMPANY_INFO_ip_address_2').val();
+            if (ip_addr_1.length > 0) {
+                // check max length of IP address 2
+                if (ip_addr_1.length > 15) {
+                    invalidMess.push("@string.Format(Messages.E020, "IPアドレス2", "15")");
+                    $('.label-ip-address-2').addClass('label-validation-error');
+                }
+                // check IP address 2
+                if (!PMS.utility.validIpAddress(ip_addr_1)) {
+                    invalidMess.push("@string.Format(Messages.E003, "IPアドレス2")");
+                    $('.label-ip-address-2').addClass('label-validation-error');
+                }
+            }
+
+            var url = $('#COMPANY_INFO_url').val();
+            if (url.length > 0) {
+                // check max length of url
+                if (url.length > 50) {
+                    invalidMess.push("@string.Format(Messages.E020, "URL", "50")");
+                    $('.label-url').addClass('label-validation-error');
+                }
+
+                // check url
+                if (!PMS.utility.validURL(url)) {
+                    invalidMess.push("@string.Format(Messages.E003, "URL")");
+                    $('.label-url').addClass('label-validation-error');
+                }
+            }
+
+            // check max length of establishment_date
+            var establishmentDate = $('#COMPANY_INFO_establishment_date').val();
+            if (establishmentDate.length > 10) {
+                invalidMess.push("@string.Format(Messages.E020, "入社年月日", "10")");
+                $('.label-establishment-date').addClass('label-validation-error');
+            }
+            var DATE_FORMAT = 'yyyy/mm/dd';
+            var errEstablishmentDate = PMS.utility.validDate(establishmentDate, DATE_FORMAT, "入社年月日");
+            if (errEstablishmentDate != null) {
+                invalidMess.push(errEstablishmentDate);
+                $('.label-establishment-date').addClass('label-validation-error');
+            }
+
+            var capital = $('#COMPANY_INFO_capital').val().trim().replace(/,/g, '');
+            if (capital.length > 0) {
+                // check max length of capital
+                if (capital.length > 9) {
+                    invalidMess.push("@string.Format(Messages.E020, "資本金", "9")");
+                    $('.label-capital').addClass('label-validation-error');
+                }
+            }
+
+            // check max length of representative
+            if ($('#COMPANY_INFO_representative').val().length > 50) {
+                invalidMess.push("@string.Format(Messages.E020, "代表者", "50")");
+                $('.label-representative').addClass('label-validation-error');
+            }
+
+            var employee_number = $('#COMPANY_INFO_employee_number').val();
+            if (employee_number.length > 0) {
+                // check max length of employee number
+                if (employee_number.length > 4) {
+                    invalidMess.push("@string.Format(Messages.E020, "従業員数", "4")");
+                    $('.label-employee-number').addClass('label-validation-error');
+                }
+            }
+
+            // check max length of file
+            var file = $('#file').val();
+            if (file.length > 255) {
+                invalidMess.push("@string.Format(Messages.E020, "ロゴ画像", "255")");
+                $('.label-image-company-logo').addClass('label-validation-error');
+            }
+
+            var fileExtension = ['jpeg', 'jpg', 'png'];
+            var sFileExtension = file.split('.')[file.split('.').length - 1].toLowerCase();
+
+            if (file.length > 0 && $.inArray(sFileExtension, fileExtension) == -1) {
+                invalidMess.push("@string.Format(Messages.E010, "jpg,png.jpeg")");
+                $('.label-image-company-logo').addClass('label-validation-error');
+            }
+
+            var fileInput = document.getElementById('file');
+            for (i = 0; i < fileInput.files.length; i++) {
+                if (fileInput.files[i].size / 1024 > 500) {
+                    invalidMess.push("@string.Format(Messages.E021, "500KB以内")");
+                    $('.label-image-company-logo').addClass('label-validation-error');
+                    break;
+                }
+            }
+
+            if (fileDrag !== null && typeof (fileDrag) !== 'undefined') {
+                // check max length of file
+                if (fileDrag.name.length > 255) {
+                    invalidMess.push("@string.Format(Messages.E020, "ロゴ画像", "255")");
+                    $('.label-image-company-logo').addClass('label-validation-error');
+                }
+
+                var fileExtension = ['jpeg', 'jpg', 'png'];
+                var sFileExtension = fileDrag.name.split('.')[fileDrag.name.split('.').length - 1].toLowerCase();
+
+                if (fileDrag.length > 0 && $.inArray(sFileExtension, fileExtension) == -1) {
+                    invalidMess.push("@string.Format(Messages.E010, "jpg,png.jpeg")");
+                    $('.label-image-company-logo').addClass('label-validation-error');
+                }
+
+                if (fileDrag.size / 1024 > 500) {
+                    invalidMess.push("@string.Format(Messages.E021, "500KB以内")");
+                    $('.label-image-company-logo').addClass('label-validation-error');
+                }
+            }
+
+            // check max length of remarks
+            if ($('#COMPANY_INFO_remarks').val().length > 200) {
+                invalidMess.push("@string.Format(Messages.E020, "備考", "200")");
+                $('.label-remarks').addClass('label-validation-error');
+            }
+
+            return invalidMess;
+        }
+
+        getAvatar();
+
+        var displayImage = function (base64Data) {
+            var img = "<img class='image_company_logo thumb' id='image_company_logo' "
+                        + "src='" + "data:image/jpg;base64,"
+                      + base64Data + "'/>";
+
+            if ($('.box-img').length > 0) {
+                $('.box-img').remove();
+                $(".bootstrap-filestyle").before(img);
+            }
+
+            var imgLogo = "<img id='companyImage' "
+                        + "src='" + "data:image/jpg;base64,"
+                      + base64Data + "'/>";
+
+            $("#image_company_logo").after(img).remove();
+            $("#companyImage").after(imgLogo).remove();
+        };
+
+        function getAvatar() {
+            PMS.utility.getImageByAjax('/Common/GetImage', { id: '@Model.COMPANY_INFO.company_code', type: '@Constant.GetImage.COMPANY_IMAGE' }, function (data) {
+                if (data != null) {
+                    displayImage(data.base64imgage);
+                } else {
+                    var img = '<div class="box-img">'
+                    + '<img class="no_image_company_logo" id="image_company_logo" src="/Images/img_building.png">'
+                    + '</div>';
+
+                    if ($('.box-img').length !== 0) {
+                        $('.box-img').remove();
+                        $(".bootstrap-filestyle").before(img);
+                    }
+                    else {
+                        $("#image_company_logo").after(img).remove();
+                    }
+                    $('.clearImage').remove();
+
+                    $('#companyImage').attr('src', '');
+                    $('#companyImage').css('display', 'none');
+                }
+            });
+        }
+    });
+</script>
+
+@Scripts.Render("~/bundles/bootstrap-filestyle")

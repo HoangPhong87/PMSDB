@@ -1,0 +1,320 @@
+﻿/*Company Info Screen*/
+.company_info .link-company-detail{
+    cursor:pointer;
+    color: #337ab7;
+    padding-top: 6px;
+}
+
+.company_info #btnAddressSearch .btn-icon {
+    padding-left: 27px;
+}
+
+.company_info .date input {
+    margin: 0;
+}
+
+.company_info textarea {
+    overflow-y: scroll;
+}
+
+.company_info .input-group-btn {
+    font-size: 1em;
+}
+
+.company_info .bootstrap-filestyle .form-control {
+    height: 30px;
+}
+
+.company_info .bootstrap-filestyle input {
+    border: none!important;
+    outline: 0!important;
+    background-color: #f4f4f4!important;
+    padding-left: 20px;
+    box-shadow: none;
+}
+
+.company_info .image_company_logo{
+    border: 1px dotted #ccc;
+    max-height: 180px;
+    margin-bottom: 10px;
+    margin-top: 8px;
+    background-color: #ccc;
+}
+
+.company_info .no_image_company_logo {
+    border: 1px dotted #ccc;
+    max-height: 180px;
+    margin-bottom: 10px;
+    margin-top: 13px;
+    background-color: #ccc;
+    position: absolute;
+    margin: auto;
+    top: 38px;
+    left: 31px;
+    width: 148.5px;
+    height: 120px;
+}
+
+.company_info #btnSubmit{
+    margin-left: 0px;
+}
+
+@media (min-width: 5396px) {
+    .company_info .link-company-detail{
+        padding-top: 10px;
+    }
+}
+
+/*End Company Info Screen*/
+/*End Company Detail Screen*/
+.company_detail .note-message{
+    margin-top: 6px;
+}
+
+.company_detail .closing-date-box{
+    margin-top: 6px;
+}
+
+.company_detail .btnAddHoliday{
+	float: left;
+}
+
+.company_detail .btnDeleteHoliday:hover {
+    color: red;
+}
+
+.company_detail .label-holiday-date,
+.company_detail .label-holiday-name{
+    margin-left: 21px;
+    margin-right: -10px;
+}
+
+.company_detail .datepicker-days{
+    margin-right: 12px;
+}
+
+.company_detail  .target-content{
+    margin-bottom:10px;
+}
+.company_detail .select-left{
+    margin-right: -10px;
+}
+
+.company_detail label.col-sm-2 {
+    width: 19%;
+}
+
+.company_detail .btnAddHoliday {
+    margin-right: 10px;
+}
+
+.company_detail .bt-space {
+    margin-right: 10px;
+    visibility: hidden;
+}
+
+.company_detail .target-content {
+    margin-bottom: 10px
+}
+
+.company_detail .div_special_holiday, .company_detail .title-holiday-list {
+    padding: 0;
+}
+
+.company_detail .title-holiday {
+    margin-top: 15px;
+    margin-bottom: 0;
+}
+
+.company_detail .top-title {
+    width: 160px;
+    text-align: center;
+    font-weight: bold;
+    float: left;
+}
+
+.company_detail .title-holiday-name {
+    width: 250px;
+}
+
+@media (min-width: 5464px) {
+    .company_detail .note-message,
+    .company_detail .closing-date-box{
+        margin-top: 20px;
+    }
+}
+
+/*End Company Detail Screen*/
+
+
+input.checkbox {
+    margin-left: 11px;
+	margin-right: 0px;
+}
+
+.mail_address {
+	text-decoration:underline;
+	color:#4D99E0;
+}
+.title_lockpass {
+	margin-top: -3px;
+}
+
+label.first {
+	margin-left: 0px;
+}
+
+.Notise {
+	color: red;
+}
+.title-list-holiday-1 {
+	text-align:center;
+	width:10%;
+	margin-left:140px;
+}
+
+.title-list-holiday-2 {
+	text-align:center;
+	width:10%;
+	margin-left:40px;
+}
+
+.holiday-date {
+	width:20%;
+}
+.special-holiday-add {
+	float:left;
+	width: 240px;
+}
+
+.full_screen{
+	width:98% !important;
+}
+table {
+	text-align:center;
+}
+
+.col_2_textbox {
+	width: 300px;
+}
+
+.col_2_textarea {
+	display: inline;
+	width: 350px;
+	height:140px;
+    resize:none;
+}
+
+.col_1 {
+	width: 14%;
+	margin-left: 0px;
+}
+
+#btnSearch {
+	margin-left: 20px;
+}
+
+input[name="Delete"]{
+	margin-left: 17px;
+}
+
+button[name='btnBack'] 
+{
+	margin-left: 3px;
+	margin-top: 12px;
+	width: 98px;
+	height: 23px;
+}
+
+#InfoTable td .short-text {
+	width:190px;
+}
+
+#InfoTable td .url{
+	color: #4D99E0;
+}
+
+#InfoTable th {
+	min-width:60px;
+}
+
+#InfoTable td.upd-date {
+	min-width:150px;
+}
+
+a.btn_csv{
+	margin-left: 13px;
+	margin-top: 8px;
+}
+
+a[name='btnAddressSearch']{
+    margin-top: 6px;
+    width: 87px;
+    text-align: center;
+}
+
+.tell-no{
+    width: 178px;
+}
+
+div.special-holiday{
+    width: 450px;
+	max-height: 190px;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+div.title-special-holiday{
+	margin-bottom:-10px;
+}
+
+/*zoom in common textarea*/
+ @media (max-width: 1300px) {
+    .candy-textArea{
+        max-width: 950px;
+    }
+    .set-max-width{
+        max-width :950px;
+    }
+}
+
+@media (max-width: 1100px) {
+    .candy-textArea{
+        max-width: 950px;
+    }
+    .set-max-width{
+        max-width :950px;
+    }
+}
+@media (min-width: 1300px) {
+    .candy-textArea{
+        max-width: 955px;
+    }
+    .set-max-width{
+        max-width :955px;
+    }
+}
+@media (min-width: 1500px) {
+    .candy-textArea{
+        max-width: 1080px;
+    }
+    .set-max-width{
+        max-width :1080px;
+    }
+}
+@media (min-width: 1700px) {
+    .candy-textArea{
+        max-width:1230px;
+    }
+    .set-max-width{
+        max-width :1230px;
+    }
+}
+@media (min-width: 1800px) {
+    .candy-textArea{
+        max-width:1325px;
+    }
+    .set-max-width{
+        max-width :1325px;
+    }
+}

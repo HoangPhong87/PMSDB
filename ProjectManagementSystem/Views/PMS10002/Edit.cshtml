@@ -1,0 +1,260 @@
+﻿@model ProjectManagementSystem.ViewModels.PMS10002.PMS10002EditViewModel
+@using ModelState = System.Web.WebPages.Html.ModelState
+@using ProjectManagementSystem.Common;
+@using ProjectManagementSystem.Resources;
+
+@{
+    ViewBag.Title = "掲載情報登録";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<section class="content-header">
+<h1>
+    @ViewBag.Title
+</h1>
+</section>
+<div class="content clearfix information-regist">
+    @using (Html.BeginForm("EditInformation", "PMS10002", FormMethod.Post, new { id = "frmInfoEdit", @class = "form-horizontal" }))
+    {
+        <div id="title"></div>
+        @Html.ValidationSummary(false)
+
+        <div class="form-group">
+            <label class="col-sm-2 control-label bold label-start-date">掲載開始日<span class="RequiredField">*</span></label>
+            <div class="date datepicker-days col-sm-10">
+                @Html.TextBox(m => m.INFORMATION.publish_start_date, "{0:yyyy/MM/dd}", new { @class = "ime-mode", maxlength = 10, @placeholder = "YYYY/MM/DD" })
+                <button type="button" class="btn light"><i class="btn-icon btn-calendar"></i></button>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-2 control-label bold label-end-date">掲載終了日<span class="RequiredField">*</span></label>
+            <div class="date datepicker-days col-sm-10">
+                @Html.TextBox(m => m.INFORMATION.publish_end_date, "{0:yyyy/MM/dd}", new { @class = "ime-mode", maxlength = 10, @placeholder = "YYYY/MM/DD" })
+                <button type="button" class="btn light"><i class="btn-icon btn-calendar"></i></button>
+            </div>
+        </div>
+                
+        <div class="form-group">
+            <label class="col-sm-2 control-label bold label-information">掲載内容<span class="RequiredField">*</span></label>
+            <div class="col-sm-4">
+                @Html.TextAreaFor(m => m.INFORMATION.content, new { @class = "form-control candy-textArea", maxlength = 200, rows = 5 })
+                <input type="hidden" class="set-max-width" />
+            </div>
+        </div>
+        
+        <div id="updateTime">
+            <div class="form-group">
+                <label class="col-sm-2 control-label bold">登録日時</label>
+                @Html.Label("", !string.IsNullOrEmpty(@Model.INFORMATION.ins_date.ToString()) ? @Model.INFORMATION.ins_date.ToString("yyyy/MM/dd HH:mm") : "", new { @class = "col-sm-9 control-label font-normal", id = "insDate" })
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label bold">登録者</label>
+                <label class="col-sm-9 control-label" id="insUser">@Model.INFORMATION.user_regist</label>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label bold">更新日時</label>
+                @Html.Label("", !string.IsNullOrEmpty(@Model.INFORMATION.upd_date.ToString()) ? @Model.INFORMATION.upd_date.ToString("yyyy/MM/dd HH:mm") : "", new { @class = "col-sm-9 control-label font-normal", id = "updDate" })
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label bold">更新者</label>
+                <label class="col-sm-9 control-label" id="updUser">@Model.INFORMATION.user_update</label>
+            </div>
+        </div>
+
+        <div class="form-group btn-group-edit col-sm-12">
+            @Html.AntiForgeryToken()
+            @Html.HiddenFor(m => m.INFORMATION.info_id)
+
+            <button type="button" id="btnBack" name="Back" class="btn light btnNoStyleDisable"><i class="btn-icon btn-back"></i>戻る</button>
+            <button type="button" id="btnSubmit" class="btn green"><i class="btn-icon btn-regist"></i> 登録</button>
+
+            <label class="bold" id="deleteFlag">
+                @Html.CheckBoxFor(m => m.Delete)
+                削除
+            </label>
+        </div>
+    }
+</div>
+
+<script type="text/javascript">
+    var maxWidth =$(".set-max-width").css("max-width").slice(0, $(".set-max-width").css("max-width").length - 2); // set max-width of textarea
+    $(function () {
+        $(document).ready(function () {
+            PMS.utility.focusTextbox();
+            PMS.utility.imeControl($("#INFORMATION_content"), 'active');
+
+            $(".content-wrapper").addClass("content-edit-wrapper");
+
+            if ($('#INFORMATION_info_id').val() === '0') {
+                $('#updateTime, #deleteFlag').hide();
+            }
+
+            // get max-width of textarea when resize manu bar left
+            window.addEventListener('resize', function (event) {
+                maxWidth = $(".set-max-width").css("max-width").slice(0, $(".set-max-width").css("max-width").length - 2);
+                //handle change textare when resize menu bar left
+                if ($('body').hasClass('sidebar-collapse') === true) {
+                    // case close when page first load
+                    $(".candy-textArea").css("max-width",(parseInt(maxWidth,10) + 115)+ "px");
+                }
+                else{
+                    $(".candy-textArea").css("max-width",parseInt(maxWidth,10)+ "px");
+                }
+            });
+            //end get max-width of textarea when resize manu bar left
+        });
+        //handle change textare when resize menu bar left
+        if ($('body').hasClass('sidebar-collapse') === true) {
+            // case close when page first load
+            $(".candy-textArea").css("max-width",(parseInt(maxWidth,10) + 115)+ "px");
+        }
+        $(document).off('a.sidebar-toggle i');
+        $(document).on('click', 'a.sidebar-toggle i', function () {
+            if ($('body').hasClass('sidebar-collapse') === true) {
+                // close
+                $(".candy-textArea").css("max-width",(parseInt(maxWidth,10) + 115)+ "px");
+            } else {
+                // open
+                $(".candy-textArea").css("max-width",(parseInt($(".candy-textArea").css("max-width").slice(0, $(".candy-textArea").css("max-width").length - 2),10) - 115)+ "px");
+            }
+        });
+        //end handle change textare when resize menu bar left
+
+        function validateData() {
+            var invalidMess = [];
+            var DATE_FORMAT = 'yyyy/mm/dd';
+            var start_date = $('#INFORMATION_publish_start_date').val();
+            var end_date = $('#INFORMATION_publish_end_date').val();
+            var content = $('#INFORMATION_content').val();
+
+            // check max length of information_content
+            if (start_date.length == 0) {
+                invalidMess.push("@string.Format(Messages.E002, "掲載開始日")");
+                $('.label-start-date').addClass('label-validation-error');
+            }
+            // check max length of information_content
+            if (end_date.length == 0) {
+                invalidMess.push("@string.Format(Messages.E002, "掲載終了日")");
+                $('.label-end-date').addClass('label-validation-error');
+            }
+
+            var errStartDate = PMS.utility.validDate(start_date, DATE_FORMAT, "掲載開始日");
+            var errEndDate = PMS.utility.validDate(end_date, DATE_FORMAT, "掲載終了日");
+
+            if (errStartDate != null) {
+                $('.label-start-date').addClass('label-validation-error');
+                invalidMess.push(errStartDate);
+            }
+
+            if (errEndDate != null) {
+                invalidMess.push(errEndDate);
+                $('.label-end-date').addClass('label-validation-error');
+            }
+
+            if (errStartDate == null && start_date.length != 0 &&
+                errEndDate == null && end_date.length != 0 &&
+                !PMS.utility.compareDate(start_date, end_date, DATE_FORMAT)) {
+                    invalidMess.push(['@string.Format(Messages.E056)']);
+                    $('.label-start-date').addClass('label-validation-error');
+                    $('.label-end-date').addClass('label-validation-error');
+            }
+
+            // check max length of information_content
+            if (content.length == 0) {
+                invalidMess.push("@string.Format(Messages.E002, "掲載内容")");
+                $('.label-information').addClass('label-validation-error');
+            }
+
+            // check max length of information_content
+            if (content.length > 200) {
+                invalidMess.push("@string.Format(Messages.E020, "掲載内容", "200")");
+                $('.label-information').addClass('label-validation-error');
+            }
+
+            return invalidMess;
+        }
+
+        $(document).on('click', 'button#btnSubmit', function () {
+            PMS.utility.removeValidationError();
+            var invalidMess = validateData();
+            if (invalidMess.length > 0) {
+                PMS.utility.showClientError(invalidMess);
+                return false;
+            }
+            PMS.utility.IsAuthenticateTimeout('@string.Format(Messages.I006)', '#frmInfoEdit');
+        });
+
+        $("#frmInfoEdit").submit(function (e) {
+            var formData = new FormData(this);
+
+            $.ajax({
+                url: $(this).attr("action"),
+                type: 'POST',
+                data: formData,
+                mimeType: "multipart/form-data",
+                contentType: false,
+                cache: false,
+                processData: false,
+                success: function (response) {
+                    var data = JSON.parse(response);
+
+                    BootstrapDialog.closeAll();
+
+                    if (data.statusCode == 201) { // update success
+                        $("#frmInfoEdit").css('visibility', 'hidden');
+
+                        PMS.utility.showMessageDialog(PMS.utility.htmlDecode('@Constant.DialogType.INFORMATION'), data.message, null, null, function () {
+                            $('#INFORMATION_info_id').val(data.infoID);
+
+                            if (data.infoID > 0) {
+                                $('#insDate').text(data.insDate);
+                                $('#insUser').text(PMS.utility.nvl(data.insUser, ''));
+                            }
+
+                            $('#updDate').text(data.updDate);
+                            $('#updUser').text(data.updUser);
+
+                            $("#Delete").prop('checked', data.deleted);
+
+                            $('#updateTime, #deleteFlag').show();
+                            $("#frmInfoEdit").css('visibility', '');
+
+                        });
+                    }
+
+                    if (data.statusCode == 500) { // Exception
+                        $("#frmInfoEdit").css('visibility', 'hidden');
+                        PMS.utility.showMessageDialog(PMS.utility.htmlDecode('@Constant.DialogType.WARNING'), data.message, '/PMS10002');
+                    }
+
+                    if (typeof (data.ErrorMessages) !== 'undefined') // invalid data
+                        PMS.utility.showClientError(data.ErrorMessages);
+                },
+                error: function (error) {
+                    if (error.status == 419) { //419: Authentication Timeout
+                        $("#frmInfoEdit").css('visibility', 'hidden');
+                        window.location.href = '/PMS01001/Login/timeout';
+                    }
+                }
+            });
+
+            e.preventDefault(); // prevent Default action
+        });
+    });
+
+    $(document).off('#btnBack');
+    $(document).on('click', '#btnBack', function () {
+        $.ajax({
+            type: "POST",
+            url: '/Common/SetButtonBackSession',
+            dataType: 'json',
+            data: null,
+            success: function () {
+                window.location.href = "/PMS10002";
+            },
+            error: function (error) {
+            }
+        });
+    });
+</script>

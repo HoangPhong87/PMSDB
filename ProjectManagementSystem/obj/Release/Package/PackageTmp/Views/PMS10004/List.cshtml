@@ -1,0 +1,292 @@
+﻿@model ProjectManagementSystem.ViewModels.PMS10004.PMS10004ListViewModel
+@using ProjectManagementSystem.Common
+@using ProjectManagementSystem.Resources;
+
+@{
+    ViewBag.Title = "カテゴリ一覧";
+    var currentUser = HttpContext.Current.Session[Constant.SESSION_LOGIN_USER] as LoginUser;
+}
+
+<section class="content-header category-list-header">
+    <div class="title">
+        <h1>
+            @ViewBag.Title
+        </h1>
+        @if (currentUser != null && currentUser.PlanFunctionList.Contains(Constant.FunctionID.CategoryRegist) && currentUser.FunctionList.Contains(Constant.FunctionID.CategoryRegist))
+        {
+            <button id="btnCreateNew" class="btn dark btnNew"><i class="btn-icon btn-add"></i>新規作成</button>
+            <input type="hidden" id="roleEdit" value="true" />
+        }
+    </div>
+    <div class="search-form">
+        <div class="search-condition">
+            <div class="row">
+                <label class="width-120">カテゴリ</label>
+                @Html.TextBoxFor(m => m.Condition.CATEGORY_NAME, new { style = "ime-mode: auto;", maxlength = 50 })
+
+                <label class="width-120">サブカテゴリ</label>
+                @Html.TextBox(m => m.Condition.SUB_CATEGORY_NAME, new { style = "ime-mode: auto;", maxlength = 50 })
+
+                @if (currentUser != null && currentUser.PlanFunctionList.Contains(Constant.FunctionID.CategoryList_Admin) && currentUser.FunctionList.Contains(Constant.FunctionID.CategoryList_Admin))
+                {
+                    <label class="width-120">
+                        @Html.CheckBoxFor(m => m.Condition.DELETED_INCLUDE, new { @class = "condition_chkbox" })
+                        削除済を含む
+                    </label>
+                }
+                else
+                {
+                    @Html.CheckBoxFor(m => m.Condition.DELETED_INCLUDE, new { @style = "visibility:hidden" })
+                }
+            </div>
+        </div>
+        <div class="right search-action">
+            <button type="button" id="btnSearch" name="btnSearch" class="btn dark"><i class="btn-icon btn-search"></i>検索</button>
+            <button type="button" id="btnClear" name="btnClear" class="btn light"><i class="btn-icon btn-clear"></i>クリア</button>
+        </div>
+    </div>
+</section>
+
+@RenderPage("~/Views/Shared/ShowHideHeaderContent.cshtml")
+
+<div class="data-list content category-list clearfix" style="visibility:hidden">
+    <table id="InfoTable" class="display" width="100%">
+        <thead>
+            <tr>
+                <th>カテゴリID</th>
+                <th>No.</th>
+                <th>カテゴリ</th>
+                <th>サブカテゴリ</th>
+                <th>更新日時</th>
+                <th>更新者</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+</div>
+
+<div class="sales-group-detail-footer search-date clearfix">
+    <button id="btnExport" type="button" class="btn dark pull-left"><i class="btn-icon btn-output-csv"></i>CSV出力</button>
+
+    <form id="formAction" class="frmExport" method="POST">
+        <input type="hidden" name="id" value="0" />
+        <input id="category" name="category" type="hidden">
+        <input id="sub_category" name="sub_category" type="hidden">
+        <input id="deleteFlag" name="deleteFlag" type="hidden" value="false">
+        @Html.Hidden("hdnOrderBy")
+        @Html.Hidden("hdnOrderType")
+        <input id="tabId" name="TAB_ID" type="hidden" />
+    </form>
+</div>
+<input type="hidden" id="table_order_columns" value="" />
+
+<script type="text/javascript" charset="utf-8">
+
+    $(function () {
+        var uniqueId = "@Guid.NewGuid().ToString()";
+        $("#tabId").val(uniqueId);
+        SetEventBeforeUnload();
+        LoadOldValueOfControls();
+        var oSorting = {
+            "bSort": true
+        };
+        var oPaginate = {
+            "bPaginate": true,
+            "iDisplayLength": parseInt(@App[ConfigurationKeys.LIST_ITEMS_PER_PAGE]),
+            "bStateSave": false
+        };
+        var oServerSide = {
+            "bServerSide": true,
+            "sAjaxSource": '@Url.Action("Search", "PMS10004")',
+            "fnBeforeSend": beforeSend,
+            "fnServerParams": serverParams,
+            "fnDrawCallback": displayComplete,
+            "fnInitComplete": bindData
+        };
+        var aoColumnDefs = [
+            { "sName": "category_id", "bVisible": false, "aTargets": [0], "sWidth": "0" },
+            { "bSortable": false, "aTargets": [1], "sWidth": "50px", "sClass": "cell_center bold" },
+            { "sName": "category", "aTargets": [2], "sWidth": "500px", "sClass": "category cell_left", "mRender": function (data, type, full) { return buildEditLink(full[0], data, full[6], full[7]); } },
+            { "sName": "sub_category", "aTargets": [3], "sWidth": "500px", "sClass": "sub_category cell_left", "mRender": function (data, type, full) { return buildEditLink(full[0], data, full[6], full[7]); } },
+            { "sName": "upd_date", "aTargets": [4], "sWidth": "200px", "sClass": "upd_date cell_center upd-date" },
+            { "sName": "user_update", "aTargets": [5], "sWidth": "150px", "sClass": "user_update cell_left", "mRender": function (data, type, full) { return PMS.utility.buildColumShortText(data, "short-text-person"); } }
+        ];
+
+        function displayComplete() {
+            $('#InfoTable div.1').each(function () {
+                $(this).parents('tr').removeClass().addClass('delete-row');
+            });
+
+            $('div.category-list').removeAttr('style');
+            $("#onloadDiv").hide();
+            $('.pace.pace-active').addClass('pace-inactive').removeClass('pace-active');
+            $('#btnSearch').removeAttr('disabled');
+            custom_order('#InfoTable', 2, 0);
+        }
+
+        function bindData(data) {
+            // process status disabled  buttton exportCSV when search data
+            if (data.aaData.length == 0) {
+                $('#btnExport').addClass('disabled').attr('disabled', 'disabled');
+            }
+            else {
+                $('#btnExport').removeClass('disabled').removeAttr('disabled');
+            }
+        }
+
+
+        function buildEditLink(id, data, categoryDelete, subCategoryDelete) {
+            var classDelete = '' + categoryDelete + ' ' + subCategoryDelete;
+            var html = PMS.utility.buildColumShortText(data, classDelete);
+
+            if (PMS.utility.checkPermission('#roleEdit'))
+                html = '<div class="short-text text-overflow '+ categoryDelete +' '+ subCategoryDelete +'">'
+                   + ' <a href="#" class="category-edit-link" category-id="'+ id +'" title="'+ data +'">'+ data +'</a>'
+                   + ' </div>';
+
+            return html;
+        }
+
+        var dataTable = CreateDataTable('#InfoTable', oSorting, oPaginate, oServerSide, aoColumnDefs);
+
+        function beforeSend() {
+        }
+
+        function serverParams(aoData) {
+            var orderBy = 'category_id';
+            var orderType = 'asc';
+            $('table.dataTable tr th').each(function () {
+                if ($(this).hasClass('sorting_asc')) {
+                    orderBy = $(this).attr('class').split(' ')[0];
+                } else if ($(this).hasClass('sorting_desc')) {
+                    orderBy = $(this).attr('class').split(' ')[0];
+                    orderType = 'DESC';
+                }
+            });
+            $('#hdnOrderBy').val(orderBy);
+            $('#hdnOrderType').val(orderType);
+
+            aoData.push(
+                { "name": "CATEGORY_NAME", "value": $("#category").val() },
+                { "name": "SUB_CATEGORY_NAME", "value": $("#sub_category").val() },
+                { "name": "DELETED_INCLUDE", "value": $("#deleteFlag").val() },
+                { "name": "orderBy", "value": $("#hdnOrderBy").val() },
+                { "name": "orderType", "value": $("#hdnOrderType").val() },
+                { "name": "TAB_ID", "value": $("#tabId").val() }
+            );
+            if (typeof (colReorder) !== 'undefined') {
+                $("#table_order_columns").val(colReorder.fnOrder());
+                colReorder.fnReset();
+            }
+        }
+
+        function saveDataCondition() {
+            $("#category").val($("#Condition_CATEGORY_NAME").val());
+            $("#sub_category").val($("#Condition_SUB_CATEGORY_NAME").val());
+            $("#deleteFlag").val($("#Condition_DELETED_INCLUDE").prop('checked'));
+        }
+
+        $("button#btnSearch").click(function () {
+            searchCategory();
+        });
+
+        $(document).bind('keypress', function ( e ) {
+            var code = e.keyCode || e.which;
+            if (code == 13) { //Enter keycode
+                searchCategory();
+            }
+        });
+
+        function searchCategory(){
+            $('.validation-summary-errors').remove();
+            var invalidMess = [];
+            // check valid
+            var category = $('#Condition_CATEGORY_NAME').val();
+            var subCategory = $('#Condition_SUB_CATEGORY_NAME').val();
+
+            if (category.length > 50) {
+                invalidMess.push("@string.Format(Messages.E020, "カテゴリ", "50")");
+            }
+            if (subCategory.length > 50) {
+                invalidMess.push("@string.Format(Messages.E020, "サブカテゴリ", "50")");
+            }
+
+            if (invalidMess.length > 0) {
+                $('.pace.pace-active').addClass('pace-inactive').removeClass('pace-active');
+                $("#onloadDiv").hide();
+                PMS.utility.showClientError(invalidMess, '.title');
+                return false;
+            }
+
+            $("#category").val($("#Condition_CATEGORY_NAME").val());
+            $("#sub_category").val($("#Condition_SUB_CATEGORY_NAME").val());
+            $("#deleteFlag").val($("#Condition_DELETED_INCLUDE").prop('checked'));
+
+            $('.pace.pace-inactive').removeClass('pace-inactive').addClass('pace-active');
+            $("#onloadDiv").show(function () {
+                dataTable.fnPageChange('first');
+            });
+            $('#btnSearch').attr('disabled', 'disabled');
+        }
+
+        PMS.utility.imeControl($("#Condition_CATEGORY_NAME"), 'active');
+        PMS.utility.imeControl($("#Condition_SUB_CATEGORY_NAME"), 'active');
+
+        $("button#btnClear").click(function () {
+            $("#Condition_CATEGORY_NAME").val("");
+            $("#Condition_SUB_CATEGORY_NAME").val("");
+            $("#Condition_DELETED_INCLUDE").prop('checked', false);
+            PMS.utility.ClearRestoreData("PMS10004");
+        });
+
+        $('button#btnExport').click(function () {
+            var orderBy = 'category_id';
+            var orderType = 'asc';
+
+            $('table.dataTable tr th').each(function () {
+                if ($(this).hasClass('sorting_asc')) {
+                    orderBy = $(this).attr('class').split(' ')[0];
+                } else if ($(this).hasClass('sorting_desc')) {
+                    orderBy = $(this).attr('class').split(' ')[0];
+                    orderType = 'DESC';
+                }
+            });
+            $('#hdnOrderBy').val(orderBy);
+            $('#hdnOrderType').val(orderType);
+
+            $("#formAction").attr("action", "/PMS10004/ExportCsvListCategory");
+            $("#formAction").submit();
+        });
+
+        $(document).on('click', 'button#btnCreateNew', function () {
+            var $form = $("#formAction");
+
+            $form.attr("action", "/PMS10004/Edit");
+            $form.children('input[name="id"]').val(0);
+            $form.submit();
+        });
+
+        $(document).off('.category-edit-link');
+        $(document).on('click', '.category-edit-link', function(){
+            var $form = $("#formAction");
+
+            $form.attr("action", "/PMS10004/Edit");
+            $form.children('input[name="id"]').val($(this).attr("category-id"));
+            $form.submit();
+        });
+
+        PMS.utility.LoadSearchCondition();
+    });
+
+    function LoadOldValueOfControls() {
+        var categoryName = $('#category').val();
+        if (categoryName.length > 0) {
+            $('#Condition_CATEGORY_NAME').val(categoryName);
+        }
+
+        var subCategoryName = $('#sub_category').val();
+        if (subCategoryName.length > 0) {
+            $('#Condition_SUB_CATEGORY_NAME').val(subCategoryName);
+        }
+    }
+</script>

@@ -1,0 +1,93 @@
+﻿@model ProjectManagementSystem.ViewModels.PMS01001.CompanyCodeViewModel
+@using System.Configuration
+@using ProjectManagementSystem.Resources;
+
+@{
+    ViewBag.Title = "パスワード再発行";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="main-header">
+    <img src="~/Images/ico_service.png" class="logo_left" />
+</div>
+<div class="box box-primary input-company">
+    @using (Html.BeginForm("InputCompanyCode", "PMS01001", FormMethod.Post))
+    {
+        if (TempData["PasswordReissueSucess"] != null)
+        {
+            <div class="reissueSuccess">
+                <h1>パスワード再発行</h1>
+                <div class="content">
+                    @TempData["PasswordReissueSucess"].ToString()<br />
+                    <a>@ConfigurationManager.AppSettings["smtpUser"]</a> からメールで連絡しました。<br />
+                    メールが届かない場合はスパムフォルダや迷惑メールフォルダに届いていないか確認してください。<br />
+                    企業や組織宛のメールアドレスでメールが届かない場合は、メールシステムやネットワークの管理者にも相談をしてください。<br />
+                    上記を試してもメールが届かない場合、お手数ですが登録しているメールアドレスを添えて <a href="mailto:@ConfigurationManager.AppSettings["smtpSupport"]">@ConfigurationManager.AppSettings["smtpSupport"]</a> までお問い合わせください。
+                    <br />
+                    <br />
+                    <a href="@Url.Action("Login", "PMS01001")">ログイン画面へ戻る</a>
+                </div>
+            </div>
+
+        }
+        else
+        {
+            <div class="box-header">
+                <h1>パスワード再発行</h1>
+                <div class="title" id="title"></div>
+                @Html.ValidationSummary(false)
+            </div><!-- /.box-header -->
+            <div class="box-body">
+                <div class="form-group">
+                    <label class="lable-bold">入力されたメールアドレスは複数アカウントで使用されています。</label>
+                    <br />
+                    <label class="lable-bold">ご契約の「企業コード」を入力して「送信」ボタンをクリックしてください。</label>
+                    <div class="content-control">
+                        <label class="control-label bold label-company-code">企業コード  <span class="RequiredField">*</span></label>
+                        @Html.TextBoxFor(m => m.CompanyCode, new { @class = "form-inline", maxlength = 5})
+                        @Html.HiddenFor(m => m.Email)
+                        <button type="submit" id="Transmission" name="Transmission" class="btn dark btn-margin1">送信</button>
+                        <button type="button" id="Return" name="Return" class="btn light btn-margin1" onclick='window.location = "@Url.Action("PasswordReissue", "PMS01001")";'><i class="btn-icon btn-back"></i>戻る</button>
+                    </div>
+                </div>
+            </div><!-- /.box-body -->
+        }
+    }
+</div>
+
+<script type="text/javascript" charset="utf-8">
+    $(function () {
+        PMS.utility.imeControl($("#CompanyCode"), 'disable');
+        PMS.utility.validFullHalfSize($("#CompanyCode"));
+
+        $( document ).ready(function() {
+            $('body').css("background","#FFFFFF");
+        });
+
+        $(document).off('#Transmission');
+        $(document).on('click', '#Transmission', function () {
+            $('.validation-summary-errors').remove();
+            var invalidMess = validateData();
+            if (invalidMess.length > 0) {
+                PMS.utility.showClientError(invalidMess);
+                return false;
+            }
+            $("#onloadDiv").show();
+        });
+
+        function validateData() {
+            var invalidMess = [];
+
+            var companyCode = $('#CompanyCode').val();
+            if (companyCode.length == 0) {
+                invalidMess.push("@string.Format(Messages.E002, "企業コード")");
+            }
+            else {
+                if (companyCode.length > 5) {
+                    invalidMess.push("@string.Format(Messages.E020, "企業コード", "5")");
+                }
+            }
+            return invalidMess;
+        }
+    });
+</script>

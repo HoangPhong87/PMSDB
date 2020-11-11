@@ -1,0 +1,553 @@
+﻿.user-list {
+    margin-top: 47px;
+}
+
+    .user-list .div-left td.dataTables_empty {
+        border-right: none;
+    }
+
+    .user-list .div-right td.dataTables_empty {
+        border-left: none;
+    }
+
+    .user-list .div-left {
+        float: left;
+        width: 20%;
+        margin-right: -1px;
+    }
+
+    .user-list .div-right {
+        float: left;
+        min-width: 80%;
+        max-width: 80%;
+        overflow-x: auto;
+        overflow-y: hidden;
+    }
+
+    .user-list .display_name_group, .user-select-list .display_name_group {
+        min-width: 250px;
+        max-width: 250px;
+    }
+
+    .user-list .user-name, .user-list .base_unit_cost, .user-list .user_update, .user-select-list .display_name {
+        min-width: 150px;
+        max-width: 150px;
+    }
+
+    .user-list .display_name_position, .user-select-list .display_name_position {
+        min-width: 100px;
+        max-width: 100px;
+    }
+
+    .user-list .entry_date, .user-list .is_active {
+        min-width: 120px;
+        max-width: 120px;
+    }
+
+    .user-list .mail_address_1, .user-select-list .mail_address_1 {
+        min-width: 250px;
+        max-width: 250px;
+    }
+
+    .user-list .upd_date {
+        min-width: 200px;
+    }
+
+    .user-list td.upd_date {
+        white-space: nowrap;
+    }
+
+    .user-list .user_update {
+        min-width: 150px;
+        max-width: 250px;
+    }
+
+    .user-list .user-name a .longtext, .user-list .mail_address_1 .longtext {
+        cursor: pointer;
+    }
+
+    /*paging*/
+    .user-list .dataTables_paginate {
+        position: absolute;
+        margin-top: 35px;
+        padding-left: 13%;
+        text-align: left;
+    }
+
+.sidebar-collapse .user-list .dataTables_info {
+    left: 70px;
+}
+
+.user-list .dataTables_info {
+    position: absolute;
+    left: 200px;
+    margin-top: -55px;
+}
+
+.user-list .dataTables_length {
+    position: absolute;
+    right: 30px;
+    margin-top: -44px;
+}
+
+@media (max-width: 1150px) {
+    .user-list .dataTables_info {
+        width: 64%;
+    }
+
+    .user-list .dataTables_length {
+        position: absolute;
+        left: 197px;
+        margin-top: -40px;
+        width: 100%;
+    }
+
+    .user-list .dataTables_paginate {
+        padding-left: 15%;
+    }
+}
+
+@media (max-width: 1024px) {
+    .user-list .dataTables_info {
+        width: 70%;
+    }
+
+    .user-list .dataTables_length {
+        position: absolute;
+        left: 306px;
+        margin-top: -40px;
+        width: 100%;
+    }
+
+    .user-list .dataTables_paginate {
+        padding-left: 16%;
+    }
+
+    .user-select-list .display_name_group,
+    .user-select-list .mail_address_1 {
+        min-width: 150px;
+        max-width: 150px;
+    }
+
+    .user-select-list .base_unit_cost {
+        min-width: 120px;
+        max-width: 120px;
+    }
+}
+
+@-moz-document url-prefix() {
+    .user-list .dataTables_paginate {
+        left: 42%;
+        padding-left: 0;
+    }
+
+    @media (max-width: 1150px) {
+        .user-list .dataTables_paginate {
+            left: 51%;
+            padding-left: 0;
+        }
+    }
+
+      @media (max-width: 1024px) {
+        .user-list .dataTables_paginate {
+            left: 56%;
+            padding-left: 0;
+        }
+    }
+}
+
+@media (min-width: 5396px) {
+    .personal-setting #btnSubmit {
+        width: 117px;
+    }
+}
+
+input.checkbox {
+    margin-left: 11px;
+}
+
+fieldset {
+    margin-bottom: 10px;
+}
+
+label.bold {
+    font-weight: bold;
+}
+
+table {
+    text-align: center;
+}
+
+.no_image_user {
+    border: 1px dotted #ccc;
+    max-height: 180px;
+    margin-bottom: 10px;
+    margin-top: 13px;
+    background-color: #ccc;
+    position: absolute;
+    margin: auto;
+    top: 28px;
+    left: 34px;
+    width: 140px;
+    height: 140px;
+}
+
+.image_user {
+    border: 1px dotted #ccc;
+    max-height: 180px;
+    margin-bottom: 10px;
+    margin-top: 8px;
+    background-color: #ccc;
+}
+
+.col_2_textbox {
+    width: 420px;
+}
+
+.col_2_textarea {
+    display: inline;
+    width: 450px;
+    height: 140px;
+    resize: none;
+}
+
+.col_1 {
+    width: 14%;
+}
+
+.col_12 {
+    width: 80%;
+}
+
+
+label.first {
+    margin-left: 0px;
+}
+
+
+.required_1 {
+    color: red;
+    width: 61px;
+}
+
+
+.required_2 {
+    color: red;
+    width: 42px;
+}
+
+.ui-widget-content .ui-widget-header .ui-state-default {
+    margin-left: 263px;
+}
+
+.layout_remark {
+    margin-top: 0px;
+}
+
+.upload_image {
+    margin-bottom: 20px;
+}
+
+.title_lockpass, .title-retirement {
+    margin-top: -3px;
+}
+
+.remark {
+    margin-top: 10px;
+}
+
+.label_delete {
+    margin-left: -15px;
+}
+
+.update_sucess {
+    float: left;
+    margin: -32px 7px 0 -12px;
+    position: fixed;
+}
+
+.ui-dialog .ui-dialog-title {
+    margin-left: 4px;
+}
+
+.ui-dialog .ui-dialog-buttonpane {
+    border-width: 0 0 0 0;
+}
+
+.btnBack {
+    margin-left: 3px;
+    margin-top: 12px;
+    width: 98px;
+    height: 23px;
+}
+
+a.btn_csv {
+    margin-top: 8px;
+    border-radius: 2px;
+}
+
+.tbl-user-list td .mail {
+    cursor: pointer;
+}
+
+.col_0 {
+    min-width: 103px;
+}
+
+input[type="file"] {
+    width: 300px !important;
+    margin-left: 0px;
+    padding-left: 0px;
+}
+
+
+.btn-select {
+    margin-left: 5px;
+    width: 80px;
+}
+
+.user-list .left-button {
+    margin-top: -28px;
+}
+
+/* 検索条件*/
+
+.label-width {
+    min-width: 115px;
+}
+
+.longtext {
+    max-width: 100%;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    margin-left: 0px;
+    vertical-align: middle;
+    margin-bottom: 0px;
+}
+
+.search-date {
+    text-align: left;
+    margin-top: 50px;
+}
+
+
+.search-condition .condition-name {
+    width: 31%;
+    margin-bottom: 15px;
+}
+
+.search-condition .condition-group {
+    width: 27%;
+}
+
+.search-condition .condition-position {
+    width: 42%;
+}
+
+.search-condition .condition-email {
+    width: 31%;
+}
+
+.search-condition .condition-delete {
+    width: 16%;
+}
+
+.search-condition .condition-retirement {
+    width: 53%;
+}
+
+.search-condition input[type="email"] {
+    margin: 0px;
+}
+
+.user-select-header .search-condition .condition-name,
+.user-select-header .search-condition .condition-group {
+    width: 35%;
+    margin-bottom: 15px;
+}
+
+.user-select-header .search-condition .condition-email,
+.user-select-header .search-condition .condition-position {
+    width: 65%;
+}
+
+.user-select-header label {
+    min-width: 113px;
+}
+
+.user-select-header input, .user-select-header select {
+    width: 200px;
+}
+
+
+/*user create*/
+.user-regist .date input {
+    margin: 0px;
+}
+
+.user-regist .created-info {
+    margin-left: 0px;
+}
+
+.user-regist .input-group-btn {
+    font-size: 1em;
+}
+
+.user-regist .bootstrap-filestyle .form-control {
+    height: 30px;
+}
+
+.user-regist .bootstrap-filestyle label {
+    margin-left: 0px;
+}
+
+.user-regist .bootstrap-filestyle input {
+    border: none !important;
+    outline: 0 !important;
+    background-color: #F4F4F4 !important;
+    padding-left: 20px;
+}
+
+.user-regist .bootstrap-filestyle .buttonText {
+    font-weight: bold;
+}
+
+.personal-setting #btnSubmit {
+    margin-top: 40px;
+    margin-left: 16px;
+}
+
+.personal-setting .date input {
+    margin: 0px;
+}
+
+.personal-setting .input-group-btn {
+    font-size: 1em;
+}
+
+.personal-setting .bootstrap-filestyle .buttonText {
+    font-weight: bold;
+}
+
+.personal-setting .bootstrap-filestyle .form-control {
+    height: 30px;
+}
+
+.personal-setting .bootstrap-filestyle input {
+    border: none !important;
+    outline: 0 !important;
+    background-color: #F4F4F4 !important;
+    padding-left: 20px;
+}
+
+/*user list select dialog*/
+
+.user-list-select-footer {
+    margin-top: 0px;
+}
+
+.search-condition .delete-include {
+    margin-left: 57px;
+}
+
+/*zoom in common textarea*/
+ @media (max-width: 1300px) {
+    .candy-textArea{
+        max-width: 945px;
+    }
+    .set-max-width{
+        max-width : 945px;
+    }
+}
+
+@media (max-width: 1100px) { /*125%*/
+    .candy-textArea{
+        max-width: 945px;
+    }
+    .set-max-width{
+        max-width : 945px;
+    }
+}
+@media (min-width: 1300px) { /*110% and 100%*/
+    .candy-textArea{
+        max-width: 945px;
+    }
+    .set-max-width{
+        max-width : 945px;
+    }
+}
+@media (min-width: 1500px) {
+    .candy-textArea{
+        max-width: 1070px;
+    }
+    .set-max-width{
+        max-width : 1070px;
+    }
+}
+@media (min-width: 1700px) {
+    .candy-textArea{
+        max-width:1220px;
+    }
+    .set-max-width{
+        max-width :1220px;
+    }
+}
+@media (min-width: 1800px) {
+    .candy-textArea{
+        max-width:1320px;
+    }
+    .set-max-width{
+        max-width : 1320px;
+    }
+}
+/*end zoom in textarea*/
+
+.custom-calendar-text{
+    width:110px !important;
+}
+
+.custom-calendar-button{
+    margin-left: 5px;
+}
+
+.user-regist .progress-list {
+    padding: 15px 20px;
+    height: 105px;
+    width: auto;
+    min-height: 60px;
+    max-height: 313px;
+    background: #F4F4F4;
+    border: 1px solid #ccc;
+    overflow: auto;
+    resize: vertical;
+    background-color: #ffffff;
+    margin-left: 15px;
+}
+
+    .user-regist .progress-list .tb-detail {
+        width: 613px !important;
+    }
+
+        .user-regist .progress-list .tb-detail td {
+            white-space: nowrap;
+        }
+
+    .user-regist .progress-list .short-progress-remarks {
+        width: 350px;
+    }
+
+    .user-regist .progress-list .td-remove {
+        border: none;
+        background: #ffffff;
+        width: 60px;
+    }
+    .user-regist .btnAddProgress .btn-icon {
+        padding-left: 21px; 
+        margin-right: -15px; 
+        margin-left: -10px; 
+    }
+
+    .lbl-action:hover {
+        color: red;
+    }

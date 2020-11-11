@@ -1,0 +1,17 @@
+﻿{
+    "sProcessing": "",
+    "sLengthMenu": "行数 _MENU_",
+    "sZeroRecords": "該当データはありません。",
+    "sInfo": "全 _TOTAL_ 件中 _START_ ～ _END_ 件を表示",
+    "sInfoEmpty": "",
+    "sInfoFiltered": "（全 _MAX_ 件より抽出）",
+    "sInfoPostFix": "",
+    "sSearch": "検索:",
+    "sUrl": "",
+    "oPaginate": {
+        "sFirst": "先頭",
+        "sPrevious": "前",
+        "sNext": "次",
+        "sLast": "最終"
+    }
+}

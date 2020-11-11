@@ -1,0 +1,459 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="E001" xml:space="preserve">
+    <value>入力データを登録できませんでした。</value>
+  </data>
+  <data name="E002" xml:space="preserve">
+    <value>{0}は必須項目です。</value>
+    <comment>Indicates a required field.</comment>
+  </data>
+  <data name="E003" xml:space="preserve">
+    <value>{0}の入力形式に誤りがあります。</value>
+    <comment>There is an error in the input format of {0}.</comment>
+  </data>
+  <data name="E004" xml:space="preserve">
+    <value>{0}を選択してください。</value>
+    <comment>Please choose a {0}</comment>
+  </data>
+  <data name="E005" xml:space="preserve">
+    <value>この内容で登録します。\nよろしいですか？</value>
+    <comment>Are you sure want register ?</comment>
+  </data>
+  <data name="E006" xml:space="preserve">
+    <value>既に選択されている{0}です。</value>
+    <comment>{0} is already selected.</comment>
+  </data>
+  <data name="E007" xml:space="preserve">
+    <value>{0}に誤りがあるか、登録されていない{1}です。</value>
+    <comment>ログインエラー</comment>
+  </data>
+  <data name="E008" xml:space="preserve">
+    <value>既に使用されている{0}です。{1}は重複登録できません。</value>
+    <comment>メールアドレスはデータベースに存在しています。(メール重複を行う場合）</comment>
+  </data>
+  <data name="E009" xml:space="preserve">
+    <value>既に使用されている{0}です。{1}は重複登録できません。</value>
+  </data>
+  <data name="E010" xml:space="preserve">
+    <value>ファイル形式が不正です。使用できるファイル形式は{0}です。</value>
+    <comment>イメージを正しくない形式（.jpg, png, jpeg）で入力した場合</comment>
+  </data>
+  <data name="E011" xml:space="preserve">
+    <value>ファイルサイズが大きすぎます。{0}のファイルを選択してください。</value>
+    <comment>サイズが大きすぎるイメージを入力した場合。</comment>
+  </data>
+  <data name="E012" xml:space="preserve">
+    <value>メール送信に失敗しました。</value>
+    <comment>メール送信に失敗しました。</comment>
+  </data>
+  <data name="E013" xml:space="preserve">
+    <value>入力回数上限を超えましたのでアカウントはロックされました。</value>
+    <comment>The account was locked because it has exceeded the maximum number of inputs.</comment>
+  </data>
+  <data name="E014" xml:space="preserve">
+    <value>このアカウントはロックされています。システム管理者にお問い合わせください。</value>
+    <comment>This account has been locked. Please contact your system administrator.</comment>
+  </data>
+  <data name="E015" xml:space="preserve">
+    <value>{0}の{1}に失敗しました。</value>
+    <comment>Failure to do something</comment>
+  </data>
+  <data name="E016" xml:space="preserve">
+    <value>既に使用されている{0}です。別の{1}を入力してください。</value>
+  </data>
+  <data name="E017" xml:space="preserve">
+    <value>{0}を選択してください。</value>
+    <comment>Please choose a {0}</comment>
+  </data>
+  <data name="E018" xml:space="preserve">
+    <value>{0}を{1}しました。</value>
+    <comment>ユーザプロフィールの更新に成功しました。</comment>
+  </data>
+  <data name="E019" xml:space="preserve">
+    <value>{0}は{1}～{2}の範囲で入力してください。</value>
+    <comment>In {0} field, please enter in the range {1} - {2} </comment>
+  </data>
+  <data name="E020" xml:space="preserve">
+    <value>{0}は{1}文字以内で入力してください。</value>
+    <comment>In {0} field, , please enter {1} characters {0}</comment>
+  </data>
+  <data name="E021" xml:space="preserve">
+    <value>ファイルサイズが大きすぎます。{0}のファイルを選択してください。</value>
+  </data>
+  <data name="E022" xml:space="preserve">
+    <value>{0}と{1}が一致しません。</value>
+    <comment>{0} does not match {1}.</comment>
+  </data>
+  <data name="E023" xml:space="preserve">
+    <value>{0}は6～32文字の範囲で入力してください。</value>
+  </data>
+  <data name="E024" xml:space="preserve">
+    <value>期間が変更されました。\nアサイン一覧、売上一覧、支払一覧の内容が 変更 されますがよろしいですか？</value>
+    <comment>Duration has changed. Are you want to change assigg list, sales list, payment list</comment>
+  </data>
+  <data name="E025" xml:space="preserve">
+    <value>消費税率を変更しますか？</value>
+    <comment>Are you sure want to change the consumption tax rate?</comment>
+  </data>
+  <data name="E026" xml:space="preserve">
+    <value>{0}は特別な記号と空白を含んではいけません。</value>
+    <comment>{0} must not contain any special symbols and spaces.</comment>
+  </data>
+  <data name="E027" xml:space="preserve">
+    <value>期間終了日は期間開始日より未来の日付を入力して下さい。</value>
+    <comment>period start date must be smaller than period end date.</comment>
+  </data>
+  <data name="E028" xml:space="preserve">
+    <value>{0}の{1}に誤りがあります。</value>
+    <comment>Error input data in ActualWorkRegist</comment>
+  </data>
+  <data name="E029" xml:space="preserve">
+    <value>入力された内容に誤りがあるか、登録されていないアカウントです。</value>
+  </data>
+  <data name="E030" xml:space="preserve">
+    <value>期間は1年以内で設定してください。</value>
+    <comment>Please set within 1 year period.</comment>
+  </data>
+  <data name="E031" xml:space="preserve">
+    <value>他のユーザーによって更新されたため登録に失敗しました。&lt;br /&gt;最新情報を取得しますか？</value>
+    <comment>Data has been updated by another user.</comment>
+  </data>
+  <data name="E032" xml:space="preserve">
+    <value>アサインされているプロジェクトが存在しません。</value>
+    <comment>Projects that are assigned does not exist.</comment>
+  </data>
+  <data name="E033" xml:space="preserve">
+    <value>登録されている社員No.とCSVファイルの社員No.が一致しません。</value>
+  </data>
+  <data name="E034" xml:space="preserve">
+    <value>CSVの形式が不正です。</value>
+  </data>
+  <data name="E035" xml:space="preserve">
+    <value>CSV取込処理に失敗しました。</value>
+  </data>
+  <data name="E036" xml:space="preserve">
+    <value>{0}に値が設定されていません。</value>
+    <comment>{0}は対象の項目名。（社員番号,社員名前,日期,出社時刻,退社時刻のいずれか）</comment>
+  </data>
+  <data name="E037" xml:space="preserve">
+    <value>登録されている社員No.とCSVファイルの社員No.が一致しません。</value>
+  </data>
+  <data name="E038" xml:space="preserve">
+    <value>{0}の形式が不正です。</value>
+    <comment>{0}は対象の項目名。（日期）{0}は対象の項目名。（出社時刻,退社時刻のいずれか）</comment>
+  </data>
+  <data name="E039" xml:space="preserve">
+    <value>{0}は{1}より未来の時間を入力して下さい。</value>
+    <comment>{0}：退社時刻、{1}：出社時刻</comment>
+  </data>
+  <data name="E040" xml:space="preserve">
+    <value>{0}のデータが重複しています。</value>
+    <comment>{0}は対象の項目名。（日期）</comment>
+  </data>
+  <data name="E041" xml:space="preserve">
+    <value>稼働実績の合計時間が設定上限を超えています。</value>
+  </data>
+  <data name="E042" xml:space="preserve">
+    <value>CSVファイルの形式に誤りがあります。</value>
+  </data>
+  <data name="E043" xml:space="preserve">
+    <value>変更された内容はありません。</value>
+  </data>
+  <data name="E044" xml:space="preserve">
+    <value>接続の有効時間が切れました。再度ログインしなおしてください。</value>
+    <comment>session time out</comment>
+  </data>
+  <data name="E045" xml:space="preserve">
+    <value>{0}の登録に失敗しました。</value>
+    <comment>Can't regist</comment>
+  </data>
+  <data name="E046" xml:space="preserve">
+    <value>ファイル形式に誤りがあります。</value>
+  </data>
+  <data name="E047" xml:space="preserve">
+    <value>CSVファイルの書式に誤りがあります。&lt;br&gt;CSVファイルの内容を確認してください。</value>
+  </data>
+  <data name="E048" xml:space="preserve">
+    <value>入力したパスワードと確認パスワードが一致していません。</value>
+  </data>
+  <data name="E049" xml:space="preserve">
+    <value>稼動実績と勤務時間に差異があるため本登録できません。</value>
+    <comment>You can not register this because there is a difference in working hours and operational performance</comment>
+  </data>
+  <data name="E050" xml:space="preserve">
+    <value>CSVデータの取り込みが完了しました。</value>
+    <comment>Update CSV data has been completed.</comment>
+  </data>
+  <data name="E051" xml:space="preserve">
+    <value>更新処理に失敗しました。</value>
+    <comment>I failed to update process.</comment>
+  </data>
+  <data name="E052" xml:space="preserve">
+    <value>複数のプロジェクトが選択されているため複写できません。</value>
+    <comment>Can not be select multiple projects</comment>
+  </data>
+  <data name="E053" xml:space="preserve">
+    <value>変更前と同一のパスワードは設定できません。</value>
+  </data>
+  <data name="E054" xml:space="preserve">
+    <value>添付ファイルの表示名を設定してください。</value>
+    <comment>Display name of attach file is required</comment>
+  </data>
+  <data name="E055" xml:space="preserve">
+    <value>指定のファイルが見つかりません。システム管理者にお問い合わせください。</value>
+    <comment>Cannot find attach file to download</comment>
+  </data>
+  <data name="E056" xml:space="preserve">
+    <value>掲載終了日は掲載開始日より未来の日付を入力して下さい。</value>
+    <comment>Please enter published end date greater than published start date.</comment>
+  </data>
+  <data name="E057" xml:space="preserve">
+    <value>入力されていないサブカテゴリがあります。</value>
+    <comment>There is a Sub-category that have not been inputed</comment>
+  </data>
+  <data name="E058" xml:space="preserve">
+    <value>サブカテゴリが設定されていません。</value>
+    <comment>Sub-category is not set</comment>
+  </data>
+  <data name="E059" xml:space="preserve">
+    <value>既に使用されているフェーズのため削除できません。</value>
+    <comment>Cannot delete contract type phase</comment>
+  </data>
+  <data name="E060" xml:space="preserve">
+    <value>既に使用されている適用開始日です。適用開始日は重複登録できません。</value>
+    <comment>Apply start date of consumption tax is exits.</comment>
+  </data>
+  <data name="E061" xml:space="preserve">
+    <value>全ての曜日を規定休日に設定することはできません。</value>
+    <comment>It is not possible to set the provisions holiday all the day of the week.</comment>
+  </data>
+  <data name="E062" xml:space="preserve">
+    <value>営業日数が0になる月があります。休日設定を見直してください。</value>
+    <comment>There is a month in which the number of business days becomes zero. Please review the setting holiday.</comment>
+  </data>
+  <data name="E063" xml:space="preserve">
+    <value>既に使用されているサブカテゴリのため削除できません。</value>
+    <comment>Cannot delete sub category</comment>
+  </data>
+  <data name="E064" xml:space="preserve">
+    <value>ログアウトします。\nよろしいですか？</value>
+    <comment>Are you want to log out ?</comment>
+  </data>
+  <data name="E065" xml:space="preserve">
+    <value>理由を備考欄に入力してください。  </value>
+  </data>
+  <data name="E066" xml:space="preserve">
+    <value>契約プランの期限が切れているか無効になっています。</value>
+  </data>
+  <data name="E067" xml:space="preserve">
+    <value>{0}登録数の上限を超えたため登録できません。</value>
+    <comment>{0} regist data cannot be execute because litmit data by license.</comment>
+  </data>
+  <data name="E068" xml:space="preserve">
+    <value>対象の諸経費種別は現在使用されているため削除できません。</value>
+  </data>
+  <data name="E0681" xml:space="preserve">
+    <value>取引先CSVが不正です。</value>
+    <comment>Customer csv import invalid</comment>
+  </data>
+  <data name="E069" xml:space="preserve">
+    <value>対象のプロジェクトは稼働実績が入力されているため変更できません。</value>
+    <comment>The target project can not be changed because the operation result has been entered.</comment>
+  </data>
+  <data name="E070" xml:space="preserve">
+    <value>CSVファイルの読み込みに失敗しました。</value>
+  </data>
+  <data name="E071" xml:space="preserve">
+    <value>チェック起点曜日が設定されていません。</value>
+    <comment>Check day of week is not set</comment>
+  </data>
+  <data name="E999" xml:space="preserve">
+    <value>処理中にシステムエラーが発生しました。</value>
+  </data>
+  <data name="I001" xml:space="preserve">
+    <value>入力したメールアドレスに新しいパスワードを送信しました。</value>
+    <comment>メール送信に成功しました。</comment>
+  </data>
+  <data name="I002" xml:space="preserve">
+    <value>パスワード再発行</value>
+  </data>
+  <data name="I003" xml:space="preserve">
+    <value>&lt;p&gt;パスワードを変更するには、以下のリンクをクリックしてください:&lt;/p&gt;
+&lt;p&gt;{0}&lt;/p&gt;
+&lt;p&gt;ログイン:&lt;span style="font-weight: bold;"&gt; {1}&lt;/span&gt;&lt;/p&gt;
+&lt;hr style="width: 43%;margin-left: 0px;"&gt;
+お問い合わせはこちら
+&lt;br&gt;
+{2}</value>
+  </data>
+  <data name="I004" xml:space="preserve">
+    <value>{0}を{1}しました。</value>
+    <comment>Success to do something</comment>
+  </data>
+  <data name="I005" xml:space="preserve">
+    <value>パスワードが{0}ヶ月以上変更されていません。\nパスワードを変更してください。</value>
+  </data>
+  <data name="I006" xml:space="preserve">
+    <value>この内容で登録します。\nよろしいですか？</value>
+    <comment>Are you sure want register ?</comment>
+  </data>
+  <data name="I007" xml:space="preserve">
+    <value>{0}を{1}しました。</value>
+    <comment>ユーザプロフィールの更新に成功しました。</comment>
+  </data>
+  <data name="I008" xml:space="preserve">
+    <value>CSV取込処理を行うと勤務開始時間、勤務終了時間は上書きされますがよろしいですか？</value>
+  </data>
+  <data name="I009" xml:space="preserve">
+    <value>CSV取込処理が完了しました。</value>
+  </data>
+  <data name="I010" xml:space="preserve">
+    <value>変更内容が保存されていませんがよろしいですか？</value>
+  </data>
+  <data name="I011" xml:space="preserve">
+    <value>住所情報が上書きされますがよろしいですか？</value>
+  </data>
+  <data name="I012" xml:space="preserve">
+    <value>郵便番号に該当する住所情報が見つかりません。</value>
+  </data>
+  <data name="I013" xml:space="preserve">
+    <value>パスワードを変更してください。</value>
+  </data>
+  <data name="I014" xml:space="preserve">
+    <value>既に使用されているタグのため変更できません。</value>
+    <comment>I cannot be changed because of the tag that is being used.</comment>
+  </data>
+  <data name="I015" xml:space="preserve">
+    <value>郵便番号を入力して下さい。</value>
+  </data>
+  <data name="I016" xml:space="preserve">
+    <value>郵便番号に誤りがあります。</value>
+  </data>
+  <data name="I017" xml:space="preserve">
+    <value>パスワードの再設定が完了しました。\nログイン画面に遷移します。</value>
+  </data>
+  <data name="I018" xml:space="preserve">
+    <value>URLが不正です。
+再度Eメールを確認してください。</value>
+  </data>
+  <data name="I019" xml:space="preserve">
+    <value>稼働実績が未登録の日付に対して取込処理を行います。\nよろしいですか？</value>
+  </data>
+</root>

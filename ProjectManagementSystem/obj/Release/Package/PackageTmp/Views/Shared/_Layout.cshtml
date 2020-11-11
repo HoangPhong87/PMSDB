@@ -1,0 +1,93 @@
+﻿@using ProjectManagementSystem.Common;
+@using ProjectManagementSystem.Resources;
+@using System.Configuration;
+<!DOCTYPE html>
+
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <link href="~/Images/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+    <title>@ViewBag.Title</title>
+    @RenderPage("~/Views/Shared/_CommonScript.cshtml")
+
+    @Styles.Render("~/Content/css/bootstrap")
+    @Styles.Render("~/Content/fontawesome/css/icon")
+    @Styles.Render("~/Content/common")
+    @Styles.Render("~/Content/css/" + ViewContext.RouteData.Values["controller"].ToString())
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/common")
+    @Scripts.Render("~/bundles/jquery/plugins")
+    @Scripts.Render("~/bundles/input")
+    @Scripts.Render("~/bundles/dataTables")
+    @Scripts.Render("~/bundles/windowControl")
+
+    @if (ViewContext.RouteData.Values["controller"].ToString() != "PMS01001")
+    {
+        @Scripts.Render("~/bundles/loadingPlugin")
+    }
+</head>
+
+@if (HttpContext.Current.Session[Constant.SESSION_LOGIN_USER] != null)
+{
+    <body>
+        <input type="hidden" id="ip" value="@ViewBag.CheckServer" />
+        <div id="onloadDiv">
+        </div>
+        <div class="wrapper">
+            <header id="header" class="main-header">
+                @RenderPage("~/Views/Shared/_Header1.cshtml")
+            </header>
+            <aside class="main-sidebar-small">
+                @RenderPage("~/Views/Shared/_SideMenuSmall.cshtml")
+            </aside>
+            <aside class="main-sidebar">
+                @RenderPage("~/Views/Shared/_SideMenu.cshtml")
+            </aside>
+            <div class="content-wrapper">
+                @RenderBody()
+            </div>
+            @RenderPage("~/Views/Shared/_Footer1.cshtml")
+        </div>
+    </body>
+}
+else
+{
+    <body>
+        <input type="hidden" id="ip" value="@ViewBag.CheckServer" />
+        <div id="onloadDiv">
+        </div>
+        <div class="main-header">
+            <img src="~/Images/ico_service.png" class="logo_left" />
+        </div>
+        <div id="body">
+            @RenderBody()
+        </div>
+        <div id="footer">
+        </div>
+    </body>
+}
+</html>
+
+<script type='text/javascript'>
+    //check ip server
+    var checkIp = $('#ip').val();
+    if (checkIp === "1") {
+        $('.main-header').addClass('main-header-test-env');
+    }
+
+    if (localStorage.getItem('status-menu') === null
+        || localStorage.getItem('status-menu') === 'null'
+        || localStorage.getItem('status-menu') === 'open') {
+        $('body').removeClass('sidebar-collapse');
+    } else {
+        $('body').addClass('sidebar-collapse');
+    }
+    if (navigator.userAgent.indexOf('Firefox') != -1) {// check browser is Firefox
+        $(document).bind("ajaxSend", function (c, xhr) {
+            $(window).bind('beforeunload', function () {
+                xhr.abort();
+            })
+        });
+    }
+</script>

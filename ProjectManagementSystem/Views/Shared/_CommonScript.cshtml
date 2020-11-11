@@ -1,0 +1,14 @@
+﻿
+<script>
+    function GetPath(path) {
+        var contentPath = '@Url.Content("~/")';
+
+        
+        var fullPath = path.replace(/^~/, '');
+
+        
+        fullPath = fullPath.replace(/^\//, contentPath);
+
+        return fullPath;
+    }
+</script>

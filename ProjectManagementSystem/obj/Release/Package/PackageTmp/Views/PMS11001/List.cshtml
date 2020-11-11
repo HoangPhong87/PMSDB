@@ -1,0 +1,240 @@
+﻿@model ProjectManagementSystem.ViewModels.PMS11001.PMS11001ListViewModel
+@using ProjectManagementSystem.Resources;
+@using ProjectManagementSystem.Common;
+
+@{
+    ViewBag.Title = "拠点一覧";
+    var currentUser = HttpContext.Current.Session[Constant.SESSION_LOGIN_USER] as LoginUser;
+}
+
+<section class="content-header">
+    <div class="title">
+        <h1>@ViewBag.Title</h1>
+        @if (currentUser != null && currentUser.PlanFunctionList.Contains(Constant.FunctionID.BranchRegist) && currentUser.FunctionList.Contains(Constant.FunctionID.BranchRegist))
+        {
+            <button id="btnCreateNew" class="btn dark btnNew"><i class="btn-icon btn-add"></i>新規作成</button>
+            <input type="hidden" id="roleEdit" value="true" />
+        }
+    </div>
+    <div class="search-form">
+        <div class="search-condition">
+            <div class="row">
+                <label class="width-120">拠点名</label>
+                @Html.TextBoxFor(m => m.Condition.BranchName, new { style = "ime-mode: auto;", maxlength = 100 })
+
+                @if (currentUser != null)
+                {
+                    if (currentUser.PlanFunctionList.Contains(Constant.FunctionID.BranchList_Admin) && currentUser.FunctionList.Contains(Constant.FunctionID.BranchList_Admin))
+                    {
+                        <label class="width-120">
+                            @Html.CheckBoxFor(m => m.Condition.DeleteFlag)
+                            削除済を含む
+                        </label>
+                    }
+                    else
+                    {
+                        @Html.CheckBoxFor(m => m.Condition.DeleteFlag, new { @style = "visibility:hidden" })
+                    }
+                }
+            </div>
+        </div>
+        <div class="right search-action">
+            <button type="button" id="btnSearch" name="btnSearch" class="btn dark"><i class="btn-icon btn-search"></i>検索</button>
+            <button type="button" id="btnClear" name="btnClear" class=" btn light"><i class="btn-icon btn-clear"></i>クリア</button>
+        </div>
+    </div>
+</section>
+
+@RenderPage("~/Views/Shared/ShowHideHeaderContent.cshtml")
+
+<div class="content data-list branch-list clearfix" style="visibility:hidden">
+    <table id="InfoTable" class="display" width="100%">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>No.</th>
+                <th aria-valuetext="location_name">拠点名</th>
+                <th aria-valuetext="display_name">拠点（表示名）</th>
+                <th aria-valuetext="display_order">表示順</th>
+                <th aria-valuetext="remarks">備考</th>
+                <th aria-valuetext="upd_date">更新日時</th>
+                <th aria-valuetext="upd_user">更新者</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+</div>
+
+<div class="sales-group-detail-footer search-date clearfix">
+    <form method="POST" action="@Url.Action("ExportCsv","PMS11001")" class="frmExport">
+        @Html.Hidden("hdnBranchName")
+        @Html.Hidden("hdnDelFlag", false)
+        @Html.Hidden("hdnOrderBy", "upd_date")
+        @Html.Hidden("hdnOrderType", "desc")
+        <input id="tabId" name="TAB_ID" type="hidden" />
+        <button id="btnExport" type="button" class="btn dark pull-left"><i class="btn-icon btn-output-csv"></i>CSV出力</button>
+    </form>
+</div>
+
+<form method="POST" action="@Url.Action("Edit","PMS11001")" class="frm-edit">
+    <input type="hidden" name="id" value="0" />
+</form>
+<input type="hidden" id="table_order_columns" value="" />
+
+<script type="text/javascript" charset="utf-8">
+    $(function () {
+        var uniqueId = "@Guid.NewGuid().ToString()";
+        $("#tabId").val(uniqueId);
+        SetEventBeforeUnload();
+        LoadOldValueOfControls();
+        PMS.utility.imeControl($("#Condition_BranchName"), 'active');
+
+        var oSorting = {
+            "bSort": true
+        };
+        var oPaginate = {
+            "bPaginate": true,
+            "iDisplayLength": parseInt(@App[ConfigurationKeys.LIST_ITEMS_PER_PAGE]),
+            "bStateSave": false
+        };
+        var oServerSide = {
+            "bServerSide": true,
+            "sAjaxSource": '@Url.Action("Search", "PMS11001")',
+            "fnServerParams": serverParams,
+            "fnDrawCallback": displayComplete,
+            "fnInitComplete": bindData
+        };
+        var aoColumnDefs = [
+
+            { "bSortable": false, "bVisible": false, "aTargets": [0], "sWidth": "0%", "sClass": "cell_left" },
+            { "bSortable": false, "aTargets": [1], "sWidth": "5%", "sClass": "cell_center bold" },
+            { "sName": "location_name", "aTargets": [2], "sWidth": "20%", "sClass": "cell_left", "mRender": function (data, type, full) { return buildEditLink(full[0], full[8], data); } },
+            { "sName": "display_name", "aTargets": [3], "sWidth": "20%", "sClass": "cell_left", "mRender": function (data, type, full) { return PMS.utility.buildColumShortText(data, 'location-name'); } },
+            { "sName": "display_order", "aTargets": [4], "sWidth": "15%", "sClass": "cell_center" },
+            { "sName": "remarks", "aTargets": [5], "sWidth": "20%", "sClass": "cell_left", "mRender": function (data, type, full) { return PMS.utility.buildColumShortText(data, 'location-remark'); } },
+            { "sName": "upd_date", "aTargets": [6], "sWidth": "20%", "sClass": "cell_center update-date-cell" },
+            { "sName": "upd_user", "aTargets": [7], "sWidth": "15%", "sClass": "cell_left", "mRender": function (data, type, full) { return PMS.utility.buildColumShortText(data, 'location-update'); } }
+        ];
+        var dataTable = CreateDataTable('#InfoTable', oSorting, oPaginate, oServerSide, aoColumnDefs);
+
+        function buildEditLink(id, deleted, data) {
+            var html = PMS.utility.buildColumShortText(data, 'location-name ' + deleted);
+
+            if (PMS.utility.checkPermission('#roleEdit'))
+                html = '<div class="short-text text-overflow location-name"><a href="#" class="edit-link ' + deleted + '" aria-valuetext="' + id + '" title="' + data + '"><label class="longtext">' + data + '</label></a></div>';
+
+            return html;
+        }
+
+        function serverParams(aoData) {
+            aoData.push(
+                { "name": "BranchName", "value": $("#hdnBranchName").val() },
+                { "name": "DeleteFlag", "value": $("#hdnDelFlag").val() },
+                { "name": "orderBy", "value": $("#hdnOrderBy").val() },
+                { "name": "orderType", "value": $("#hdnOrderType").val() },
+                { "name": "TAB_ID", "value": $("#tabId").val() }
+            );
+            if (typeof (colReorder) !== 'undefined') {
+                $("#table_order_columns").val(colReorder.fnOrder());
+                colReorder.fnReset();
+            }
+        }
+
+        function displayComplete() {
+            
+            $('#InfoTable .1').each(function () {
+                $(this).parents('tr').removeClass().addClass('delete-row');
+            });
+
+            $('div.branch-list').removeAttr('style');
+            $("#onloadDiv").hide();
+            $('.pace.pace-active').addClass('pace-inactive').removeClass('pace-active');
+            $('#btnSearch').removeAttr('disabled');
+            custom_order('#InfoTable', 2, 0);
+        }
+
+        function bindData(data) {
+            // process status disabled  buttton exportCSV when search data
+            if (data.aaData.length == 0) {
+                $('#btnExport').addClass('disabled').attr('disabled', 'disabled');
+            }
+            else {
+                $('#btnExport').removeClass('disabled').removeAttr('disabled');
+            }
+        }
+
+        function searchByCondition() {
+            $('.validation-summary-errors').remove();
+
+            var invalidMess = [];
+
+            if ($('#Condition_BranchName').val().length > 100)
+                invalidMess.push('@string.Format(Messages.E020, "拠点名", "100")');
+
+            if (invalidMess.length > 0) {
+                PMS.utility.showClientError(invalidMess, '.title');
+                return false;
+            }
+
+            $('input[name="hdnBranchName"]').val($('#Condition_BranchName').val());
+            $('input[name="hdnDelFlag"]').val($("#Condition_DeleteFlag").prop('checked'));
+
+            $('.pace.pace-inactive').removeClass('pace-inactive').addClass('pace-active');
+            $("#onloadDiv").show(function () {
+                dataTable.fnPageChange('first');
+            });
+            $('#btnSearch').attr('disabled', 'disabled');
+        }
+
+        $(document).bind('keypress', function (e) {
+            var code = e.keyCode || e.which;
+            if (code == 13) { //Enter keycode
+                searchByCondition();
+            }
+        });
+
+        $('button#btnSearch').click(function () {
+            searchByCondition();
+        });
+
+        $('button#btnClear').click(function () {
+            $('#Condition_BranchName').val("")
+            $("#Condition_DeleteFlag").prop('checked', false);
+            PMS.utility.ClearRestoreData("PMS11001");
+        });
+
+        $(document).off('#InfoTable tr th');
+        $(document).on('click', '#InfoTable tr th:not(.sorting_disabled)', function () {
+            var sort_type = $(this).hasClass('sorting_asc') ? 'asc' : 'desc';
+
+            $('input[name="hdnOrderBy"]').val($(this).attr("aria-valuetext"));
+            $('input[name="hdnOrderType"]').val(sort_type);
+        });
+
+        $(document).off('a.edit-link');
+        $(document).on('click', 'a.edit-link', function () {
+            var $form = $(".frm-edit");
+
+            $form.children('input[name="id"]').val($(this).attr("aria-valuetext"));
+            $form.submit();
+        });
+
+        $('button#btnCreateNew').click(function () {
+            var $form = $(".frm-edit");
+            $form.children('input[name="id"]').val('0');
+            $form.submit();
+        });
+
+        $('#btnExport').click(function () {
+            $(".frmExport").submit();
+        });
+        PMS.utility.LoadSearchCondition();
+    });
+
+    function LoadOldValueOfControls() {
+        var branchName = $('#hdnBranchName').val();
+        if (branchName.length > 0) {
+            $('#Condition_BranchName').val(branchName);
+        }
+    }
+</script>

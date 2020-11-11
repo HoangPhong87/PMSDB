@@ -1,0 +1,969 @@
+﻿@model ProjectManagementSystem.ViewModels.PMS06001.PMS06001ListViewModel
+@using ProjectManagementSystem.Resources;
+@using ProjectManagementSystem.Common;
+
+@{
+    ViewBag.Title = "プロジェクト一覧";
+    var currentUser = HttpContext.Current.Session[Constant.SESSION_LOGIN_USER] as LoginUser;
+}
+
+@Scripts.Render("~/bundles/dragOn")
+<div id="onloadDivSales">
+</div>
+<section class="content-header">
+    <h1 id="title">
+        @ViewBag.Title
+    </h1>
+    <div class="search-form">
+        @Html.HiddenFor(m => m.Condition.sortCol)
+        @Html.HiddenFor(m => m.Condition.sortDir)
+
+        <div class="search-condition clearfix">
+            <div class="row row-margin-bottom">
+                <label class="width-120">プロジェクト名</label>
+                @Html.TextBoxFor(m => m.Condition.PROJECT_NAME, new { style = "ime-mode: auto;", @class = "search_project_name", maxlength = 50, @placeholder = "プロジェクト名" })
+
+                <label class="width-100">ステータス</label>
+                @Html.DropDownListFor(m => m.Condition.STATUS_ID, new SelectList(Constant.SalesTypeStatusList.Items, "Key", "Value"), new { @class = "" })
+                @Html.DropDownListFor(m => m.Condition.COMPLETE_ID, new SelectList(Constant.CompleteStatusSearchList.Items, "Key", "Value"), new { @class = "" })
+            </div>
+
+            <div class="row row-margin-bottom">
+                <div class="col-1">
+                    <div class="row-margin-bottom">
+                        <label class="width-120">期間</label>
+                        @Html.DropDownListFor(m => m.Condition.TIME_CONDITION_TYPE, new SelectList(Constant.TimeConditionTypeList.Items, "Key", "Value"), new { @class = "" })
+                        <span class="date datepicker-months">
+                            @Html.TextBox(m => m.Condition.FROM_DATE, "{0:yyyy/MM}", new { @class = "ime-mode", maxlength = 7, @placeholder = "YYYY/MM" })
+                            <button type="button" class="btn light"><i class="btn-icon btn-calendar"></i></button>
+                        </span>
+                        <span class="date-range-space">～</span>
+                        <span class="date datepicker-months">
+                            @Html.TextBox(m => m.Condition.TO_DATE, "{0:yyyy/MM}", new { @class = "ime-mode", maxlength = 7, @placeholder = "YYYY/MM" })
+                            <button type="button" class="btn light"><i class="btn-icon btn-calendar"></i></button>
+                        </span>
+                    </div>
+                    <div class="row-margin-bottom">
+                        <label class="width-120">発注元</label>
+                        @Html.TextBoxFor(m => m.Condition.CUSTOMER_NAME, new { @readonly = "readonly", @class = "value-selected search_customer", title = Model.Condition.CUSTOMER_NAME })
+                        
+                        <button type="button" id="btnSelectCustomer" class="btn light"><i class="btn-icon btn-search-dialog"></i></button>
+                        @Html.DropDownListFor(m => m.Condition.TAG_ID, Model.TAG_LIST, "指定なし", new { @class = "" })
+                    </div>
+                    <div>
+                        <label class="width-120">契約種別</label>
+                        @Html.DropDownListFor(m => m.Condition.CONTRACT_TYPE_ID, Model.CONTRACT_TYPE_LIST, "指定なし", new { @class = "" })
+                        <label class="width-100" style="width:55px;">担当者</label>
+                        @Html.TextBoxFor(m => m.Condition.CHARGE_PERSON, new { @readonly = "readonly", @class = "value-selected", placeholder = "名前", title = Model.Condition.CHARGE_PERSON })
+
+                        <button type="button" id="btnSelectChargePerson" class="btn light"><i class="btn-icon btn-search-dialog"></i></button>
+                        
+                    </div>
+                </div>
+                <div class="col-2">
+                    <div class="row-margin-bottom">
+                        <label class="width-100 lbl-auto">所属</label>
+                        @*@Html.DropDownListFor(m => m.Condition.GROUP_ID, Model.GROUP_LIST, new { @multiple = "multiple" })*@
+                        @Html.ListBoxFor(m => m.Condition.GROUP_ID, Model.GROUP_LIST)
+                    </div>
+                    <div>
+                        @if (currentUser.PlanFunctionList.Contains(Constant.FunctionID.ProjectList_Admin) && currentUser.FunctionList.Contains(Constant.FunctionID.ProjectList_Admin))
+                        {
+                            <label class="width-100 lbl-auto">&nbsp;</label>
+                            <label class="bold">
+                                @Html.CheckBoxFor(m => m.Condition.DELETE_FLG)
+                                削除済を含む
+                            </label>
+                        }
+                        else
+                        {
+                            @Html.CheckBoxFor(m => m.Condition.DELETE_FLG, new { @style = "visibility:hidden" })
+                        }
+                    </div>
+                    @Html.TextBoxFor(m => m.Condition.CUSTOMER_ID, new { style = "visibility:hidden;" })
+                    @Html.TextBoxFor(m => m.Condition.CHARGE_PERSON_ID, new { style = "visibility:hidden;" })
+                </div>
+            </div>
+        </div>
+        <div class="right search-action">
+            <button type="button" id="btnSearch" name="btnSearch" class="btn dark"><i class="btn-icon btn-search"></i>検索</button>
+            <button type="button" id="btnClear" name="btnClear" class=" btn light"><i class="btn-icon btn-clear"></i>クリア</button>
+        </div>
+    </div>
+</section>
+
+@RenderPage("~/Views/Shared/ShowHideHeaderContent.cshtml")
+<div class="content data-list project-list clearfix" style="visibility:hidden">
+    <div class="summary-project-list row">
+        <div class="summary-project-text width-16-7">
+            <label class="title">受注金額合計</label>
+            @Html.Label(string.Empty, "0", new { id = "lblTotalOrder", @class = "money" })
+        </div>
+        <div class="summary-project-text width-16-6">
+            <label class="title">支払金額合計</label>
+            @Html.Label(string.Empty, "0", new { id = "lblTotalPayment", @class = "money" })
+        </div>
+        <div class="summary-project-text width-16-7">
+            <label class="title">原価合計</label>
+            @Html.Label(string.Empty, "0", new { id = "lblTotalCost", @class = "money" })
+        </div>
+        <div class="summary-project-text width-25-0">
+            <label class="title">予定利益合計（率）</label>
+            <label id="lblTotalProfit" class="money"></label>
+        </div>
+        <div class="summary-project-text width-25-0 border-right">
+            <label class="title">実績利益合計（率）</label>
+            <label id="lblTotalActualProfit" class="money"></label>
+        </div>
+        <div class="col-lg-3">
+            &nbsp;
+        </div>
+    </div>
+
+    <div class="clearfix special-list">
+        <div class="div-left">
+            <table class="tbl-list-left dataTable" width="100%">
+                <thead>
+                    <tr>
+                        <th class="th-checkbox sorting_disabled cell_center"><input name="selectProject" type="checkbox" class="check-all-project"></th>
+                        <th class="project_name sorting cell_left" tabindex="0">プロジェクト名</th>
+                        @if (currentUser.PlanFunctionList.Contains(Constant.FunctionID.ProjectDetail) && currentUser.FunctionList.Contains(Constant.FunctionID.ProjectDetail))
+                        {
+                            <th class="sorting_disabled cell_center link-detail">稼動実績</th>
+                        }
+                        @if ((currentUser.PlanFunctionList.Contains(Constant.FunctionID.ProjectPlanRegist) && currentUser.FunctionList.Contains(Constant.FunctionID.ProjectPlanRegist))
+                            || (currentUser.PlanFunctionList.Contains(Constant.FunctionID.ProjectPlanReadOnly) && currentUser.FunctionList.Contains(Constant.FunctionID.ProjectPlanReadOnly)))
+                        {
+                            <th class="sorting_disabled cell_center link-plan-detail">計画書</th>
+                        }
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+        <div class="div-center">
+            <table class="tbl-list-center dataTable scrollalble" width="100%">
+                <thead>
+                    <tr>
+                        <th>ﾌﾟﾛｼﾞｪｸﾄID</th>
+                        <th>更新日時</th>
+                        <th>プロジェクト名</th>
+                        <th>契約種別</th>
+                        <th>ランク</th>
+                        <th>開始日</th>
+                        <th>納品日</th>
+                        <th>検収日</th>
+                        <th>担当者</th>
+                        <th>ステータス</th>
+                        <th>受注金額</th>
+                        <th>予定工数</th>
+                        <th>実績工数</th>
+                        <th>進捗</th>
+                        <th>予定利益</th>
+                        <th>実績利益</th>
+                        <th>発注元</th>
+                        <th>更新日時</th>
+                        <th>更新者</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="search-date project-list-action clearfix">
+    @if (currentUser != null)
+    {
+        if (currentUser.PlanFunctionList.Contains(Constant.FunctionID.ProjectRegist) && currentUser.FunctionList.Contains(Constant.FunctionID.ProjectRegist))
+        {
+            <button type="button" class="btn btn-left red btnDeleteProject"><i class="btn-icon btn-delete"></i>削除</button>
+            <form method="POST" action="@Url.Action("Edit","PMS06001")" class="frm-add">
+                <input type="hidden" name="id" value="0" />
+                <input type="hidden" name="isLinkToCopy" />
+            </form>
+            <div id="mdCopyProject" class="modal fade" data-backdrop="static">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <div>複写項目選択</div>
+                        </div>
+                        <div class="modal-body">
+                            <form method="POST" action="@Url.Action("New","PMS06001")" class="frm-copy" id="frmCopyProject">
+                                <label>
+                                    <input checked="checked" id="rbCopyProject" name="rbCopyProject" type="radio" value="0" />
+                                    通常複写
+                                </label>
+                                <label>
+                                    <input id="rbCopyProject" name="rbCopyProject" type="radio" value="1" />
+                                    全項目複写
+                                </label>
+                                <input type="hidden" name="id" value="0" />
+                                <input type="hidden" name="isLinkToCopy" />
+                                <input type="hidden" name="copyType" />
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" id="btnSubmitCopy" class="btn dark">OK</button>
+                            <button type="button" class="btn light" data-dismiss="modal">キャンセル</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <button id="btnCreateCopy" type="button" class="btn btn-left dark"><i class="btn-icon btn-copy"></i>複写</button>
+
+            <input type="hidden" id="roleEdit" value="true" />
+            @Html.DropDownList("ddlSelectStatusList", Model.STATUS_SELECT_LIST, new { @class = "btn-left"})
+            <button type="button" id="btnUpdateStatus" class="btn btn-left green"><i class="btn-icon btn-regist"></i>ステータス変更</button>
+            <button type="button" class="btn btn-left dark" id="exportCSV"><i class="btn-icon btn-output-csv"></i>CSV出力</button>
+        }
+
+        if (currentUser.PlanFunctionList.Contains(Constant.FunctionID.ProjectDetail) && currentUser.FunctionList.Contains(Constant.FunctionID.ProjectDetail))
+        {
+            <input type="hidden" id="roleDetail" value="true" />
+            <form method="POST" action="/PMS06001/Detail" class="frm-detail">
+                <input type="hidden" name="id" value="">
+            </form>
+        }
+
+        if ((currentUser.PlanFunctionList.Contains(Constant.FunctionID.ProjectPlanRegist) && currentUser.FunctionList.Contains(Constant.FunctionID.ProjectPlanRegist))
+                            || (currentUser.PlanFunctionList.Contains(Constant.FunctionID.ProjectPlanReadOnly) && currentUser.FunctionList.Contains(Constant.FunctionID.ProjectPlanReadOnly)))
+        {
+            <input type="hidden" id="rolePlanDetail" value="true" />
+            <form id="frmProjectPlan" method="POST" action='@Url.Action("Plan", "PMS06001")'>
+                <input id="plan_projectId" name="plan_projectId" type="hidden" value="">
+                <input id="read_only" name="read_only" type="hidden" value="1">
+            </form>
+        }
+    }
+            <form id="frmExportProjectListCsv" method="POST" action="@Url.Action("ExportProjectListToCSV", "PMS06001")" class="frmExport">
+                @Html.Hidden("hdnProjectName", @Model.Condition.PROJECT_NAME)
+                @Html.Hidden("hdnStatusId", @Model.Condition.STATUS_ID)
+                @Html.Hidden("hdnCompleteId", @Model.Condition.COMPLETE_ID)
+                @Html.Hidden("hdnTimeConditionType", @Model.Condition.TIME_CONDITION_TYPE)
+                @Html.Hidden("hdnFrom", @Model.Condition.FROM_DATE)
+                @Html.Hidden("hdnTo", @Model.Condition.TO_DATE)
+                @Html.Hidden("hdnCustomerName", @Model.Condition.CUSTOMER_NAME)
+                @Html.Hidden("hdnTagId", @Model.Condition.TAG_ID)
+                @Html.Hidden("hdnContractTypeId", @Model.Condition.CONTRACT_TYPE_ID)
+                @Html.Hidden("hdnChargePerson", @Model.Condition.CHARGE_PERSON)
+                @Html.Hidden("hdnGroupId")
+                @Html.Hidden("hdnDelFlag", @Model.Condition.DELETE_FLG)
+                @Html.Hidden("hdnCustomerId", @Model.Condition.CUSTOMER_ID)
+                @Html.Hidden("hdnChargePersonId", @Model.Condition.CHARGE_PERSON_ID)
+                @Html.Hidden("hdnOrderBy")
+                @Html.Hidden("hdnOrderType")
+                <input id="tabId" name="TAB_ID" type="hidden" />
+            </form>
+            @Html.Hidden("DefaultGroupId", Model.Condition.GROUP_ID)
+
+    <input type="hidden" id="table_order_columns" value="" />
+</div>
+
+<script type="text/javascript">
+    var sort_colum = $("#Condition_sortCol").val().length > 0 ? parseInt($("#Condition_sortCol").val()) : 0;
+    var sort_type = $("#Condition_sortDir").val().length > 0 ? $("#Condition_sortDir").val() : 'desc';
+    var th_name = "";
+    if (sort_colum == 2) {
+        th_name = "プロジェクト名";
+    } else  if (sort_colum > 2) {
+        $('table.tbl-list-center').find('th').each(function ($index) {
+            if ($index == sort_colum) {
+                th_name = $(this).text();
+                return false;
+            }
+        });
+    }
+ 
+    $(function () {
+        var uniqueId = "@Guid.NewGuid().ToString()";
+        $("#tabId").val(uniqueId);
+        SetEventBeforeUnload();
+        LoadOldValueOfControls();
+        PMS.utility.imeControl($("#Condition_PROJECT_NAME"), 'active');
+        //var hdnGroup = $('#DefaultGroupId').val();
+        //if (hdnGroup.length > 0 && $('#Condition_GROUP_ID').val() === undefined) {
+        //if (hdnGroup.length > 0) {
+        //    var groupArr = hdnGroup.split(',');
+        //    $('#Condition_GROUP_ID').val(groupArr);
+        //}
+
+        $('.div-center').dragOn({ easing: false, exclusion: { th: '', id: '.dataTables_length, .dataTables_info, .dataTables_paginate' } });
+
+        var oSorting = {
+            "bSort": true
+        };
+        var oPaginate = {
+            "bPaginate": true,
+            "iDisplayLength": parseInt(@App[ConfigurationKeys.LIST_ITEMS_PER_PAGE]),
+            "bStateSave": true
+        };
+        var oServerSide = {
+            "bServerSide": true,
+            "sAjaxSource": '@Url.Action("Search", "PMS06001")',
+            "fnBeforeSend": beforeSend,
+            "fnServerParams": serverParams,
+            "fnDrawCallback": displayComplete,
+            "fnInitComplete": bindData
+        };
+        var aoColumnDefs = [
+            { "sName": "project_sys_id", "bSortable": false, "bSortable": false, "bVisible": false, "aTargets": [0], "sWidth": "0%", "sClass": "project_sys_id cell_left" },
+            { "sName": "status_order", "bSortable": false, "bVisible": false, "aTargets": [1], "sWidth": "0%", "sClass": "upd_date cell_left" },
+            { "sName": "project_name", "bSortable": false, "bVisible": false, "aTargets": [2], "sWidth": "0%", "sClass": "project_name cell_left" },
+            { "sName": "contract_type_order", "aTargets": [3], "sWidth": "4%", "sClass": "contract_type_order cell_center", "mRender": function (data, type, full) { return PMS.utility.buildColumShortText(data, 'contracttype-name'); } },
+            { "sName": "rank_order", "aTargets": [4], "sWidth": "4%", "sClass": "rank_order cell_center" },
+            { "sName": "start_date", "aTargets": [5], "sWidth": "4%", "sClass": "start_date cell_center" },
+            { "sName": "end_date", "aTargets": [6], "sWidth": "4%", "sClass": "end_date cell_center" },
+            { "sName": "acceptance_date", "aTargets": [7], "sWidth": "4%", "sClass": "acceptance_date cell_center" },
+            { "sName": "pic_order", "aTargets": [8], "sWidth": "5%", "sClass": "pic_order cell_left", "mRender": function (data, type, full) { return PMS.utility.buildColumShortText(data, 'pic-name'); } },
+            { "sName": "status_order", "aTargets": [9], "sWidth": "5%", "sClass": "status_order cell_center", "mRender": function (data, type, full) { return PMS.utility.buildColumShortText(data, 'contracttype-name'); } },
+            { "sName": "total_sales", "aTargets": [10], "sWidth": "9%", "sClass": "total_sales cell_right", "mRender": function (data, type, full) { return '<span class="' + full[21] + '">' + data + '</span>'; } },
+            { "sName": "estimate_man_days", "aTargets": [11], "sWidth": "9%", "sClass": "estimate_man_days cell_right", "mRender": function (data, type, full) { return '<span class="' + full[20] + '">' + data + '</span>'; } },
+            { "sName": "actual_man_day", "aTargets": [12], "sWidth": "5%", "sClass": "actual_man_day cell_right" },
+            { "sName": "progress", "aTargets": [13], "sWidth": "3%", "sClass": "progress cell_center", "mRender": function (data, type, full) { return '<span class="progress ' + (full[19] == '1' ? 'deleted' : '') + '" id="' + full[0] + '" title="' + full[23] + '">' + data + '</span>'; } },
+            { "sName": "plan_profit", "aTargets": [14], "sWidth": "4.5%", "sClass": "plan_profit cell_right", "mRender": function (data, type, full) { return '<span class="' + full[22] + '">' + data + '</span>'; } },
+            { "sName": "actual_profit", "aTargets": [15], "sWidth": "4.5%", "sClass": "actual_profit cell_right" },
+            { "sName": "customer_name", "aTargets": [16], "sWidth": "4%", "sClass": "customer_name cell_left", "mRender": function (data, type, full) { return PMS.utility.buildColumShortText(data); } },
+            { "sName": "upd_date", "aTargets": [17], "sWidth": "9%", "sClass": "upd_date cell_center" },
+            { "sName": "upd_user", "aTargets": [18], "sWidth": "4%", "sClass": "upd_user cell_left", "mRender": function (data, type, full) { return PMS.utility.buildColumShortText(data, 'pic-name'); } }
+        ];
+
+        var dataTable = CreateDataTable('table.tbl-list-center', oSorting, oPaginate, oServerSide, aoColumnDefs);
+
+        function beforeSend() {
+        }
+
+        function serverParams(aoData) {
+            var orderBy = 'status_order';
+            var orderType = 'ASC';
+
+            $('table.tbl-list-left tr th, table.tbl-list-center tr th').each(function () {
+                if ($(this).hasClass('sorting_asc')) {
+                    orderBy = $(this).attr('class').split(' ')[0];
+                } else if ($(this).hasClass('sorting_desc')) {
+                    orderBy = $(this).attr('class').split(' ')[0];
+                    orderType = 'DESC';
+                }
+            });
+
+            aoData.push(
+                { "name": "PROJECT_NAME", "value": $("#hdnProjectName").val() },
+                { "name": "TIME_CONDITION_TYPE", "value": $("#hdnTimeConditionType").val() },
+                { "name": "FROM_DATE", "value": $("#hdnFrom").val() },
+                { "name": "TO_DATE", "value": $("#hdnTo").val() },
+                { "name": "CUSTOMER_ID", "value": $("#hdnCustomerId").val() },
+                { "name": "CHARGE_PERSON", "value": $("#hdnChargePerson").val() },
+                { "name": "CHARGE_PERSON_ID", "value": $("#hdnChargePersonId").val() },
+                { "name": "CUSTOMER_NAME", "value": $("#Condition_CUSTOMER_NAME").val() },
+                { "name": "TAG_ID", "value": $("#hdnTagId").val() },
+                { "name": "CONTRACT_TYPE_ID", "value": $("#hdnContractTypeId").val() },
+                { "name": "STATUS_ID", "value": $("#hdnStatusId").val() },
+                { "name": "COMPLETE_ID", "value": $("#hdnCompleteId").val() },
+                { "name": "GROUP_ID", "value": $("#hdnGroupId").val() },
+                { "name": "DELETE_FLG", "value": $("#hdnDelFlag").val() },
+                { "name": "sortCol", "value": $("#Condition_sortCol").val() },
+                { "name": "sortDir", "value": $("#Condition_sortDir").val() },
+                { "name": "orderBy", "value": orderBy },
+                { "name": "orderType", "value": orderType },
+                { "name": "TAB_ID", "value": $("#tabId").val() }
+            );
+
+            if (typeof (colReorder) !== 'undefined') {
+                $("#table_order_columns").val(colReorder.fnOrder());
+                colReorder.fnReset();
+            }
+        }
+
+        //variable save status of condition
+        var currentConditionState = { prjName: "", statusID: "", completeID: "", tcType: "", toDate: "", fromDate: "", grID: "", cusName: "", cusID: "", tagID: "",ctID:"", chkDelete:"" };
+        function displayComplete() {
+            if (sort_colum > 2) {
+                $('table.tbl-list-left th.project_name').removeClass('sorting_asc sorting_desc').addClass('sorting').removeAttr('aria-sort');
+                $('table.tbl-list-center th').removeClass('sorting_asc sorting_desc').addClass('sorting').removeAttr('aria-sort');
+                $('table.tbl-list-center').find('th').each(function ($index) {
+                    if ($(this).text() == th_name) {
+                        $(this).removeClass('sorting sorting_asc sorting_desc').addClass('sorting_' + sort_type);
+                        return false;
+                    }
+                });
+            } else if (sort_colum == 2) {
+                $('table.tbl-list-center th').removeClass('sorting_asc sorting_desc').addClass('sorting').removeAttr('aria-sort');
+                $('table.tbl-list-left th.project_name').removeClass('sorting sorting_asc sorting_desc').addClass('sorting_' + sort_type);
+            }
+
+            // display deleted row
+            $('table.tbl-list-center span.deleted').each(function () {
+                $(this).parents('tr').removeClass().addClass('delete-row');
+            });
+
+            // remove text notice empty table
+            $('table.tbl-list-center td.dataTables_empty').empty();
+
+            // show screen
+            $('div.project-list').removeAttr('style');
+
+            $('input[name="selectProject"]').prop('checked', false);
+            setStatusButton();
+
+            custom_order('.tbl-list-center', 0, 0);
+            $('table.tbl-list-center th').unbind('click.DT');
+
+            //save state search condition
+            if ($("#Condition_DELETE_FLG").is(':checked')) {
+                currentConditionState.chkDelete = "checked";
+            }
+            else {
+                currentConditionState.chkDelete = "unchecked";
+            }
+            currentConditionState.prjName = $('#Condition_PROJECT_NAME').val();
+            currentConditionState.statusID = $('#Condition_STATUS_ID').val();
+            currentConditionState.completeID = $('#Condition_COMPLETE_ID').val();
+            currentConditionState.tcType = $('#Condition_TIME_CONDITION_TYPE').val();
+            currentConditionState.toDate = $('#Condition_TO_DATE').val();
+            currentConditionState.fromDate = $('#Condition_FROM_DATE').val();
+            currentConditionState.grID = $('#Condition_GROUP_ID').val();
+            currentConditionState.cusName = $('#Condition_CUSTOMER_NAME').val();
+            currentConditionState.cusID = $('#Condition_CUSTOMER_ID').val();
+            currentConditionState.tagID = $('#Condition_TAG_ID').val();
+            currentConditionState.ctID = $('#Condition_CONTRACT_TYPE_ID').val();
+
+            $('.pace.pace-active').addClass('pace-inactive').removeClass('pace-active');
+            $("#onloadDivSales").hide();
+            $('#btnSearch').removeAttr('disabled');
+        }
+
+        function bindData(data) {
+
+            // process status disabled  buttton exportCSV when search data
+            if (data.aaData.length == 0) {
+                $('#exportCSV').addClass('disabled').attr('disabled', 'disabled');
+            }
+            else {
+                $('#exportCSV').removeClass('disabled').removeAttr('disabled');
+            }
+
+            $("#Condition_sortCol").val(data.condition.sortCol);
+            $("#Condition_sortDir").val(data.condition.sortDir);
+            sort_colum = $("#Condition_sortCol").val();
+            sort_type = $("#Condition_sortDir").val();
+            var htmlLeft = '';
+
+            if (data.aaData.length > 0) {
+                for (var i = 0; i < data.aaData.length; i++) {
+                    var trClass = 'even';
+
+                    if (i % 2 == 0)
+                        trClass = 'odd';
+
+                    if (data.aaData[i][19] == '1')
+                        trClass = 'delete-row';
+
+                    htmlLeft += '<tr role="row" class="' + trClass + '">'
+                        + '<td class="cell_center">'
+                        + '<input name="action" type="checkbox" value="' + data.aaData[i][0] + '" class="check-project">'
+                        + '</td>'
+                        + '<td class="cell_left">';
+
+                    if (PMS.utility.checkPermission('#roleEdit')) {
+                        htmlLeft += '<a title="' + data.aaData[i][2] + '" class="left text-overflow project-name" aria-valuetext="' + data.aaData[i][0] + '">' + data.aaData[i][2] + '</a>'
+                    } else {
+                        htmlLeft += PMS.utility.buildColumShortText(data.aaData[i][2], "project-name-text");
+                    }
+
+                    if (PMS.utility.checkPermission('#roleDetail')) {
+                        htmlLeft += '<td class="cell_center">'
+                            + '<a href="#" class="detail-link" aria-valuetext="' + data.aaData[i][0] + '">稼動実績</a>'
+                            + '</td>';
+                    }
+
+                    if (PMS.utility.checkPermission('#rolePlanDetail')) {
+                        htmlLeft += '<td class="cell_center">';
+
+                        if (data.aaData[i][24] > 0) {
+                            htmlLeft += '<a href="#" class="plan-detail-link" data-project-sys-id="' + data.aaData[i][0] + '">計画書</a>';
+                        }
+
+                        htmlLeft += '</td>';
+                    }
+
+                    htmlLeft += '<tr>';
+                }
+            } else {
+                htmlLeft += '<tr role="row" class="odd">'
+                    + '<td colspan="4" class="dataTables_empty">該当データはありません。</td>'
+                    + '<tr>';
+            }
+
+            $('table.tbl-list-left tbody').empty().append(htmlLeft);
+
+            $('#lblTotalOrder').text(data.totalOrder);
+            $('#lblTotalPayment').text(data.totalPayment);
+            $('#lblTotalCost').text(data.totalCost);
+            $('#lblTotalProfit').text(data.totalProfit + "（" + data.profitRate + "）");
+            $('#lblTotalActualProfit').text(data.totalActualProfit + "（" + data.actualProfitRate + "）");
+
+            //check if this is Safari on windows, fix size of table header
+            if (!!navigator.userAgent.match('Safari/534.57.2')) {
+                $('th.rank_order').css('min-width', 75);
+            }
+        }
+
+        function searchProject() {
+            $('.validation-summary-errors').remove();
+
+            // check valid date
+            var startDate = $('#Condition_FROM_DATE').val();
+            var endDate = $('#Condition_TO_DATE').val();
+            var errStartDate = PMS.utility.validDate(startDate, 'yyyy/mm', '期間（開始）');
+            var errEndDate = PMS.utility.validDate(endDate, 'yyyy/mm', '期間（終了）');
+            var invalidMess = [];
+
+            if (errStartDate != null) {
+                invalidMess.push(errStartDate);
+            }
+
+            if (errEndDate != null) {
+                invalidMess.push(errEndDate);
+            }
+
+            if (errStartDate == null && errEndDate == null && startDate.length > 0 && endDate.length > 0) {
+                // compare date
+                if (!PMS.utility.compareDate(startDate, endDate, 'yyyy/mm')) {
+                    invalidMess.push('@string.Format(Messages.E027)');
+                }
+            }
+
+            if ($("#Condition_PROJECT_NAME").val().length > 50)
+                invalidMess.push('@string.Format(Messages.E020, "プロジェクト名", "50")');
+
+            if (invalidMess.length > 0) {
+                PMS.utility.showClientError(invalidMess);
+                return false;
+            }
+
+            var $group = $("#Condition_GROUP_ID");
+
+            if ($group.val() != null && $group.find('option').length == $group.val().length) {
+                $group.val('');
+            }
+
+            $("#hdnProjectName").val($("#Condition_PROJECT_NAME").val());
+            $("#hdnTimeConditionType").val($("#Condition_TIME_CONDITION_TYPE").val());
+            $("#hdnFrom").val($("#Condition_FROM_DATE").val());
+            $("#hdnTo").val($("#Condition_TO_DATE").val());
+            $("#hdnCustomerId").val($("#Condition_CUSTOMER_ID").val());
+            $("#hdnChargePersonId").val($("#Condition_CHARGE_PERSON_ID").val());
+            $("#hdnChargePerson").val($("#Condition_CHARGE_PERSON").val());
+            $("#hdnTagId").val($("#Condition_TAG_ID").val());
+            $("#hdnContractTypeId").val($("#Condition_CONTRACT_TYPE_ID").val());
+            $("#hdnGroupId").val($("#Condition_GROUP_ID").val());
+            $("#hdnStatusId").val($("#Condition_STATUS_ID").val());
+            $("#hdnCompleteId").val($("#Condition_COMPLETE_ID").val());
+            $("#hdnDelFlag").val($("#Condition_DELETE_FLG").prop('checked'));
+            // save selected group to session storage
+            //sessionStorage.groupIds = $("#Condition_GROUP_ID").val();
+            sessionStorage.setItem('groupIds', $("#Condition_GROUP_ID").val());
+            //sort_colum = 0;
+            //sort_type = 'desc';
+            $('.pace.pace-inactive').removeClass('pace-inactive').addClass('pace-active');
+            $("#onloadDivSales").show(function () {
+                dataTable.fnPageChange('first');
+            });
+            $('#btnSearch').attr('disabled', 'disabled');
+        }
+
+        $(document).off('table.tbl-list-left th.project_name');
+        $(document).on('click', 'table.tbl-list-left th.project_name', function () {
+            $(this).blur();
+            sort_colum = 2;
+            sort_type = $(this).hasClass('sorting_asc') ? 'desc' : 'asc';
+            dataTable.fnPageChange('first');
+            th_name = $(this).text();
+        });
+
+        $(document).off('table.tbl-list-center th');
+        $(document).on('click', 'table.tbl-list-center th', function () {
+            sort_colum = $(this).index() + 3;
+            sort_type = $(this).hasClass('sorting_asc') ? 'desc' : 'asc';
+            th_name = $(this).text();
+            dataTable.fnPageChange('first');
+        });
+
+        $('button#btnSearch').click(function () {
+            searchProject();
+        });
+
+        $(document).bind('keypress', function (e) {
+            var code = e.keyCode || e.which;
+            if (code == 13) { //Enter keycode
+                searchProject();
+            }
+        });
+
+        $("#btnClear").click(function () {
+            $("#Condition_PROJECT_NAME, #Condition_FROM_DATE, #Condition_TO_DATE, #Condition_CUSTOMER_ID, #Condition_CONTRACT_TYPE_ID, #Condition_STATUS_ID, #Condition_GROUP_ID").val("");
+            $("#Condition_CUSTOMER_NAME").val("").attr("title", "");
+            $("#Condition_TAG_ID").empty().append('<option value="">指定なし</option>');
+            $("#Condition_TIME_CONDITION_TYPE, #Condition_COMPLETE_ID").val("0");
+            $("#Condition_DELETE_FLG").prop('checked', false);
+            $('#Condition_CHARGE_PERSON').val("");
+            $('#Condition_CHARGE_PERSON_ID').val("");
+            $('.date.datepicker-months').datepicker('update', '');
+            PMS.utility.ClearRestoreData("PMS06001");
+            $("#test option").attr("selected", false);
+            $("#Condition_GROUP_ID option").attr("selected", false);
+        });
+
+        function setStatusButton() {
+            if ($('input[name="action"]:checked').length == 0) {
+                $('#btnCreateCopy').removeClass('blue').addClass('disabled').attr('disabled', 'disabled');
+                $('.btnDeleteProject').removeClass('red').addClass('disabled').attr('disabled', 'disabled');
+                $('#btnUpdateStatus').removeClass('green').addClass('disabled').attr('disabled', 'disabled');
+                $('#ddlSelectStatusList').addClass('disabled').attr('disabled', 'disabled');
+            }
+            else {
+                $('#btnCreateCopy').removeClass('disabled').addClass('blue').removeAttr('disabled');
+                $('.btnDeleteProject').removeClass('disabled').addClass('red').removeAttr('disabled');
+                $('#btnUpdateStatus').removeClass('disabled').addClass('green').removeAttr('disabled');
+                $('#ddlSelectStatusList').removeClass('disabled').removeAttr('disabled');
+            }
+        }
+
+        $('button#btnSelectCustomer').click(function () {
+            var result = PMS.utility.getDataByAjax('/Common/CheckTimeOut', null);
+
+            if (result == null)
+                return;
+
+            $(this).blur();
+
+            var url = '@Url.Action("Select", "PMS02001", new { callback = "selectCustomer" })';
+            url += '&TB_iframe=true&modal=true&height=600&width=1100';
+            tb_show(null, url, false);
+        });
+
+        $('button#exportCSV').click(function () {
+            var orderBy = 'status_order';
+            var orderType = 'ASC';
+
+            $('table.tbl-list-left tr th, table.tbl-list-center tr th').each(function () {
+                if ($(this).hasClass('sorting_asc')) {
+                    orderBy = $(this).attr('class').split(' ')[0];
+                } else if ($(this).hasClass('sorting_desc')) {
+                    orderBy = $(this).attr('class').split(' ')[0];
+                    orderType = 'DESC';
+                }
+            });
+
+            $('#hdnOrderBy').val(orderBy);
+            $('#hdnOrderType').val(orderType);
+            $('#frmExportProjectListCsv').submit();
+        });
+
+        $('button#btnCreateCopy').click(function () {
+            if ($('input[name="action"]:checked').length > 1) {
+                PMS.utility.showMessageDialog(PMS.utility.htmlDecode('@Constant.DialogType.WARNING'), '@string.Format(Messages.E052)');
+                return;
+            }
+
+            //#70214
+            $('#frmCopyProject [name="rbCopyProject"][value="0"]').prop('checked', true);
+            $('#mdCopyProject').modal();
+        });
+
+        //#70214
+        $('button#btnSubmitCopy').click(function () {
+            var $form = $('#frmCopyProject');
+
+            $form.children('input[name="id"]').val($('input[name="action"]:checked').val());
+            $form.children('input[name="isLinkToCopy"]').val('true');
+            $form.children('input[name="copyType"]').val($('[name="rbCopyProject"]:checked').val());
+            $form.submit();
+        });
+
+        $('button.btnDeleteProject').click(function () {
+            var dataList = new Array();
+            var check = false;
+            $('input[name="action"]:checked').each(function () {
+                if ($(this).parent().parent('tr').hasClass('delete-row')) {
+                    check = true;
+                }else{
+                    dataList.push($(this).val());
+                }
+            });
+
+            if(check){
+                PMS.utility.showMessageDialog(PMS.utility.htmlDecode('@Constant.DialogType.WARNING'), "削除できないプロジェクト情報があります。");
+                return;
+            } else {
+                PMS.utility.showSubmitConfirmDialog('プロジェクトを削除します。よろしいですか？', null, null, function (action) {
+                    if (action) {
+                        var dataToSend = JSON.stringify({
+                            dataListProjectId: dataList
+                        });
+
+                        $.ajax({
+                            type: "POST",
+                            url: '@Url.Action("DeleteProject", "PMS06001")',
+                            dataType: "json",
+                            contentType: "application/json; charset=utf-8",
+                            data: dataToSend,
+                            success: function (result) {
+                                BootstrapDialog.closeAll();
+
+                                if (result == true) {
+                                    PMS.utility.showMessageDialog(PMS.utility.htmlDecode('@Constant.DialogType.INFORMATION'), '選択したプロジェクト情報を削除しました。', null, null, function () {
+                                        dataTable.fnPageChange('first');
+                                    });
+                                }
+                                else {
+                                    PMS.utility.showMessageDialog(PMS.utility.htmlDecode('@Constant.DialogType.WARNING'), "選択したプロジェクト情報を削除しませでした。");
+                                }
+                            },
+                            error: function (error) {
+                                if (error.status == 419) { //419: Authentication Timeout
+                                    window.location.href = '/PMS01001/Login/timeout';
+                                } else if (error.status == 420) { // out of date license
+                                    window.location.href = '/ErrorOutOfDate';
+                                }
+                                else {
+                                    window.location.href = '/Error';
+                                }
+                            }
+                        });
+                    }
+                });
+            }
+        });
+
+
+        $('button#btnUpdateStatus').click(function () {
+            var selectedList = new Array();
+            $('input[name="action"]:checked').each(function () {
+                selectedList.push($(this).val());
+            });
+            var selectedIds = selectedList.join(",");
+            //Check status can be changed or not
+            var param = {
+                projectIds: selectedIds,
+                statusId: $('#ddlSelectStatusList').val()
+            };
+
+            var data = PMS.utility.getDataByAjax('/PMS06001/CheckChangeStatusMultiProject', param);
+
+            if (data != "Accepted") {
+                PMS.utility.showMessageDialog("<i class='fa fa-warning'></i>", "@Messages.E069");
+                return;
+            }
+            PMS.utility.showSubmitConfirmDialog('ステータスを更新します。よろしいですか？', null, null, function (action) {
+                if (action) {
+                    var dataToSend = JSON.stringify({
+                        dataListProjectId: selectedList,
+                        statusID: parseInt($('#ddlSelectStatusList').val())
+                    });
+
+                    $.ajax({
+                        type: "POST",
+                        url: '@Url.Action("UpdateStatusProject", "PMS06001")',
+                        dataType: "json",
+                        contentType: "application/json; charset=utf-8",
+                        data: dataToSend,
+                        success: function (result) {
+                            BootstrapDialog.closeAll();
+
+                            if (result == true) {
+                                PMS.utility.showMessageDialog(PMS.utility.htmlDecode('@Constant.DialogType.INFORMATION'), 'ステータスを更新しました。', null, null, function () {
+                                    dataTable.fnStandingRedraw();
+                                });
+                            }
+                        },
+                        error: function (error) {
+                            if (error.status == 419) { //419: Authentication Timeout
+                                window.location.href = '/PMS01001/Login/timeout';
+                            } else if (error.status == 420) { // out of date license
+                                window.location.href = '/ErrorOutOfDate';
+                            }
+                            else {
+                                window.location.href = '/Error';
+                            }
+                        }
+                    });
+                }
+            });
+        });
+
+        $(document).off('input[name="action"]');
+        $(document).on('click', 'input[name="action"]', function () {
+            var projectID = $(this).val();
+
+            if ($(this).is(':checked')) {
+                $(this).parents('tr').addClass('selected-row');
+                $('.tbl-list-center span[id="' + projectID + '"]').parents('tr').addClass('selected-row');
+            } else {
+                $(this).parents('tr').removeClass('selected-row');
+                $('.tbl-list-center span[id="' + projectID + '"]').parents('tr').removeClass('selected-row');
+            }
+
+            setStatusButton();
+        });
+
+        $(document).off('input[name="selectProject"]');
+        $(document).on('click', 'input[name="selectProject"]', function () {
+            var checkbox = $('input[name="action"]');
+            var $control = $('.dataTable tr');
+
+            if ($(this).is(':checked')) {
+                checkbox.prop('checked', true);
+                $control.addClass('selected-row');
+            } else {
+                checkbox.prop('checked', false);
+                $control.removeClass('selected-row');
+            }
+
+            setStatusButton();
+        });
+
+        $(document).off('a.project-name');
+        $(document).on('click', "a.project-name", function () {
+            var $form = $(".frm-add");
+            $form.children('input[name="id"]').val($(this).attr("aria-valuetext"));
+            $form.children('input[name="isLinkToCopy"]').val('');
+
+            correctConditionState();
+
+            $form.submit();
+        });
+
+        function correctConditionState() {
+            //save state search condition
+            if (currentConditionState.chkDelete === "checked") {
+                $('#Condition_DELETE_FLG').prop('checked', true);
+            }
+            else {
+                $('#Condition_DELETE_FLG').prop('checked', false);
+            }
+            $('#Condition_PROJECT_NAME').val(currentConditionState.prjName);
+            $('#Condition_STATUS_ID').val(currentConditionState.statusID);
+            $('#Condition_COMPLETE_ID').val(currentConditionState.completeID);
+            $('#Condition_TIME_CONDITION_TYPE').val(currentConditionState.tcType);
+            $('#Condition_TO_DATE').val(currentConditionState.toDate);
+            $('#Condition_FROM_DATE').val(currentConditionState.fromDate);
+            $('#Condition_GROUP_ID').val(currentConditionState.grID);
+            $('#Condition_CUSTOMER_NAME').val(currentConditionState.cusName);
+            $('#Condition_CUSTOMER_ID').val(currentConditionState.cusID);
+            $('#Condition_TAG_ID').val(currentConditionState.tagID);
+            $('#Condition_CONTRACT_TYPE_ID').val(currentConditionState.ctID);
+        }
+
+        $(document).off('a.detail-link');
+        $(document).on('click', "a.detail-link", function () {
+            var $form = $(".frm-detail");
+            $form.children('input[name="id"]').val($(this).attr("aria-valuetext"));
+
+            correctConditionState();
+
+            $form.submit();
+        });
+
+        $(document).off('a.plan-detail-link');
+        $(document).on('click', "a.plan-detail-link", function () {
+            if ('@(currentUser.PlanFunctionList.Contains(Constant.FunctionID.ProjectPlanRegist)
+                    && currentUser.FunctionList.Contains(Constant.FunctionID.ProjectPlanRegist))' == 'True') {
+                    $('#read_only').val('');
+                } else {
+                    $('#read_only').val('1');
+            }
+
+            var $form = $("#frmProjectPlan");
+
+            $form.find('#plan_projectId').val($(this).data("project-sys-id"));
+            $form.submit();
+        });
+        PMS.utility.LoadSearchCondition();
+    });
+
+    function selectCustomer(res) {
+        if (typeof (res) === 'undefined' || res === null) {
+            $('#Condition_CUSTOMER_NAME').focus();
+        } else {
+            /// Display selected customer
+            $("#Condition_CUSTOMER_ID").val(res[0].CUSTOMER_ID);
+            $("#Condition_CUSTOMER_NAME").val(PMS.utility.htmlDecode(res[0].CUSTOMER_NAME)).attr('title', PMS.utility.htmlDecode(res[0].CUSTOMER_NAME)).focus();
+
+            PMS.utility.bindTagsByCustomer(res[0].CUSTOMER_ID, '#Condition_TAG_ID');
+        }
+    }
+
+    // Event click select charge person
+    $('button#btnSelectChargePerson').click(function () {
+        var result = PMS.utility.getDataByAjax('/Common/CheckTimeOut', null);
+
+        if (result == null)
+            return;
+
+        $(this).blur();
+
+        var url = '@Url.Action("Select", "PMS01002", new { callback = "setChargePerson" })';
+
+        url +='&TB_iframe=true&modal=true&height=600&width=1100';
+        $('body').css('overflow', 'hidden');
+        tb_show(null, url, false);
+    });
+
+    // Set charge person
+    function setChargePerson(res) {
+        if (typeof (res) === 'undefined' || res === null) {
+        } else {
+            $('#Condition_CHARGE_PERSON').val(res[0].USER_NAME);
+            $('#Condition_CHARGE_PERSON_ID').val(res[0].USER_ID);
+        }
+    }
+
+    function LoadOldValueOfControls() {
+        var projectName = $('#hdnProjectName').val();
+        if (projectName.length > 0) {
+            $('#Condition_PROJECT_NAME').val(projectName);
+        }
+
+        var fromDate = $('#hdnFrom').val();
+        if (fromDate.length > 0) {
+            $('#Condition_FROM_DATE').val(fromDate);
+        }
+
+        var toDate = $('#hdnTo').val();
+        if (toDate.length > 0) {
+            $('#Condition_TO_DATE').val(toDate);
+        }
+
+        var customerName = $('#hdnCustomerName').val();
+        if (customerName.length > 0) {
+            $('#Condition_CUSTOMER_NAME').val(customerName);
+        }
+
+        var customerId = $('#hdnCustomerId').val();
+        if (customerId.length > 0) {
+            $('#Condition_CUSTOMER_ID').val(customerId);
+        }
+
+        var tagId = $('#hdnTagId').val();
+        if (tagId.length > 0) {
+            $('#Condition_TAG_ID').val(tagId);
+        }
+        
+        var chargePersonId = $('#hdnChargePersonId').val();
+        if (chargePersonId.length > 0) {
+            $('#Condition_CHARGE_PERSON_ID').val(chargePersonId);
+        }
+
+        // Load groupId from session storage
+        var groupId = sessionStorage.getItem('groupIds');
+        if (groupId != undefined && groupId.length > 0) {
+            var groupIdArr = groupId.split(',');
+            $('#Condition_GROUP_ID').val(groupIdArr);
+        }
+        else {
+            sessionStorage.setItem('groupIds', $("#Condition_GROUP_ID").val());
+        }
+    }
+</script>

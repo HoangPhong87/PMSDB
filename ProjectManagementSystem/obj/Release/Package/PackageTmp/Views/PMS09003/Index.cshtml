@@ -1,0 +1,544 @@
+﻿@model ProjectManagementSystem.ViewModels.PMS09003.PMS09003SalesViewModel
+@using ProjectManagementSystem.Common
+@using ProjectManagementSystem.Resources;
+@{
+    ViewBag.Title = "取引先別売上一覧";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var currentUser = HttpContext.Current.Session[Constant.SESSION_LOGIN_USER] as LoginUser;
+}
+<div id="onloadDivSales">
+</div>
+<section class="content-header">
+    <h1 id="title">
+        @ViewBag.Title
+    </h1>
+    <div class="search-form">
+        <div class="search-condition">
+            <div class="row row-margin-bottom">
+                <div class="group-1">
+                    <label class="width-120">発注元</label>
+                    <input type="hidden" id="tmpCustomerId" />
+                    @Html.TextBoxFor(m => m.Condition.CUSTOMER_NAME, new { @readonly = "readonly", @class = "value-selected search_customer", title = Model.Condition.CUSTOMER_NAME })
+                    <button type="button" id="btnSelectCustomer" class="btn light"><i class="btn-icon btn-search-dialog"></i></button>
+                    @Html.DropDownListFor(m => m.Condition.TAG_ID, Model.TAG_LIST, "指定なし", new { @class = "" })
+                </div>
+                <div class="group-2">
+                    <label class="width-100">所属</label>
+                    @Html.DropDownListFor(m => m.Condition.GROUP_ID, Model.GROUP_LIST, "指定なし", new { @class = "" })
+
+                    @if (currentUser != null && currentUser.PlanFunctionList.Contains(Constant.FunctionID.SalesCustomer_Admin) && currentUser.FunctionList.Contains(Constant.FunctionID.SalesCustomer_Admin))
+                    {
+                        <label class="bold include-delete">
+                            @Html.CheckBoxFor(m => m.Condition.DELETED_INCLUDE, new { @class = "condition_chkbox" })
+                            削除済を含む
+                        </label>
+                    }
+                    else
+                    {
+                        @Html.CheckBoxFor(m => m.Condition.DELETED_INCLUDE, new { @style = "visibility:hidden" })
+                    }
+                </div>
+
+                <div class="group-3">
+                    <label class="width-120">期間</label>
+                    <span class="date datepicker-months from-date">
+                        @Html.TextBox(m => m.Condition.START_DATE, "{0:yyyy/MM}", new { @class = "ime-mode", maxlength = 7, @placeholder = "YYYY/MM" })
+                        <button class="btn light"><i class="btn-icon btn-calendar"></i></button>
+                    </span>
+                    <span class="date-range-space">～</span>
+                    <span class="date datepicker-months to-date">
+                        @Html.TextBox(m => m.Condition.END_DATE, "{0:yyyy/MM}", new { @class = "ime-mode", maxlength = 7, @placeholder = "YYYY/MM" })
+                        <button class="btn light"><i class="btn-icon btn-calendar"></i></button>
+                    </span>
+                </div>
+
+                <div class="group-4">
+                    <label class="width-120">契約種別</label>
+                    @Html.DropDownListFor(m => m.Condition.CONTRACT_TYPE_ID, Model.CONTRACT_TYPE_LIST, new { @multiple = "multiple" })
+                    @if (currentUser != null &&
+                      (currentUser.PlanFunctionList.Contains(Constant.FunctionID.BranchList_Admin) && currentUser.FunctionList.Contains(Constant.FunctionID.BranchList_Admin)
+                       || currentUser.PlanFunctionList.Contains(Constant.FunctionID.BranchList) && currentUser.FunctionList.Contains(Constant.FunctionID.BranchList)
+                       || currentUser.PlanFunctionList.Contains(Constant.FunctionID.BranchRegist) && currentUser.FunctionList.Contains(Constant.FunctionID.BranchRegist)))
+                    {
+                        <label class="width-100" style="width: 65px; margin-right: 5px;">拠点</label>
+                        @Html.DropDownListFor(m => m.Condition.LOCATION_ID, Model.BRANCH_LIST, new { @class = "", @multiple = "multiple", @style = "vertical-align: top !important;" })
+                    }
+                    @Html.TextBoxFor(m => m.Condition.CUSTOMER_ID, new { style = "visibility:hidden;" })
+                </div>
+            </div>
+        </div>
+        <div class="right search-action">
+            <form id="formDetailSalesCustomer" method="POST" class="frmExport">
+
+                <input id="search_customerName" name="search_customerName" type="hidden">
+                <input id="search_tagId" name="search_tagId" type="hidden">
+                <input id="search_groupId" name="search_groupId" type="hidden">
+                <input id="search_deleteFlag" name="search_deleteFlag" type="hidden" value="false">
+                <input id="search_startDate" name="search_startDate" type="hidden">
+                <input id="search_endDate" name="search_endDate" type="hidden">
+                <input id="search_contractTypeID" name="search_contractTypeID" type="hidden">
+                @if (currentUser != null &&
+                    (currentUser.PlanFunctionList.Contains(Constant.FunctionID.BranchList_Admin) && currentUser.FunctionList.Contains(Constant.FunctionID.BranchList_Admin)
+                     || currentUser.PlanFunctionList.Contains(Constant.FunctionID.BranchList) && currentUser.FunctionList.Contains(Constant.FunctionID.BranchList)
+                     || currentUser.PlanFunctionList.Contains(Constant.FunctionID.BranchRegist) && currentUser.FunctionList.Contains(Constant.FunctionID.BranchRegist)))
+                {
+                    <input id="search_locationID" name="search_locationID" type="hidden" />
+                }
+                <input id="search_customerId" name="search_customerId" type="hidden">
+                @Html.Hidden("hdnOrderBy")
+                @Html.Hidden("hdnOrderType")
+                <input id="tabId" name="TAB_ID" type="hidden" />
+            </form>
+            <button type="button" id="btnSearch" name="btnSearch" class="btn dark"><i class="btn-icon btn-search"></i>検索</button>
+            <button type="button" id="btnClear" name="btnClear" class=" btn light"><i class="btn-icon btn-clear"></i>クリア</button>
+        </div>
+    </div>
+</section>
+
+@RenderPage("~/Views/Shared/ShowHideHeaderContent.cshtml")
+
+@Html.Hidden("hdnContractTypeId", Model.Condition.CONTRACT_TYPE_ID)
+@Html.Hidden("hdnLocationID", Model.Condition.LOCATION_ID)
+
+<div class="data-list sale-customer-list content clearfix" style="visibility:hidden">
+    <div class="summary-sales-customer row">
+        <div class="col-md-2">
+            <label class="title">売上件数合計</label>
+            @Html.Label(string.Empty, "0", new { id = "lblTotalSalesNumber", @class = "money" })
+        </div>
+        <div class="col-md-3">
+            <label class="title">売上金額合計</label>
+            @Html.Label(string.Empty, "0", new { id = "lblTotalSalesAmount", @class = "money" })
+        </div>
+        <div class="col-md-3">
+            <label class="title">粗利金額合計</label>
+            @Html.Label(string.Empty, "0", new { id = "lblTotalAmountGrossMargin", @class = "money" })
+        </div>
+    </div>
+
+    <div>
+        <table id="InfoTable" class="display tbl-sale-customer" width="100%">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>No.</th>
+                    <th>取引先</th>
+                    <th>売上件数</th>
+                    <th>売上金額</th>
+                    <th>構成比</th>
+                    <th>粗利金額</th>
+                    <th>粗利率</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+</div>
+<div class="search-date">
+    <button id="btnExport" type="button" class="btn dark"><i class="btn-icon btn-output-csv"></i>CSV出力</button>
+</div>
+<form method='post' id='formDetail' action='/PMS09003/SaleTagByCustomer'>
+    <input name="customer_Id" id="customer_Id" type="hidden">
+    <input name="customer_Name" id="customer_Name" type="hidden">
+    <input name="locationId" id="locationId" type="hidden">
+    <input name="start_Date" id="start_Date" type="hidden">
+    <input name="end_Date" id="end_Date" type="hidden">
+    <input name="locationName" id="locationName" type="hidden">
+    <input name="groupId" id="groupId" type="hidden">
+    <input name="groupName" id="groupName" type="hidden">
+    <input name="contract_type_id" id="contract_type_id" type="hidden" />
+    <input name="contract_type_name" id="contract_type_name" type="hidden" />
+    <input name="tagId" id="tagId" type="hidden" />
+    <input name="tagName" id="tagName" type="hidden" />
+</form>
+
+<script type="text/javascript" charset="utf-8">
+    var sort_colum = 0;
+    var sort_type = 'asc';
+
+    $(function () {
+        var uniqueId = "@Guid.NewGuid().ToString()";
+        $("#tabId").val(uniqueId);
+        SetEventBeforeUnload();
+        $(document).off('table.dataTable tr th');
+        $(document).on('focus', 'table.dataTable tr th', function () {
+            $('table.dataTable tr th:not(.sorting_disabled)').not($(this)).removeClass('sorting_asc sorting_desc').addClass('sorting');
+            sort_colum = $(this).index() + 1;
+            sort_type = 'asc';
+
+            if ($(this).hasClass('sorting_asc'))
+                sort_type = 'desc';
+        });
+        var hdnContractType = $('#hdnContractTypeId').val();
+
+        if (hdnContractType.length > 0) {
+            var contractTypeArr = hdnContractType.split(',');
+            $('#Condition_CONTRACT_TYPE_ID').val(contractTypeArr);
+        }
+
+        var hdnLocationID = $('#hdnLocationID').val();
+        if (hdnLocationID.length  >0) {
+            var locationIdArr = hdnLocationID.split(',');
+            $('#Condition_LOCATION_ID').val(locationIdArr);
+        }
+
+        var oSorting = {
+            "bSort": true
+        };
+        var oPaginate = {
+            "bPaginate": true,
+            "iDisplayLength": parseInt(@App[ConfigurationKeys.LIST_ITEMS_PER_PAGE]),
+            "bStateSave": false
+        };
+        var oServerSide = {
+            "bServerSide": true,
+            "sAjaxSource": '@Url.Action("Search", "PMS09003")',
+            "fnBeforeSend": beforeSend,
+            "fnServerParams": serverParams,
+            "fnDrawCallback": displayComplete,
+            "fnInitComplete": bindData
+        };
+        var aoColumnDefs = [
+            { "sName": "customer_id", "bVisible": false, "aTargets": [0], "sWidth": "0" },
+            { "bSortable": false, "aTargets": [1], "sWidth": "60px", "sClass": "cell_center" },
+            { "sName": "display_name", "aTargets": [2], "sWidth": "200px", "sClass": "display_name cell_left", "mRender": function (data, type, full) { return buildColumShortText(data, full[0], full[8]); } },
+            { "sName": "records", "aTargets": [3], "sWidth": "200px", "sClass": "records cell_right" },
+            { "sName": "total_sales", "aTargets": [4], "sWidth": "200px", "sClass": "total_sales cell_right" },
+            { "sName": "total_sales", "aTargets": [5], "sWidth": "150px", "sClass": "total_sales cell_right" },
+            { "sName": "gross_profit", "aTargets": [6], "sWidth": "150px", "sClass": "gross_profit cell_right" },
+            { "sName": "gross_profit_rate", "aTargets": [7], "sWidth": "150px", "sClass": "gross_profit_rate cell_right" },
+        ];
+
+        function buildColumShortText(data, id, del) {
+            data = data != null ? data : '未設定';
+            del = del == '1' ? 'delete-row' : ''
+            var html = '<div id= "customer_link" customer_Id = "' + id + '" class="short-text text-overflow ' + del + '" title="' + data + '">' + ' <a href="#">' + data + '</a></div>';
+            return html;
+        }
+
+        $(document).off('#customer_link');
+        $(document).on('click', '#customer_link', function () {
+            $('#customer_Id').val($(this).attr("customer_Id"));
+            $('#customer_Name').val($(this).text());
+
+
+            //correct state condition
+            if (currentConditionState.chk === "checked") {
+                $('#Condition_DELETED_INCLUDE').prop('checked', true);
+            }
+            else {
+                $('#Condition_DELETED_INCLUDE').prop('checked', false);
+            }
+            $('#Condition_CONTRACT_TYPE_ID').val(currentConditionState.ctID);
+            $('#Condition_GROUP_ID').val(currentConditionState.grID);
+            $('#Condition_LOCATION_ID').val(currentConditionState.locID);
+            $('#Condition_TAG_ID').val(currentConditionState.tagID);
+            $('#Condition_CUSTOMER_NAME').val(currentConditionState.cusName);
+            $('#Condition_FROM_DATE').val(currentConditionState.fromDate);
+            $('#Condition_TO_DATE').val(currentConditionState.toDate);
+            $("#Condition_CUSTOMER_ID").val(currentConditionState.cusID);
+
+            $("#formDetail").submit();
+        });
+
+        //variable save status of condition
+        var currentConditionState = { locID: "", ctID: "", grID: "", tagID: "", cusName: "", cusID: "", fromDate: "", toDate: "", chk: "" };
+
+        function displayComplete() {
+            $('#InfoTable tr th.display_name').width('400px');
+
+            if (sort_colum == 0) {
+                $('#InfoTable tr th:not(.sorting_disabled)').removeClass('sorting_asc sorting_desc').addClass('sorting').removeAttr('aria-sort');
+            }
+
+            $('table.tbl-sale-customer tr td div.delete-row').each(function () {
+                $(this).parents('tr').removeClass().addClass('delete-row');
+            });
+
+            $('div.sale-customer-list').removeAttr('style');
+
+            //bind data start to push on details page
+            $('#start_Date').val($('#Condition_START_DATE').val());
+            $('#end_Date').val($('#Condition_END_DATE').val());
+            $('#locationId').val($('#Condition_LOCATION_ID').val());
+
+            $('#groupId').val($('#Condition_GROUP_ID').val());
+            if ($('#groupId').val() != '') {
+                $('#groupName').val($('#Condition_GROUP_ID :selected').text());
+            }
+             else {
+                $('#groupName').val('');
+            }
+
+            $('#tagId').val($('#Condition_TAG_ID').val());
+            if ($('#tagId').val() != '') {
+                $('#tagName').val($('#Condition_TAG_ID :selected').text());
+            }
+            else {
+                $('#tagName').val('');
+            }
+
+            $('#contract_type_id').val($('#Condition_CONTRACT_TYPE_ID').val());
+
+            var selectedContractValues = [];
+            $("#Condition_CONTRACT_TYPE_ID :selected").each(function () {
+                selectedContractValues.push($(this).text());
+            });
+            $('#contract_type_name').val(selectedContractValues);
+
+
+            var selectedLocationValues = [];
+            $("#Condition_LOCATION_ID :selected").each(function () {
+                selectedLocationValues.push($(this).text());
+            });
+            $('#locationName').val(selectedLocationValues);
+            //save state search condition
+            if ($("#Condition_DELETED_INCLUDE").is(':checked')) {
+                currentConditionState.chk = "checked";
+            }
+            else {
+                currentConditionState.chk = "unchecked";
+            }
+            currentConditionState.ctID = $('#Condition_CONTRACT_TYPE_ID').val();
+            currentConditionState.grID = $('#Condition_GROUP_ID').val();
+            currentConditionState.locID = $('#Condition_LOCATION_ID').val();
+            currentConditionState.tagID = $('#Condition_TAG_ID').val();
+            currentConditionState.cusName = $('#Condition_CUSTOMER_NAME').val();
+            currentConditionState.fromDate = $('#Condition_FROM_DATE').val();
+            currentConditionState.toDate = $('#Condition_TO_DATE').val();
+            currentConditionState.cusID = $("#Condition_CUSTOMER_ID").val();
+
+            $("#onloadDivSales").hide();
+            $('.pace.pace-active').addClass('pace-inactive').removeClass('pace-active');
+            $('#btnSearch').removeAttr('disabled');
+        }
+
+        var dataTable = CreateDataTable('#InfoTable', oSorting, oPaginate, oServerSide, aoColumnDefs);
+
+        function beforeSend() {
+        }
+
+        function serverParams(aoData) {
+            var orderBy = 'customer_id';
+            var orderType = 'asc';
+
+            $('table.dataTable tr th').each(function () {
+                if ($(this).hasClass('sorting_asc')) {
+                    orderBy = $(this).attr('class').split(' ')[0];
+                } else if ($(this).hasClass('sorting_desc')) {
+                    orderBy = $(this).attr('class').split(' ')[0];
+                    orderType = 'DESC';
+                }
+            });
+            $('#hdnOrderBy').val(orderBy);
+            $('#hdnOrderType').val(orderType);
+
+            aoData.push(
+                { "name": "CUSTOMER_ID", "value": $("#search_customerId").val() },
+                { "name": "CUSTOMER_NAME", "value": $("#search_customerName").val() },
+                { "name": "TAG_ID", "value": $("#search_tagId").val() },
+                { "name": "DELETED_INCLUDE", "value": $("#search_deleteFlag").val() },
+                { "name": "START_DATE", "value": $("#search_startDate").val() },
+                { "name": "END_DATE", "value": $("#search_endDate").val() },
+                { "name": "GROUP_ID", "value": $("#search_groupId").val() },
+                { "name": "CONTRACT_TYPE_ID", "value": $("#search_contractTypeID").val() },
+                { "name": "LOCATION_ID", "value": $("#search_locationID").val() },
+                { "name": "hdnOrderBy", "value": $("#hdnOrderBy").val() },
+                { "name": "hdnOrderType", "value": $("#hdnOrderType").val() },
+                { "name": "TAB_ID", "value": $("#tabId").val() }
+            );
+        }
+
+        function bindData(data) {
+
+            // process status disabled  buttton exportCSV when search data
+            if (data.aaData.length == 0) {
+                $('#btnExport').addClass('disabled').attr('disabled', 'disabled');
+            }
+            else {
+                $('#btnExport').removeClass('disabled').removeAttr('disabled');
+            }
+
+            $('#lblTotalSalesNumber').text(data.total_records + "件");
+            $('#lblTotalSalesAmount').text(data.total_sale + "円");
+            $('#lblTotalAmountGrossMargin').text(data.total_gross_profit + "円");
+        }
+
+        $("button#btnSearch").click(function () {
+            searchCustomer();
+        });
+
+        $(document).bind('keypress', function (e) {
+            var code = e.keyCode || e.which;
+            if (code == 13) { //Enter keycode
+                searchCustomer();
+            }
+        });
+
+        function searchCustomer() {
+            $('.validation-summary-errors').remove();
+            var invalidMess = [];
+
+            // check valid date
+            var errStartDate = PMS.utility.validDate($('#Condition_START_DATE').val(), 'yyyy/mm', '期間（開始）');
+            var errEndDate = PMS.utility.validDate($('#Condition_END_DATE').val(), 'yyyy/mm', '期間（終了）');
+
+            var invalidMess = [];
+
+            if ($('#Condition_START_DATE').val() == "") {
+                errStartDate = "期間（開始）を設定してください。";
+            }
+
+            if ($('#Condition_END_DATE').val() == "") {
+                errEndDate = "期間（終了）を設定してください。";
+            }
+
+            if (errStartDate != null) {
+                invalidMess.push(errStartDate);
+            }
+
+            if (errEndDate != null) {
+                invalidMess.push(errEndDate);
+            }
+
+            if (errStartDate == null && errEndDate == null) {
+                // compare date
+                if (!PMS.utility.compareDate($('#Condition_START_DATE').val(), $('#Condition_END_DATE').val(), 'yyyy/mm')) {
+                    invalidMess.push(['@string.Format(Messages.E027)']);
+                }
+
+                if (!PMS.utility.compareDateRange($('#Condition_START_DATE').val(), $('#Condition_END_DATE').val(), 11)) {
+                    invalidMess.push(['@Messages.E030']);
+                }
+            }
+
+            if (invalidMess.length > 0) {
+                PMS.utility.showClientError(invalidMess);
+                return false;
+            }
+
+            var $contractType = $("#Condition_CONTRACT_TYPE_ID");
+
+            if ($contractType.val() != null && $contractType.find('option').length == $contractType.val().length) {
+                $contractType.val('');
+            }
+            var $location = $("#Condition_LOCATION_ID");
+            if ($location.val() != null && $location.find('option').length == $location.val().length) {
+                $location.val('');
+            }
+
+            PMS.utility.LoadSearchCondition();
+            sort_colum = 0;
+            sort_type = 'asc';
+            $('.pace.pace-inactive').removeClass('pace-inactive').addClass('pace-active');
+            $("#onloadDivSales").show(function () {
+                dataTable.fnPageChange('first');
+            });
+            $('#btnSearch').attr('disabled', 'disabled');
+        }
+
+        function setDefaultTimeDuration() {
+            var fromDate = new Date();
+            var toDate = new Date();
+            var fromValue = fromDate.getFullYear() + '/' + (fromDate.getMonth() + 1);
+            toDate.setMonth(fromDate.getMonth() + 11);
+            var toValue = toDate.getFullYear() + '/' + (toDate.getMonth() +1);
+
+            $('#Condition_START_DATE').val(fromValue);
+            $('#Condition_END_DATE').val(toValue);
+
+            $('.date.datepicker-months.from-date').datepicker("update", fromValue);
+            $('.date.datepicker-months.to-date').datepicker("update", toValue);
+        }
+
+        $("#btnClear").click(function () {
+            $("#Condition_CUSTOMER_NAME").val("");
+            $("#Condition_CUSTOMER_ID").val("");
+            $("#CUSTOMER_NAME").val("");
+            $("#Condition_TAG_ID").empty();
+            $("#Condition_TAG_ID").append('<option value="">指定なし</option>');
+            $("#Condition_DELETED_INCLUDE").prop('checked', false);
+            $("#Condition_GROUP_ID").val("");
+            $("#Condition_CONTRACT_TYPE_ID").val("");
+            $("#Condition_LOCATION_ID").val("");
+
+            setDefaultTimeDuration();
+            PMS.utility.ClearRestoreData("PMS09003");
+        });
+
+        $('button#btnExport').click(function () {
+            var orderBy = 'customer_id';
+            var orderType = 'asc';
+
+            $('table.dataTable tr th').each(function () {
+                if ($(this).hasClass('sorting_asc')) {
+                    orderBy = $(this).attr('class').split(' ')[0];
+                } else if ($(this).hasClass('sorting_desc')) {
+                    orderBy = $(this).attr('class').split(' ')[0];
+                    orderType = 'DESC';
+                }
+            });
+            $('#hdnOrderBy').val(orderBy);
+            $('#hdnOrderType').val(orderType);
+
+            $("#formDetailSalesCustomer").attr("action", "/PMS09003/ExportCsvListSalesCustomer");
+            $("#formDetailSalesCustomer").submit();
+        });
+
+
+        $("button#btnSelectCustomer").click(function () {
+            var result = PMS.utility.getDataByAjax('/Common/CheckTimeOut', null);
+
+            if (result == null)
+                return;
+
+            $(this).blur();
+
+            var url = '@Url.Action("Select", "PMS02001", new { callback = "selectCustomer" })';
+            url += '&TB_iframe=true&modal=true&height=600&width=1100';
+            tb_show(null, url, false);
+        });
+
+        PMS.utility.LoadSearchCondition();
+        LoadOldValueOfControls();
+    });
+
+    function selectCustomer(res) {
+        if (typeof (res) === 'undefined' || res === null) {
+            $('#Condition_CUSTOMER_NAME').focus();
+        } else {
+            /// Display selected customer
+            $("#Condition_CUSTOMER_ID").val(res[0].CUSTOMER_ID);
+            $("#Condition_CUSTOMER_NAME").val(PMS.utility.htmlDecode(res[0].CUSTOMER_NAME)).focus();
+
+            PMS.utility.bindTagsByCustomer(res[0].CUSTOMER_ID, '#Condition_TAG_ID');
+        }
+    }
+    function LoadOldValueOfControls() {
+
+        var startDate = $('#search_startDate').val();
+
+        if (startDate.length > 0) {
+            $('#Condition_START_DATE').val(startDate);
+        }
+
+        var endDate = $('#search_endDate').val();
+
+        if (endDate.length > 0) {
+            $('#Condition_END_DATE').val(endDate);
+        }
+
+        var customerId = $('#search_customerId').val();
+
+        if (customerId.length > 0) {
+            $('#Condition_CUSTOMER_ID').val(customerId);
+        }
+
+        var customerName = $('#search_customerName').val();
+
+        if (customerName.length > 0) {
+            $('#Condition_CUSTOMER_NAME').val(customerName);
+        }
+    }
+
+</script>

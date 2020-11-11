@@ -1,0 +1,30 @@
+﻿<!DOCTYPE html>
+
+<html lang="ja">
+<head>
+    <meta name="viewport" content="width=device-width" charset="utf-8" />
+    <title>@ViewBag.Title</title>
+
+    @RenderPage("~/Views/Shared/_CommonScript.cshtml")
+
+    @Styles.Render("~/Content/css/bootstrap")
+    @Styles.Render("~/Content/fontawesome/css/icon")
+    @Styles.Render("~/Content/common")
+    @Styles.Render("~/Content/" + ViewContext.RouteData.Values["controller"].ToString() + ".css")
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/common")
+    @Scripts.Render("~/bundles/jquery/plugins")
+    @Scripts.Render("~/bundles/input")
+    @Scripts.Render("~/bundles/dataTables")
+    @Scripts.Render("~/bundles/windowControl")
+    @Scripts.Render("~/bundles/loadingPlugin")
+</head>
+<body>
+    <div id="onloadDiv">
+    </div>
+    <div id="body" class="body-select-list">
+        @RenderBody()
+    </div>
+</body>
+</html>

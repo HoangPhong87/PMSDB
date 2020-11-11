@@ -1,0 +1,1606 @@
+﻿
+/*Actual work list*/
+
+.actual-work-list #dateRange {
+    font-weight: bold;
+    text-align: center;
+    display: inline-block;
+    padding: 0px 7px;
+}
+
+.actual-work-detail #dateRange, .detail-new #dateRange, .content-header #dateRange {
+    font-weight: bold;
+    text-align: center;
+    display: inline-block;
+    padding: 0px 7px;
+}
+
+.actual-work-list a.project-detail-link {
+    margin: 0;
+    padding: 0;
+    font-weight: normal;
+}
+
+.tbl-right td.dataTables_empty {
+    border-left: none;
+    border-right: 2px solid #EAEAEA;
+}
+
+.detail-new .search-date {
+    margin-top: 25px;
+}
+
+.actual-work-list .left-button {
+    float: left;
+    margin-top: -69px;
+}
+
+.actual-work-list div.individual-left {
+    width: 65% !important;
+}
+
+.actual-work-list div.individual-right {
+    width: 35% !important;
+    overflow-x: scroll !important;
+}
+
+.actual-work-list div.div-left {
+    float: left;
+    width: 40%;
+}
+
+.actual-work-list div.div-right {
+    float: left;
+    width: 60%;
+    margin-left: -1px;
+    overflow-x: hidden;
+    overflow-y: hidden;
+}
+
+.actual-work-list div.individual-right .tbl-right th {
+    min-width: 110px;
+}
+
+.actual-work-list div.div-right .tbl-right th {
+    border-right: 1px solid #ccc;
+}
+
+.actual-work-list div.div-right .tbl-right td.actual_work {
+    padding-left: 2px;
+    padding-right: 2px;
+}
+
+.actual-work-list .dataTables_paginate {
+    position: absolute;
+    margin-top: 59px;
+    margin-left: 29%;
+}
+
+.actual-work-list .dataTables_info {
+    position: absolute;
+    left: 200px;
+    margin-top: -55px;
+}
+
+.actual-work-list .dataTables_length {
+    position: absolute;
+    right: 30px;
+    margin-top: -40px;
+}
+
+.sidebar-collapse .actual-work-list .dataTables_info {
+    left: 70px;
+}
+
+.actual-work-list .timeUnit {
+    margin-top: 6px;
+    position: absolute;
+    width: 80px;
+}
+
+.actual-work-list-search-date {
+    margin-top: 30px;
+}
+
+.actual-work-list .notification {
+    float: left;
+    padding-top: 10px;
+    width: 100%;
+}
+
+    .actual-work-list .notification p {
+        padding-bottom: 9px;
+        color: red;
+    }
+
+.actual-work-detail .timeUnit {
+    width: 80px;
+    margin-top: 3px;
+}
+
+.note {
+    margin: -15px 0 45px;
+}
+
+    .note div.templ-regist {
+        padding: 0 8px;
+        background-color: rgb(224, 233, 242);
+        display: inline-block;
+    }
+
+.search-condition .search-group {
+    width: 25%;
+}
+
+.search-condition .search-name {
+    width: 27%;
+}
+.individual-condition-header select {
+    width: initial;
+}
+.individual-condition-header .search-by-date {
+    margin-left: 100px;
+}
+
+.individual-condition-header .lbl-contract {
+    width: 80px !important;
+}
+
+.individual-condition-header .group-1 {
+    float: left;
+}
+
+    .individual-condition-header .group-1 .condition-margin {
+        margin-bottom: 15px;
+    }
+
+    .individual-condition-header .group-1 .search_project_name {
+        width: 433px;
+    }
+
+.search-condition select[id="Condition_CONTRACT_TYPE_ID"], select[id="Condition_PHASE_ID"] {
+    vertical-align: top;
+    height: 90px;
+}
+
+#actualWorkList .delete-include {
+    margin-left: 58px;
+    margin-right: 81px;
+}
+
+
+@media (max-width: 1440px) {
+    .search-condition .group-1 {
+        float: left;
+        width: 100%;
+        margin-bottom: 15px;
+    }
+
+    .search-condition .search-by-date {
+        width: 120px;
+    }
+
+    .sidebar-collapse .search-condition .group-1 {
+        float: left;
+        width: auto;
+        margin-bottom: 15px;
+    }
+
+    .sidebar-collapse .search-condition .search-by-date .width-100 {
+        width: 100px;
+    }
+}
+
+@media (max-width: 1824px) {
+    .individual-condition-header .group-1 {
+        float: left;
+        width: 100%;
+        margin-bottom: 15px;
+    }
+
+    .individual-condition-header .search-by-date {
+        width: 120px;
+    }
+
+    .individual-condition-header .search-by-date {
+        width: inherit !important;
+    }
+
+    .individual-condition-header .sidebar-collapse .group-1 {
+        float: left;
+        width: auto;
+        margin-bottom: 15px;
+    }
+
+    .individual-condition-header .sidebar-collapse .search-by-date .width-100 {
+        width: 100px;
+    }
+}
+
+@media (max-width: 1024px) {
+    .sidebar-collapse .search-condition .group-1 {
+        float: left;
+        width: 100%;
+        margin-bottom: 15px;
+    }
+
+    .sidebar-collapse .search-condition .search-by-date .width-100 {
+        width: 120px;
+    }
+}
+
+@media (max-width: 1824px) {
+    .individual-condition-header .lbl-contract {
+        width: 120px !important;
+    }
+
+    .individual-condition-header .search-by-date {
+        margin-left: 0 !important;
+    }
+}
+
+@media (max-width: 1150px) {
+    .search-condition .search-group,
+    .search-condition .search-name {
+        width: 100%;
+        margin-bottom: 15px;
+    }
+
+    .search-condition .lbl-auto-break {
+        width: 80px;
+    }
+}
+
+
+/*Actual work detail*/
+.detail-new {
+    padding: 25px !important;
+}
+
+    .detail-new a.project-plan-link {
+        font-weight: normal;
+    }
+
+    .detail-new hr {
+        border-top: 1px solid #ccc;
+        padding: 3px 0;
+    }
+
+.label-height {
+    height: 28px;
+    padding-top: 9px;
+}
+
+.actual-work-detail table .project-no {
+    width: 7%;
+}
+
+.actual-work-detail table .project-name {
+    width: 25%;
+    text-align: left;
+    padding-left: 20px;
+}
+
+.actual-work-detail table .rank {
+    width: 7%;
+}
+
+.actual-work-detail table .progress {
+    width: 6%;
+}
+
+.actual-work-detail table .plan_effort {
+    width: 12%;
+}
+
+.actual-work-detail table .actual_effort {
+    width: 8%;
+}
+
+.actual-work-detail table .personal_profit_rate {
+    width: 8%;
+}
+
+.longtext {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    margin-left: 0;
+    vertical-align: middle;
+    margin-bottom: 0;
+}
+
+.actual-work-detail .project-detail-name {
+    cursor: pointer;
+}
+
+.actual-work-detail table .project_actual_profit {
+    width: 8%;
+}
+
+.actual-work-detail {
+    padding-top: 23px;
+}
+
+.search-date-actual-detal-old {
+    height: 44px;
+}
+
+.actual-work-detail .dataTables_info {
+    display: none;
+}
+
+/*Actual work regist*/
+.monthDisplay {
+    margin-top: 30px;
+    margin-bottom: 0px;
+    padding-bottom: 0px;
+}
+
+#bigContainer {
+    margin-top: 15px;
+    padding-top: 0px;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+#leftContainer {
+    float: left;
+    width: 32%;
+}
+
+.space_time {
+    margin: 0 5px;
+}
+
+.label_delete {
+    margin-left: -11px;
+}
+
+.col_2_textbox {
+    min-width: 66px;
+    height: 26px;
+    margin-top: 1px;
+    width: 80%;
+}
+
+input[id="regist_type"] {
+    margin-right: 0px;
+    display: inline;
+    float: left;
+    margin-top: 8px;
+}
+
+.projectNameContent {
+    width: 180px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    cursor: default;
+}
+
+.phase {
+    width: 110px;
+    border-right: 0px;
+}
+
+.hour,
+.minute {
+    margin-top: 3px;
+}
+
+.start_time_hour, .start_time_minute,
+.end_time_hour, .end_time_minute,
+.rest_time_hour, .rest_time_minute,
+.allowed_cost_time_hour, .allowed_cost_time_minute {
+    width: 27px;
+    height: auto !important;
+    text-align: center;
+    padding: 0px;
+    letter-spacing: 0px;
+    border: 1px solid #888888;
+}
+
+.phaseContent {
+    width: 100px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-align: left;
+    text-overflow: ellipsis;
+    cursor: default;
+}
+
+#bigContainer table {
+    margin: 0;
+}
+
+
+.tbl-left-header th {
+    height: 35px;
+}
+
+.tbl-left-footer .title_work {
+    text-align: right;
+    font-weight: normal;
+}
+
+.projectNo {
+    width: 22%;
+}
+
+.projectName {
+    width: 60%;
+}
+
+
+.tbl-left-content .projectName {
+    background: #FFF !important;
+    vertical-align: top;
+    padding-top: 6px;
+}
+
+.div-left-content {
+    overflow: hidden;
+}
+
+.div-container-content {
+    overflow-y: hidden;
+    overflow-x: hidden;
+}
+
+.div-container-contents {
+    overflow-x: scroll;
+    overflow-y: hidden;
+}
+
+.tbl-left-content tr:first-child td {
+    border-top: none !important;
+    /*border-right: none;*/
+}
+
+.tbl-left-content .total {
+    border-right: none;
+}
+
+.tbl-container-content tr:first-child td {
+    border-top: none !important;
+}
+
+
+.tbl-left-content tr:last-child td,
+.tbl-container-content tr:last-child td {
+    /*border-bottom: none !important;*/
+}
+
+.detail-new table td:last-child {
+    border-right: 1px solid #CCC;
+}
+
+.tbl-left-content td,
+.tbl-container-content td {
+    height: 30px;
+}
+
+#container {
+    width: 68%;
+    height: auto;
+    overflow: hidden;
+}
+
+.div-header {
+    overflow: hidden;
+}
+
+.tbl-container-header th {
+    height: 35px !important;
+    font-weight: normal;
+}
+
+.tbl-container-header th,
+.tbl-container-content td {
+    text-align: center;
+    min-width: 128px;
+    letter-spacing: 0px;
+    word-spacing: 0px;
+    padding: 0;
+}
+
+.tbl-container-header .dayOfMonth th {
+    border: 1px solid #CCC;
+}
+
+.tbl-container-header .dayOfWeek th {
+    height: 35px !important;
+}
+
+.hourInput, .minuteInput {
+    width: 25px;
+    height: auto !important;
+    text-align: center;
+    padding: 0px;
+    letter-spacing: 0px;
+    border: 1px solid #888888;
+    border-radius: 4px;
+    -ms-border-radius: 4px;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+}
+
+.tbl-left-content .title_work {
+    font-weight: bold;
+}
+
+.resultRow {
+    background-color: #CCCCCC;
+    text-align: center;
+}
+
+.cellCenter {
+    text-align: center;
+}
+
+.sunday {
+    /*color: red;*/
+}
+
+.saturday {
+    /*color: #0000CC;*/
+}
+
+.holiday {
+    background-color: #F6CECE !important;
+}
+
+.hidden {
+    visibility: hidden;
+}
+
+.total {
+    background-color: rgb(254, 255, 224);
+}
+
+.col-sm-first {
+    margin-top: 4px;
+}
+
+.col_wrap {
+    word-wrap: break-word;
+    vertical-align: top;
+    width: 180px;
+}
+
+
+fieldset .short-text {
+    width: 120px;
+}
+
+.inactive-project {
+    color: red;
+    font-weight: bold;
+}
+
+@-moz-document url-prefix() {
+    .data-list table {
+        border-collapse: collapse;
+        border-spacing: 0;
+    }
+}
+
+.leftContainer-new {
+    float: left;
+}
+
+.leftContainer-new-center {
+    margin: 0 auto;
+    width: 47%;
+}
+
+/*Header*/
+.date-header {
+    width: 65px;
+}
+
+.startTime-header {
+    width: 80px;
+    white-space: nowrap;
+}
+
+.endTime-header {
+    width: 60px;
+}
+
+.restTime-header {
+    width: 85px;
+    white-space: nowrap;
+}
+
+.attendenceType-header {
+    width: 100px;
+}
+
+.totalWorkHour-header {
+    border-right: 1px solid #ccc !important;
+}
+
+/*Content*/
+.space_total {
+    margin-right: 5px;
+    margin-left: 5px;
+}
+
+.date {
+    width: 65px;
+    text-align: center;
+    border-top: none !important;
+}
+
+.startTime {
+    width: 80px;
+    text-align: center;
+    border-top: none !important;
+}
+
+.endTime {
+    width: 60px;
+    text-align: center;
+    border-top: none !important;
+}
+
+.restTime {
+    width: 85px;
+    text-align: center;
+    border-top: none !important;
+}
+
+.attendenceType {
+    width: 100px;
+    text-align: center;
+    border-top: none !important;
+}
+
+.totalWorkHour {
+    width: 65px;
+    text-align: center;
+    border-top: none !important;
+    border-right: 1px solid #CCC !important;
+}
+
+.noborder {
+    border: none !important;
+}
+
+.fourRows {
+    word-break: break-all;
+    padding: 0px !important;
+}
+
+.leftHidden {
+    visibility: hidden;
+    border: none !important;
+}
+
+.totalWorkTitle {
+    width: 80px;
+    border-top: none !important;
+    text-align: center;
+}
+
+.workingTimeTotal,
+.totalWork {
+    min-width: 85px;
+    width: 85px;
+    text-align: center;
+    border-top: none !important;
+    border-right: 1px solid #ccc !important;
+}
+
+.dataTotal {
+    text-align: center !important;
+    min-width: 165px;
+    border: 1px solid #ccc !important;
+}
+
+.work-project {
+    text-align: center !important;
+    border-top: none !important;
+}
+
+.div-left-content-new {
+    overflow: hidden;
+}
+
+.div-container-content-new {
+    overflow: hidden;
+}
+
+
+.div-container-header-new {
+    overflow: hidden;
+    margin-left: -1px;
+    max-width: 98%;
+}
+
+.leftHeader {
+    width: 250px;
+    min-width: 250px;
+}
+
+.date form {
+    margin: 0;
+    padding: 0;
+    text-align: center;
+}
+
+    .date form a {
+        margin: 0;
+        padding: 0;
+        text-align: center;
+    }
+
+        .date form a button {
+            margin: 0;
+            padding: 0;
+            text-align: center;
+        }
+
+#containerInfo {
+    height: auto;
+    overflow: hidden;
+}
+
+#containerTotal {
+    height: auto;
+    overflow: hidden;
+}
+
+#containerSummary {
+    height: auto;
+    overflow-x: auto;
+    margin-left: -1px;
+}
+
+.div-header-new {
+    overflow: hidden;
+    height: 69px;
+}
+
+.tbl-container-header-new {
+    margin: 0;
+    padding: 0;
+    overflow-y: hidden;
+    max-height: 219px;
+    margin-left: 1px;
+}
+
+.project-actual-work {
+    min-width: 165px;
+    text-align: center;
+    border-left: none !important;
+    border-right: 1px solid #ccc !important;
+}
+
+
+.tbl-container-content-new td, .tbl-container-content-new th {
+    min-width: 154px;
+    max-width: 154px;
+}
+
+.div-container-content-new {
+    margin-left: -1px;
+}
+
+@media (min-width: 3400px) {
+    .time-scale {
+        line-height: 20px;
+    }
+}
+
+@media (min-width: 5000px) {
+    .div-container-content-new {
+        margin-left: -3px;
+    }
+}
+
+@media (min-width: 1499px) {
+    #containerTotal {
+        margin-top: -1px !important;
+    }
+}
+
+@media (min-width: 1799px) {
+    #containerTotal {
+        margin-top: -2px !important;
+    }
+}
+
+@media (min-width: 2026px) {
+
+    .tbl-container-header th {
+        height: 43px !important;
+        font-weight: normal;
+    }
+
+    .tbl-left-header th {
+        height: 43px;
+    }
+
+    .tbl-left-content td, .tbl-container-content td {
+        height: 49px;
+    }
+
+    .col_2_textbox {
+        min-width: 66px;
+        width: 80%;
+        height: 35px;
+        margin-top: 1px;
+    }
+
+    .search-condition .title-label {
+        width: 140px !important;
+    }
+
+    .col_wrap {
+        word-wrap: break-word;
+        vertical-align: top;
+        width: 200px;
+    }
+}
+
+.remark {
+    height: 80px;
+}
+
+.tbl-actual-work-regist-new .title_work2 {
+    width: 200px;
+    height: 25px;
+    padding-top: 5px;
+    max-width: 200px;
+}
+
+#containerTotal {
+    margin-top: -1px;
+    margin-left: -1px;
+}
+
+@media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) { /*IE*/
+    .div-header-new,
+    .div-container-header-new {
+        border-top: solid 1px #ccc;
+        border-bottom: solid 1px #ccc;
+        height: 76px;
+        overflow: hidden;
+    }
+}
+
+.tbl-left-content,
+.tbl-left-header {
+    width: 100.1% !important;
+}
+
+@-moz-document url-prefix() { /*Firefox*/
+    #containerTotal {
+        margin-left: 0px !important;
+    }
+}
+
+.div-container-header-new {
+    margin-left: -1px;
+    width: 97.7%;
+}
+
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+    #containerInfo {
+        height: auto;
+        overflow: hidden;
+    }
+}
+
+.label_RegistTemp label {
+    margin-top: 10px;
+    margin-left: -9px;
+}
+
+#cbRegistTemp {
+    margin-top: 10px;
+    margin-left: 10px;
+}
+
+.registType_chkbox {
+    margin-top: 10px;
+    margin-left: 10px;
+}
+
+a.btn_csv {
+    margin-top: 8px;
+}
+
+@-moz-document url-prefix() {
+    select.attendance_type_cb > option:last-child {
+        border-bottom: 2px solid #CCC;
+    }
+}
+
+.col-sm-4, .col-sm-3 {
+    padding-left: 0px !important;
+    padding-right: 0px !important;
+}
+
+.col-sm-8 {
+    padding-right: 0px !important;
+}
+
+label.right {
+    font-weight: bold;
+}
+
+.btn-input-actual {
+    margin-top: 17px;
+    margin-left: 30px;
+}
+
+table button.formSubmitLink {
+    text-decoration: none;
+}
+
+.btn-left {
+    float: left;
+    margin-right: 15px;
+}
+
+#lblRegistType {
+    font-weight: bold;
+    padding-right: 0;
+    margin-left: 20px;
+}
+
+.btn-regist-type {
+    margin-left: 40px;
+}
+
+.btn-header {
+    margin-right: 30px;
+    float: right;
+}
+/*detail new */
+
+.popover_label {
+    text-align: left;
+    font-weight: bold;
+    width: 90px;
+    min-width: 90px;
+    white-space: nowrap;
+}
+
+.popover_data {
+    height: 40px;
+    line-height: 40px;
+}
+
+.content-header .GroupName {
+    padding-left: 35px;
+    padding-right: 20px;
+    font-size: 18px;
+    margin: -8px !important;
+}
+
+.content-header .UserName {
+    padding-right: 20px;
+    font-size: 18px;
+    margin: -8px !important;
+}
+
+.longtext1 {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    max-width: 312px;
+    padding-right: 60px !important;
+}
+
+.longtext2 {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    max-width: 250px;
+    margin-left: 5px;
+}
+
+.group-btn-action {
+    margin-top: 30px;
+}
+
+.form-group-2 {
+    margin-bottom: 0px;
+}
+
+.title-width {
+    width: 100px;
+}
+
+.label-width {
+    width: 136px;
+}
+
+.label-width2 {
+    width: 165px;
+    font-weight: normal !important;
+}
+
+.search-condition .form-group .update-user {
+    max-width: 20%;
+    position: absolute;
+}
+
+.tbl-left-content-new tr, .tbl-container-content-new tr {
+    height: 47px;
+}
+
+.tbl-left-content-new thead th, .tbl-container-content-new th {
+    height: 75px;
+}
+
+.div-left-content-new-2 .tbl-left-header-new tr {
+    height: 47px;
+}
+
+.div-left-content-new-3 .tbl-left-header-new tr {
+    height: 31px;
+}
+
+#containerSummary table tbody tr {
+    height: 31px;
+}
+
+.div-left-header .tbl-left-header-new tr, .div-container-header-new .tbl-container-header-new tr {
+    height: 75px;
+}
+
+.tbl-left-content-new td, .tbl-container-content-new td, .tbl-left-header-new td, .tbl-container-content-new td {
+    padding: 0px 0px;
+    vertical-align: middle;
+    white-space: nowrap;
+}
+
+    .tbl-left-content-new td.workingTime {
+        text-align: center;
+    }
+
+#containerTotal .tbl-container-content-new td {
+    border-left: none !important;
+}
+
+#containerTotal .tbl-container-content-new tr {
+    height: 48px;
+}
+
+@media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
+    #containerTotal .tbl-container-content-new tr {
+        height: 47px;
+    }
+}
+/* 1024 zoom 75%*/
+@media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) (min-width: 1343px) and (max-width: 1365px) {
+    #containerTotal .tbl-container-content-new tr {
+        height: 48px !important;
+    }
+}
+/* 1024 zoom 90%*/
+@media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) (max-width: 1150px) {
+    #containerTotal .tbl-container-content-new tr {
+        height: 48px !important;
+    }
+}
+
+/* 1024 zoom 100%*/
+@media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) (max-width: 1024px) {
+    #containerTotal .tbl-container-content-new tr {
+        height: 48px !important;
+    }
+}
+
+.tbl-left-header-new tr {
+    height: 47px;
+}
+/*.div-container-header-new .tbl-container-header-new*/
+.div-container-header-new table thead tr th {
+    min-width: 154px;
+    max-width: 154px;
+}
+
+.div-left-content-new-3 .tablesummary tr td {
+    font-weight: bold;
+    padding-left: 5px;
+    background: rgb(242, 242, 242);
+}
+
+.project_name {
+    overflow: hidden;
+    height: 2.8em;
+    padding: 0px 4px;
+}
+
+/*.search-condition .form-group label {
+    font-weight: bold;
+}*/
+
+.search-condition .form-group .title-username {
+    margin-left: 30px;
+}
+
+.search-condition .form-group {
+    margin-left: 17px;
+}
+
+.search-condition .date-label {
+    margin-left: 35px;
+}
+
+.detail-new table td {
+    border-left: 1px solid #CCC;
+    border-bottom: 1px solid #CCC;
+    border-right: none;
+}
+
+.restTime {
+    border-right: 1px solid #CCC !important;
+}
+
+.data-regist .div-left-header table td, .data-regist .div-left-header table th {
+    border-right: none !important;
+}
+
+.actual-work-detail table th {
+    border-right: 1px solid #CCC !important;
+}
+
+/*Actual work regist new*/
+.actual-work-regist-new .content-header > h1 {
+    padding: 0 0 5px 35px;
+}
+
+.actual-work-regist-new .content-header .validation-summary-errors {
+    padding: 0 35px 0px;
+}
+
+.actual-work-regist-new {
+    background-color: #F4F4F4;
+}
+
+    .actual-work-regist-new .div-left {
+        width: 30%;
+        background-color: #F4F4F4;
+        overflow: hidden;
+        overflow-y: auto;
+        position: absolute;
+        z-index: 100;
+    }
+
+        .actual-work-regist-new .div-left .content-header {
+            border-bottom: none;
+        }
+
+        .actual-work-regist-new .div-left .content-left {
+            padding-left: 35px;
+            padding-right: 35px;
+        }
+
+        .actual-work-regist-new .div-left .range-date {
+            font-weight: bold;
+        }
+
+        .actual-work-regist-new .div-left .content-left .date_display {
+            text-align: left;
+            margin-top: 5px;
+            margin-bottom: 10px;
+        }
+
+            .actual-work-regist-new .div-left .content-left .date_display span.range-date {
+                padding: 5px;
+            }
+
+        .actual-work-regist-new .div-left .content-left #bigContainer .tbl-actual-work-regist-new {
+            width: 100% !important;
+            border: 1px solid #CCC;
+        }
+
+        .actual-work-regist-new .div-left .content-left #bigContainer table td, table th,
+        .actual-work-regist-new .div-right .content-right table td, table th {
+            border: solid 1px #ccc;
+        }
+
+        .actual-work-regist-new .div-left .content-left .tbl-actual-work-regist-new .title_work_regist {
+            background: rgb(242, 242, 242);
+            width: 40%;
+            font-weight: bold;
+            height: 25px;
+            padding-top: 5px;
+        }
+
+        .actual-work-regist-new .div-left .content-left .tbl-actual-work-regist-new td.content_work_regist {
+            width: 60%;
+            background: #FFFFFF;
+            padding-left: 1px;
+            padding-right: 6px;
+            padding-bottom: 2px;
+            padding-top: 0px;
+        }
+
+        .actual-work-regist-new .div-left .content-left .tbl-actual-work-regist-new .remark-content {
+            margin-left: 6px;
+            margin-top: 6px;
+            margin-bottom: 3px;
+            width: 97.5%;
+            overflow-y: scroll;
+            resize: inherit;
+            height: 90px;
+        }
+
+        .actual-work-regist-new .div-left .content-left .tbl-actual-work-regist-new .attendance_type_cb {
+            width: 96%;
+            height: 26px;
+            margin-left: 5px;
+            margin-top: 6px;
+            margin-bottom: 4px;
+        }
+
+        .actual-work-regist-new .div-left .content-left .group-btn #btnClear {
+            margin-right: 5px;
+            margin-left: 5px;
+        }
+
+        .actual-work-regist-new .div-left .content-left .group-btn {
+            margin-top: 15px;
+            min-width: 280px;
+        }
+
+    .actual-work-regist-new .div-right {
+        float: none;
+        background-color: #F4F4F4;
+        position: relative;
+        margin-left: 410px;
+        overflow-y: auto;
+        overflow-x: hidden;
+        border-left: 2px solid #CCC;
+    }
+
+        .actual-work-regist-new .div-right .content-right {
+            margin-top: 35px !important;
+            margin-left: 35px;
+        }
+
+#total-time {
+    position: relative;
+    margin-left: 410px;
+    border-left: 2px solid #CCC;
+}
+
+    #total-time .total-time-right {
+        height: 35px;
+        background: rgb(249, 254, 151);
+        padding-left: 30px;
+        border-top: 1px solid #CCC;
+        padding-top: 8px;
+        font-weight: bold;
+    }
+
+    #total-time .total-actual-time {
+        margin-left: 15px;
+    }
+
+.actual-work-regist-new .div-right .tbl-actual-work-regist-new {
+    width: 350px;
+}
+
+.actual-work-regist-new .div-right .content-right table td.actual-time {
+    background: #FFFFFF;
+    padding-left: 1px;
+    padding-right: 6px;
+    padding-bottom: 2px;
+    padding-top: 0px;
+}
+
+.actual-work-regist-new .div-right .content-right table tr.total-actual-time-regist {
+    background: rgb(254, 255, 224);
+}
+
+    .actual-work-regist-new .div-right .content-right table tr.total-actual-time-regist td {
+        height: 27px !important;
+    }
+
+.tbl-actual-work-regist-new td.title_work {
+    background: rgb(242, 242, 242);
+    font-weight: bold;
+    height: 25px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    background-image: url('../images/sort_desc_disabled.png');
+    background-repeat: no-repeat;
+    background-position: top right;
+}
+
+    .tbl-actual-work-regist-new td.title_work div.proj-name-short {
+        max-width: 244px;
+    }
+
+    .tbl-actual-work-regist-new td.title_work div.proj-name-long {
+        max-width: 300px;
+    }
+
+    .tbl-actual-work-regist-new td.title_work div.status {
+        float: left;
+        width: auto;
+        color: red;
+    }
+
+.search-condition .grouplist {
+    width: 190px;
+    margin: 0 10px;
+}
+
+@-moz-document url-prefix() {
+    .actual-work-regist-new .div-left #bigContainer {
+        border: 1px solid #CCC;
+    }
+
+    .div-right table.tbl-actual-work-regist-new tr td {
+        border-left: 1px solid #CCC !important;
+    }
+}
+
+@media (min-width: 2100px) {
+    .actual-work-regist-new .div-left .total {
+        padding-top: 8px !important;
+    }
+
+    @-moz-document url-prefix() {
+        .actual-work-regist-new .div-left .content-left #bigContainer .tbl-actual-work-regist-new {
+            width: 100% !important;
+            border: 1px solid #CCC;
+        }
+
+            .actual-work-regist-new .div-left .content-left #bigContainer .tbl-actual-work-regist-new tr {
+                border: 1px solid #CCC;
+            }
+
+        .actual-work-regist-new .div-left #bigContainer {
+            border: 1px solid #CCC;
+        }
+
+        .div-right table.tbl-actual-work-regist-new {
+            top: 1px !important;
+        }
+    }
+}
+
+@-moz-document url-prefix() {
+    @media (min-width: 2100px) {
+        .actual-work-regist-new .div-left .content-left .tbl-actual-work-regist-new .remark-content {
+            margin-left: 7px;
+            margin-top: 6px;
+            margin-bottom: 4px;
+            width: 98.8%;
+            overflow-y: scroll;
+            resize: vertical;
+            max-height: 200px;
+        }
+
+
+        #total-time {
+            border-left: 0px;
+            border-right: 0px;
+            width: 100%;
+        }
+
+            #total-time .total-time-left {
+                float: left;
+                height: 37px;
+                background-color: #F4F4F4;
+                border-right: 2px solid #CCC;
+            }
+
+            #total-time .total-time-right {
+                height: 37px;
+                background: rgb(249, 254, 151);
+                padding-left: 30px;
+                border: 1px solid #CCC;
+                padding-top: 8px;
+                font-weight: bold;
+            }
+    }
+}
+
+@media (min-width: 2100px) {
+
+    #total-time {
+        border-left: 0px;
+        border-right: 0px;
+        width: 100%;
+    }
+
+        #total-time .total-time-left {
+            float: left;
+            height: 56px;
+            background-color: #F4F4F4;
+            border-right: 2px solid #CCC;
+        }
+
+        #total-time .total-time-right {
+            height: 56px;
+            background: rgb(249, 254, 151);
+            padding-left: 30px;
+            border: 1px solid #CCC;
+            padding-top: 12px;
+            font-weight: bold;
+        }
+
+    .actual-work-regist-new .div-left .content-left .tbl-actual-work-regist-new .remark-content {
+        margin-left: 6px;
+        margin-top: 6px;
+        margin-bottom: 8px;
+        width: 99%;
+        overflow-y: scroll;
+        resize: vertical;
+        max-height: 200px;
+    }
+}
+
+/* 稼働実績入力 Screen CSS*/
+
+.search-condition .title-label {
+    width: 90px;
+    text-align: right;
+    margin-bottom: 7px;
+}
+
+.search-condition #currentMonth {
+    float: left;
+}
+
+.register-search-date {
+    padding-bottom: 4px;
+    text-align: left;
+}
+
+.delete-label {
+    margin-left: 10px;
+    margin-top: 7px;
+}
+
+#container .div-header .div-container-header .tbl-container-header tr th {
+    border-right: 1px solid #CCC !important;
+}
+
+@media (max-width: 1150px) {
+    .actual-work-list div.div-left {
+        float: left;
+        width: 40%;
+    }
+
+    .actual-work-list div.div-right {
+        min-width: 60%;
+        max-width: 60%;
+    }
+
+    .actual-work-list div.individual-right{
+        min-width:35%;
+    }
+}
+
+@media (max-width: 1300px) {
+    .workingTimeTotal,
+    .totalWork {
+        min-width: 86px;
+        width: 86px;
+    }
+
+    .leftHeader {
+        width: 250px;
+        min-width: 250px;
+    }
+}
+
+@media (max-width: 1329px) {
+    .workingTimeTotal,
+    .totalWork {
+        min-width: 85px;
+        width: 85px;
+    }
+
+    .leftHeader {
+        width: 250px;
+        min-width: 250px;
+    }
+}
+
+@media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) and (max-width: 1400px) {
+    .actual-work-list .dataTables_length {
+        right: 27px;
+    }
+}
+
+@media (max-width: 1150px) {
+    .actual-work-list .dataTables_length {
+        left: 195px;
+        width: 100%;
+    }
+}
+
+@media (max-width: 1024px) {
+    .workingTimeTotal,
+    .totalWork {
+        min-width: 85px;
+        width: 85px;
+    }
+
+    .leftHeader {
+        width: 250px;
+        min-width: 250px;
+    }
+
+    .actual-work-list .dataTables_length {
+        left: 308px;
+        width: 100%;
+    }
+}
+
+@media (min-width: 1497px) {
+    .title-width {
+        width: 120px;
+        margin-left: -20px;
+    }
+
+    .label-width {
+        width: 155px;
+    }
+}
+
+@media (min-width: 1400px) and (max-width: 1600px) {
+    .actual-work-regist-new .div-right, .actual-work-regist-new #total-time {
+        margin-left: 470px;
+    }
+}
+
+@media (min-width: 1800px) and (max-width: 2100px) {
+    .actual-work-regist-new .div-right, .actual-work-regist-new #total-time {
+        margin-left: 620px;
+    }
+}
+
+
+#container .wrap-header-float {
+    overflow: hidden;
+    position: fixed;
+    top: 0;
+    height: 36px;
+}
+
+@-moz-document url-prefix() {
+
+    #container .wrap-header-float {
+        height: 35px;
+    }
+}
+
+#container .header-float {
+    overflow-x: scroll;
+    width: 761px;
+}
+
+/* zoom 80%*/
+@media (max-width: 1710px) and (min-width: 1700px) {
+    .actual-work-regist-new .div-right, .actual-work-regist-new #total-time {
+        margin-left: 513px;
+    }
+}
+
+.cell_left {
+    max-width: 100px;
+}
+
+.longtext1 {
+    max-width: 25%;
+}
+
+.project-name {
+    width: 90%;
+}

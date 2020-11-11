@@ -1,0 +1,556 @@
+﻿@model ProjectManagementSystem.ViewModels.PMS09004.PMS09004ListViewModel
+@using ProjectManagementSystem.Common
+@using ProjectManagementSystem.Resources;
+@{
+    ViewBag.Title = "売上支払一覧";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var currentUser = HttpContext.Current.Session[Constant.SESSION_LOGIN_USER] as LoginUser;
+}
+
+@Scripts.Render("~/bundles/dragOn")
+<div id="onloadDivSales">
+</div>
+<section class="content-header">
+    <h1 id="title">
+        @ViewBag.Title
+    </h1>
+    <div class="search-form">
+        <div class="search-condition">
+            <div class="row row-margin-bottom">
+                    <label class="width-120">期間</label>
+                    <span class="date datepicker-months start">
+                        @Html.TextBox(m => m.Condition.TARGET_TIME_START, "{0:yyyy/MM}", new { @class = "ime-mode", maxlength = 7, @placeholder = "YYYY/MM" })
+                        <button class="btn light"><i class="btn-icon btn-calendar"></i></button>
+                    </span>
+                    <span class="date-range-space">～</span>
+                    <span class="date datepicker-months end">
+                        @Html.TextBox(m => m.Condition.TARGET_TIME_END, "{0:yyyy/MM}", new { @class = "ime-mode", maxlength = 7, @placeholder = "YYYY/MM" })
+                        <button class="btn light"><i class="btn-icon btn-calendar"></i></button>
+                    </span>
+
+                <label class="width-100">所属</label>
+                @Html.DropDownListFor(m => m.Condition.GROUP_ID, Model.GROUP_LIST, "指定なし", new { @class = "" })
+
+                <label class="width-100">ユーザー名</label>
+                @Html.TextBoxFor(m => m.Condition.USER_NAME, new { style = "ime-mode: auto;", maxlength = 50 })
+            </div>
+            <div class="row row-margin-bottom">
+                <label class="width-120">発注元</label>
+                <input class="value-selected search_customer" id="Condition_CUSTOMER_NAME" name="Condition.CUSTOMER_NAME" readonly="readonly" title="" type="text" value="">
+                <button type="button" id="btnSelectCustomer" class="btn light"><i class="btn-icon btn-search-dialog"></i></button>
+                @Html.TextBox(m => m.Condition.CUSTOMER_ID, new { style = "visibility: hidden;" })
+            </div>
+            <div class="row">
+                <label class="width-120 float-to-left">契約種別</label>
+                @Html.DropDownListFor(m => m.Condition.CONTRACT_TYPE_ID, Model.CONTRACT_TYPE_LIST, new { @multiple = "multiple", @class = "float-to-left" })
+                <div class="tblCheckbox">
+                    <div class="tblRow">
+                        @if (currentUser != null && currentUser.PlanFunctionList.Contains(Constant.FunctionID.SalesPayment_Admin) && currentUser.FunctionList.Contains(Constant.FunctionID.SalesPayment_Admin))
+                        {
+                            <label class="bold include-delete">
+                                @Html.CheckBoxFor(m => m.Condition.DELETE_FLG, new { @class = "condition_chkbox" })
+                                削除済を含む
+                            </label>
+                        }
+                        else
+                        {
+                            @Html.CheckBoxFor(m => m.Condition.DELETE_FLG, new { @style = "visibility:hidden" })
+                        }
+                        <label class="bold include-delete">
+                            @Html.CheckBoxFor(m => m.Condition.PLAN_DISPLAY, new { @class = "condition_chkbox" })
+                            予定表示
+                        </label>
+                        <label class="bold include-delete">
+                            @Html.CheckBoxFor(m => m.Condition.PLANNED_MEMBER_INCLUDE, new { @class = "condition_chkbox" })
+                            全てのアサインメンバーを表示
+                        </label>
+                    </div>
+                    <div class="tblRow">
+                        <label class="bold include-delete">
+                            @Html.CheckBoxFor(m => m.Condition.ESTIMATE_DISPLAY, new { @class = "condition_chkbox" })
+                            見込み分を含む
+                        </label>
+                    </div>
+                </div>
+                @if (currentUser != null &&
+                        (currentUser.PlanFunctionList.Contains(Constant.FunctionID.BranchList_Admin) && currentUser.FunctionList.Contains(Constant.FunctionID.BranchList_Admin)
+                         || currentUser.PlanFunctionList.Contains(Constant.FunctionID.BranchList) && currentUser.FunctionList.Contains(Constant.FunctionID.BranchList)
+                         || currentUser.PlanFunctionList.Contains(Constant.FunctionID.BranchRegist) && currentUser.FunctionList.Contains(Constant.FunctionID.BranchRegist)))
+                {
+                    <label style="width:80px" class="width-120 lbl-contract float-to-left">拠点</label>
+                    @Html.DropDownListFor(m => m.Condition.LOCATION_ID, Model.BRANCH_LIST, new { @class = "float-to-left", @multiple = "multiple", @style = "vertical-align: top !important;" })
+                }
+            </div>
+        </div>
+        <div class="right search-action">
+            @using (Html.BeginForm("ExportCsv", "PMS09004", FormMethod.Post, new { id = "formDetailSalesCustomer", enctype = "multipart/form-data", @class = "frmExport" }))
+            {
+                @*<input id="searchTargetTime" name="TARGET_TIME" type="hidden" value="@Model.Condition.TARGET_TIME">*@
+                <input id="searchTargetTimeStart" name="TARGET_TIME_START" type="hidden" value="@Model.Condition.TARGET_TIME_START">
+                <input id="searchTargetTimeEnd" name="TARGET_TIME_END" type="hidden" value="@Model.Condition.TARGET_TIME_END">
+                <input id="searchGroupId" name="GROUP_ID" type="hidden" value="@Model.Condition.GROUP_ID">
+                <input id="searchUserName" name="USER_NAME" type="hidden" value="@Model.Condition.USER_NAME">
+                <input id="searchCustomerName" name="CUSTOMER_NAME" type="hidden">
+                <input id="searchCustomerId" name="CUSTOMER_ID" type="hidden" value="@Model.Condition.CUSTOMER_ID">
+                <input id="searchContractTypeID" name="CONTRACT_TYPE_ID" type="hidden" value="@Model.Condition.CONTRACT_TYPE_ID">
+                <input id="searchDeleteFlag" name="DELETE_FLG" type="hidden" value="@Model.Condition.DELETE_FLG.ToString()">
+
+                <input id="searchPlanDisplay" name="PLAN_DISPLAY" type="hidden" value="@Model.Condition.PLAN_DISPLAY.ToString()">
+                <input id="searchPlannedMemberInclude" name="PLANNED_MEMBER_INCLUDE" type="hidden" value="@Model.Condition.PLANNED_MEMBER_INCLUDE.ToString()">
+                <input id="searchEstimateDisplay" name="ESTIMATE_DISPLAY" type="hidden" value="@Model.Condition.ESTIMATE_DISPLAY">
+                if (currentUser != null &&
+                            (currentUser.PlanFunctionList.Contains(Constant.FunctionID.BranchList_Admin) && currentUser.FunctionList.Contains(Constant.FunctionID.BranchList_Admin)
+                             || currentUser.PlanFunctionList.Contains(Constant.FunctionID.BranchList) && currentUser.FunctionList.Contains(Constant.FunctionID.BranchList)
+                             || currentUser.PlanFunctionList.Contains(Constant.FunctionID.BranchRegist) && currentUser.FunctionList.Contains(Constant.FunctionID.BranchRegist)))
+                {
+                    <input id="searchLocationId" name="LOCATION_ID" type="hidden" value="@Model.Condition.LOCATION_ID">
+                }
+                <input id="tabId" name="TAB_ID" type="hidden" />
+            }
+
+            <button type="button" id="btnSearch" name="btnSearch" class="btn dark"><i class="btn-icon btn-search"></i>検索</button>
+            <button type="button" id="btnClear" name="btnClear" class="btn light"><i class="btn-icon btn-clear"></i>クリア</button>
+        </div>
+    </div>
+</section>
+
+@RenderPage("~/Views/Shared/ShowHideHeaderContent.cshtml")
+
+<div class="data-list sale-payment-list content special-list clearfix" style="visibility:hidden">
+    <div class="summary-sales-payment row">
+        <div class="col-md-3">
+            <label class="title">売上金額合計</label>
+            @Html.Label(string.Empty, "0 円", new { id = "lblTotalSalesAmount", @class = "money" })
+        </div>
+        <div class="col-md-3">
+            <label class="title">予定原価合計</label>
+            @Html.Label(string.Empty, "0 円", new { id = "lblTotalCostPlan", @class = "money" })
+        </div>
+        <div class="col-md-3">
+            <label class="title">実績原価合計</label>
+            @Html.Label(string.Empty, "0 円", new { id = "lblTotalCostActual", @class = "money" })
+        </div>
+        <div class="col-md-3">
+            <label class="title">支払金額合計</label>
+            @Html.Label(string.Empty, "0 円", new { id = "lblTotalPaymentAmount", @class = "money" })
+        </div>
+    </div>
+
+    <div class="div-left">
+        <table class="dataTable" id="tb-left" width="100%" style="margin-bottom:5px;">
+            <thead>
+                <tr>
+                    <th>年月</th>
+                    <th>発注元</th>
+                    <th>プロジェクト名</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+
+    <div class="div-right">
+        <table id="tb-right" class="dataTable" width="100%">
+            <thead>
+                <tr>
+                    <th>所属</th>
+                    <th>ユーザー名</th>
+                    <th>売上金額</th>
+                    <th>原価</th>
+                    <th>予定工数</th>
+                    <th>予定原価合計</th>
+                    <th>実績工数</th>
+                    <th>実績原価合計</th>
+                    <th>発注先</th>
+                    <th>支払金額</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+</div>
+<div class="notification">
+    <p>※一覧の工数は小数点第3位を四捨五入した値を表示しております。</p>
+</div>
+<div class="search-date">
+    <button id="btnExport" type="button" class="btn dark"><i class="btn-icon btn-output-csv"></i>CSV出力</button>
+</div>
+
+<script type="text/javascript" charset="utf-8">
+    $(function () {
+        $('.div-right').dragOn();
+
+        var uniqueId = "@Guid.NewGuid().ToString()";
+        $("#tabId").val(uniqueId);
+        SetEventBeforeUnload();
+        LoadOldValueOfControls();
+
+        //setting value for the DataTable
+        var oSorting = {
+            "bSort": false
+        };
+        var oPaginate = {
+            "bPaginate": true,
+            "iDisplayLength": parseInt(@App[ConfigurationKeys.LIST_ITEMS_PER_PAGE]),
+            "bStateSave": false
+        };
+        var oServerSide = {
+            "bServerSide": true,
+            "sAjaxSource": '@Url.Action("Search", "PMS09004")',
+            "fnBeforeSend": beforeSend,
+            "fnServerParams": serverParams,
+            "fnInitComplete": bindData,
+            "fnDrawCallback": displayComplete
+        };
+        var aoColumnDefs = [
+            { "sName": "group_name", "aTargets": [0], "sWidth": "5%", "sClass": "group_name cell_left", "mRender": function (data, type, full) { return PMS.utility.buildColumShortText(data); } },
+            { "sName": "user-name", "aTargets": [1], "sWidth": "5%", "sClass": "user-name cell_left", "mRender": function (data, type, full) { return PMS.utility.buildColumShortText(data); } },
+            { "sName": "sale-amount", "aTargets": [2], "sWidth": "5%", "sClass": "sale-amount cell_right money" },
+            { "sName": "unit_cost", "aTargets": [3], "sWidth": "5%", "sClass": "unit_cost cell_right money" },
+            { "sName": "plan_man_times", "aTargets": [4], "sWidth": "5%", "sClass": "plan_man_times cell_right" },
+            { "sName": "plan_cost", "aTargets": [5], "sWidth": "5%", "sClass": "plan_cost cell_right money" },
+            { "sName": "actual_work_time", "aTargets": [6], "sWidth": "5%", "sClass": "actual_work_time cell_right" },
+            { "sName": "actual_cost", "aTargets": [7], "sWidth": "5%", "sClass": "actual_cost cell_right money" },
+            { "sName": "payment_company", "aTargets": [8], "sWidth": "5%", "sClass": "payment_company cell_left", "mRender": function (data, type, full) { return PMS.utility.buildColumShortText(data); } },
+            { "sName": "amount", "aTargets": [9], "sWidth": "5%", "sClass": "amount cell_right money" },
+            { "sName": "del_flg", "aTargets": [10], "bVisible": false, "sWidth": "0%" },
+        ];
+
+        var dataTable = CreateDataTable('#tb-right', oSorting, oPaginate, oServerSide, aoColumnDefs);
+
+        function beforeSend() {
+        }
+
+        function serverParams(aoData) {
+            aoData.push(
+                { "name": "ESTIMATE_DISPLAY", "value": $("#searchEstimateDisplay").val() },
+                { "name": "CUSTOMER_ID", "value": $("#searchCustomerId").val() },
+                { "name": "TARGET_TIME_START", value: $("#searchTargetTimeStart").val() },
+                { "name": "TARGET_TIME_END", value: $("#searchTargetTimeEnd").val() },
+                { "name": "GROUP_ID", value: $("#searchGroupId").val() },
+                { "name": "LOCATION_ID", "value": $("#searchLocationId").val() },
+                { "name": "DELETE_FLG", "value": $("#searchDeleteFlag").val() },
+                { "name": "PLAN_DISPLAY", "value": $("#searchPlanDisplay").val() },
+                { "name": "PLANNED_MEMBER_INCLUDE", "value": $("#searchPlannedMemberInclude").val() },
+                { "name": "USER_NAME", "value": $("#searchUserName").val() },
+                { "name": "CONTRACT_TYPE_ID", "value": $("#searchContractTypeID").val() },
+                { "name": "TAB_ID", "value": $("#tabId").val() }
+            );
+        }
+
+        function bindData(data) {
+            // process status disabled  buttton exportCSV when search data
+            if (data.aaData.length == 0) {
+                $('#btnExport').addClass('disabled').attr('disabled', 'disabled');
+            }
+            else {
+                $('#btnExport').removeClass('disabled').removeAttr('disabled');
+            }
+
+            var html = '';
+
+
+            if (data.aaData.length > 0) {
+                for (var i = 0; i < data.aaData.length; i++) {
+                    var trClass = 'even';
+                    if (i % 2 == 0)
+                        trClass = 'odd';
+
+                    if (data.aaData[i][10] == '1')
+                        trClass = 'delete-row';
+
+                    html += '<tr class="' + trClass + '">'
+                        + '<td class="cell_center">' + data.aaData[i][11] + '</td><td data-overflow="no-dragon" class="cell_left short-text text-overflow sales_company" title="' + data.aaData[i][12] + '">' + data.aaData[i][13] + '</td><td data-overflow="no-dragon" class="cell_left short-text text-overflow project_name" title="' + data.aaData[i][12] + '">' + data.aaData[i][12] + '</td>'
+                        + '</tr>';
+                }
+            } else {
+                    html += '<tr role="row" class="odd">'
+                        + ' <td colspan="3" class="dataTables_empty">該当データはありません。</td>'
+                        + ' <tr>';
+            }
+
+            $('#tb-left tbody').empty().append(html);
+
+            $('#lblTotalSalesAmount').text(data.totalSalesAmount + "円");
+            $('#lblTotalCostPlan').text(data.totalCostPlan + "円");
+            $('#lblTotalCostActual').text(data.totalCostActual + "円");
+            $('#lblTotalPaymentAmount').text(data.totalPaymentAmount + "円");
+
+
+        }
+
+        //variable save status of condition
+        var currentConditionState = { grID: "", usrName: "", toDate: "", fromDate: "", locID: "" };
+        function displayComplete() {
+            currentConditionState.grID = $('#Condition_GroupId').val();
+            currentConditionState.usrName = $('#Condition_DisplayName').val();
+            currentConditionState.fromDate = $('#Condition_StartMonth').val();
+            currentConditionState.toDate = $('#Condition_EndMonth').val();
+            currentConditionState.locID = $('#Condition_LOCATION_ID').val();
+
+            $('.money').each(function () {
+                $(this).text(PMS.utility.convertIntToMoney($(this).text()));
+            });
+
+            $('#tb-left tbody tr.delete-row').each(function () {
+                $(this).parents('tr').removeClass().addClass('delete-row');
+            });
+
+             if ($('#tb-right td.dataTables_empty').length > 0)
+                $('#tb-right td.dataTables_empty').text('');
+
+            $('div.sale-payment-list').removeAttr('style');
+            $("#onloadDivSales").hide();
+            $('.pace.pace-active').addClass('pace-inactive').removeClass('pace-active');
+            $('#btnSearch').removeAttr('disabled');
+        }
+
+        function buildFormCode(data, userID, targetTime) {
+            var arr = data.split('(');
+            var dData = arr[0];
+            var type = 0;
+            var logged = 0;
+            if (arr.length > 1) {
+                type = arr[1].split(")")[0];
+            }
+            if (arr.length > 2) {
+                logged = arr[2].split(")")[0];
+            }
+            var s = '';
+            if ($('#roleDetail').length > 0) {
+                s = '<a href="#" class="detail-link" user_id="' + userID
+                + '" selected_year = "' + targetTime.substring(0, 4)
+                + '" selected_month = "' + targetTime.substring(5)
+                + '" type = "' + type
+                + '" logged = "' + logged
+                + '">' + dData + '</a>';
+            }
+            else {
+                s = '<div type=' + type + '>' + dData + '</div>';
+            }
+            return s;
+        }
+
+        function convertMonth(month) {
+            var targetMonth = month;
+            if (month < 10) {
+                targetMonth = '0' + month;
+            }
+            return targetMonth;
+        }
+
+        function checkValue(value, extend) {
+            if (value != null)
+                value = value + extend;
+            else
+                value = '';
+
+            return value;
+        }
+
+        function checkManday(value) {
+            if (value == null)
+                value = '';
+            else
+                value = parseFloat(value).toFixed(2) + '人月';
+
+            return value;
+        }
+
+        function checkTime(value) {
+            if (value == null)
+                value = '';
+            else
+                value = parseFloat(value).toFixed(2) + 'h';
+
+            return value;
+        }
+
+        $("button#btnSearch").click(function () {
+            searchCustomer();
+        });
+
+        $(document).bind('keypress', function (e) {
+            var code = e.keyCode || e.which;
+            if (code == 13) { //Enter keycode
+                searchCustomer();
+            }
+        });
+
+        function searchCustomer() {
+            $('.validation-summary-errors').remove();
+            var invalidMess = [];
+
+            // check valid date
+            var invalidMess = [];
+            var targetTimeStartVal = $('#Condition_TARGET_TIME_START').val();
+            var targetTimeEndVal = $('#Condition_TARGET_TIME_END').val();
+            var errStartDate = PMS.utility.validDate(targetTimeStartVal, 'yyyy/mm', '期間（開始）');
+            var errEndDate = PMS.utility.validDate(targetTimeEndVal, 'yyyy/mm', '期間（終了）');
+
+            if ($('#Condition_USER_NAME').val().length > 50) {
+                invalidMess.push("ユーザー名は50文字以内で入力してください");
+            }
+
+            if (targetTimeStartVal == "") {
+                invalidMess.push("@string.Format(Messages.E002, "期間（開始）")");
+            } else if (errStartDate != null) {
+                    invalidMess.push(errStartDate);
+            }
+
+            if (targetTimeEndVal == "") {
+                invalidMess.push("@string.Format(Messages.E002, "期間（終了）")");
+            } else if (errEndDate != null) {
+                    invalidMess.push(errEndDate);
+            }
+
+            if (invalidMess.length == 0 && targetTimeStartVal.length > 0 && targetTimeEndVal.length > 0 && errStartDate == null && errEndDate == null) {
+                // compare date
+                if (!PMS.utility.compareDate(targetTimeStartVal, targetTimeEndVal, 'yyyy/mm')) {
+                    invalidMess.push('@string.Format(Messages.E027)');
+                }
+
+                // valid max duration time
+                if (!PMS.utility.compareDateRange(targetTimeStartVal, targetTimeEndVal, 5)) {
+                    invalidMess.push('期間は6ヶ月以内で設定してください。');
+                }
+            }
+
+            if (invalidMess.length > 0) {
+                PMS.utility.showClientError(invalidMess);
+                return false;
+            }
+
+            var $contractType = $("#Condition_CONTRACT_TYPE_ID");
+
+            if ($contractType.val() != null && $contractType.find('option').length == $contractType.val().length) {
+                $contractType.val('');
+            }
+
+            var $location = $("#Condition_LOCATION_ID");
+
+            if ($location.val() != null && $location.find('option').length == $location.val().length) {
+                $location.val('');
+            }
+
+            var targetTimeStartArr = targetTimeStartVal.split('/');
+            var targetTimeEndArr = targetTimeEndVal.split('/');
+            if (targetTimeStartArr[1].length == 1) {
+                $('#Condition_TARGET_TIME_START').val(targetTimeStartArr[0] + '/0' + targetTimeStartArr[1]);
+            }
+
+             if (targetTimeEndArr[1].length == 1) {
+                $('#Condition_TARGET_TIME_END').val(targetTimeEndArr[0] + '/0' + targetTimeEndArr[1]);
+            }
+
+            PMS.utility.LoadSearchCondition();
+            $('.pace.pace-inactive').removeClass('pace-inactive').addClass('pace-active');
+            $("#onloadDivSales").show(function () {
+                 dataTable.fnPageChange('first');
+            });
+            $('#btnSearch').attr('disabled', 'disabled');
+        }
+
+
+        $("#btnClear").click(function () {
+            $("#Condition_CUSTOMER_ID").val("");
+            $("#Condition_CUSTOMER_NAME").val("");
+            $("#Condition_USER_NAME").val("");
+            $("#Condition_DELETE_FLG").prop('checked', false);
+            $("#Condition_PLAN_DISPLAY").prop('checked', false);
+            $("#Condition_PLANNED_MEMBER_INCLUDE").prop('checked', false);
+            $("#Condition_GROUP_ID").val("");
+            $("#Condition_LOCATION_ID").val("");
+            $("#Condition_TARGET_TIME_START").val("");
+            $("#Condition_TARGET_TIME_END").val("");
+            $("#Condition_USER_NAME").val("");
+            $("#Condition_CONTRACT_TYPE_ID").val("");
+            $("#Condition_ESTIMATE_DISPLAY").prop('checked', false);
+            var date = new Date();
+            var month = date.getMonth() + 1;
+            if (month < 10) {
+                month = '0' + month;
+            }
+            var dateValue = date.getFullYear() + '/' + month;
+            $("#Condition_TARGET_TIME_START").val(dateValue);
+            $("#Condition_TARGET_TIME_END").val(dateValue);
+
+            $('.date.datepicker-months.start').datepicker("update", dateValue);
+            $('.date.datepicker-months.end').datepicker("update", dateValue);
+            PMS.utility.ClearRestoreData("PMS09004");
+        });
+
+        $('button#btnExport').click(function () {
+            $("#formDetailSalesCustomer").attr("action", "/PMS09004/ExportCsv");
+            $("#formDetailSalesCustomer").submit();
+        });
+
+        $("button#btnSelectCustomer").click(function () {
+            var result = PMS.utility.getDataByAjax('/Common/CheckTimeOut', null);
+
+            if (result == null)
+                return;
+
+            $(this).blur();
+
+            var url = '@Url.Action("Select", "PMS02001", new { callback = "selectCustomer" })';
+            url += '&TB_iframe=true&modal=true&height=600&width=1100';
+            tb_show(null, url, false);
+        });
+
+        PMS.utility.LoadSearchCondition();
+    });
+
+    function selectCustomer(res) {
+        if (typeof (res) === 'undefined' || res === null) {
+            $('#Condition_CUSTOMER_NAME').focus();
+        } else {
+            /// Display selected customer
+            $("#Condition_CUSTOMER_ID").val(res[0].CUSTOMER_ID);
+            $("#Condition_CUSTOMER_NAME").val(PMS.utility.htmlDecode(res[0].CUSTOMER_NAME)).focus();
+
+            PMS.utility.bindTagsByCustomer(res[0].CUSTOMER_ID, '#Condition_TAG_ID');
+        }
+    }
+
+    function LoadOldValueOfControls() {
+        var hdnContractType = $('#searchContractTypeID').val();
+
+        if (hdnContractType.length > 0) {
+            var contractTypeArr = hdnContractType.split(',');
+            $('#Condition_CONTRACT_TYPE_ID').val(contractTypeArr);
+        }
+
+        var hdnLocation = $('#searchLocationId').val();
+
+        if (hdnLocation != undefined && hdnLocation.length > 0) {
+            var locationArr = hdnLocation.split(',');
+            $('#Condition_LOCATION_ID').val(locationArr);
+        }
+
+        var hdnUserName = $('#searchUserName').val();
+        if (hdnUserName.length > 0) {
+            $('#Condition_USER_NAME').val(hdnUserName);
+        }
+
+        var hdnCustomerId = $('#searchCustomerId').val();
+        if (hdnCustomerId.length > 0) {
+            $('#Condition_CUSTOMER_ID').val(hdnCustomerId);
+        }
+
+        var hdnCustomerName = $('#searchCustomerName').val();
+        if (hdnCustomerName.length > 0) {
+            $('#Condition_CUSTOMER_NAME').val(hdnCustomerName);
+        }
+
+        var hdnTargetTimeStart = $('#searchTargetTimeStart').val();
+        if (hdnTargetTimeStart.length > 0) {
+            $('#Condition_TARGET_TIME_START').val(hdnTargetTimeStart);
+        }
+
+        var hdnTargetTimeEnd = $('#searchTargetTimeEnd').val();
+        if (hdnTargetTimeEnd.length > 0) {
+            $('#Condition_TARGET_TIME_END').val(hdnTargetTimeEnd);
+        }
+    }
+</script>

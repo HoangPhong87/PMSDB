@@ -1,0 +1,438 @@
+﻿/* Common css for 2 screen*/
+
+.tbl-right td.dataTables_empty {
+    border-left: none;
+    border-right: 2px solid #EAEAEA;
+}
+
+.assign-by-user  div.div-right thead th,
+.assign-by-project  div.div-right thead th{
+    min-width: 103px;
+}
+
+.unit-cost-infor div.div-right thead th{
+    min-width: 210px;
+}
+
+.tbl-assign-by-user td.dataTables_empty,
+.tbl-assign-by-project td.dataTables_empty {
+    border-right: none;
+}
+
+@media (min-width: 2100px) {
+    .assign-by-project .left-button {
+        margin-top: -3px !important;
+    }
+
+    .assign-by-project .div-left .dataTables_info {
+        right: 400px;
+    }
+}
+
+button[name="btnExport"] {
+    float: left;
+}
+
+/* Assignment By Project Screen*/
+
+.assign-by-project {
+    padding-top: 80px !important;
+}
+
+.assign-by-project div.div-left {
+    float: left;
+    width: 63%;
+}
+
+.assign-by-project  div.div-right {
+    float: left;
+    width: 37%;
+    margin-left: -1px;
+    overflow-x: scroll;
+    overflow-y: hidden;
+}
+
+
+.tbl-assign-by-project td .pic-name {
+    min-width: 110px;
+    max-width: 8%;
+    position: absolute;
+    margin-top:-10px;
+}
+
+.assign-by-project .left-button {
+     float: left;
+     margin-top: -69px;
+}
+
+.assign-by-project-header .group-1 {
+    float: left;
+}
+
+.assign-by-project-header #Condition_STATUS_ID {
+  vertical-align: top;
+  width: 120px;
+  height: 80px;
+}
+
+.assign-by-project-header div.search-project-name {
+    margin-bottom: 18px !important;
+}
+
+.assign-by-project-header .search_project_name {
+    width: 435px;
+}
+
+.assign-by-project-header .search_customer {
+    width: 216px;
+}
+
+.assign-by-project-header .taglist {
+	width: 160px;
+}
+
+.assign-by-project-header .group-2 {
+    margin-left: 104px;
+}
+
+.assign-by-project-header .group-2 label {
+    margin-bottom: 0;
+}
+
+@media (max-width: 1100px) {
+    .assign-by-project-header .group-1.row-2 {
+        float: left;
+        width: 100%;
+        margin-bottom: 10px;
+    }
+
+    .assign-by-project-header .group-2.row-2 {
+        margin-left: 547px;
+    }
+
+    .sidebar-collapse .assign-by-project-header .group-1.row-2 {
+        width: auto;
+        margin-bottom: 0;
+    }
+
+    .sidebar-collapse .assign-by-project-header .group-2.row-2 {
+        margin-left: 104px;
+    }
+}
+
+@media (max-width: 1024px) {
+    .sidebar-collapse .assign-by-project-header .group-1.row-2 {
+        float: left;
+        width: 100%;
+        margin-bottom: 10px;
+    }
+
+    .sidebar-collapse .assign-by-project-header .group-2.row-2 {
+        margin-left: 547px;
+    }
+}
+
+@media (max-width: 1150px) {
+    .search-condition .condition-project-name,
+    .search-condition .condition-customer,
+    .search-condition .condition-time,
+    .search-condition .condition-group,
+    .search-condition .condition-status,
+    .search-condition .condition-inactive {
+        width: 100%;
+        margin-bottom: 15px;
+    }
+
+    .search-condition .lbl-auto-break {
+        width: 80px;
+    }
+}
+
+
+/* Assignment By User Screen*/
+
+.assign-by-user {
+    padding-top: 80px !important;
+}
+
+.search-form label.period-title{
+    margin-left: 52px;
+    min-width: 0px;
+}
+
+.assign-by-user-header .search-condition .condition-name {
+    width: 25%;
+}
+
+.assign-by-user-header .search-condition .condition-group {
+    width: 22%;
+}
+
+.assign-by-user-header .search-condition .condition-time {
+    width: 35%;
+}
+
+.assign-by-user-header .search-condition .condition-delete {
+    width: 16%;
+}
+
+@media (max-width: 1150px) {
+    .assign-by-user-header .search-condition .condition-name,
+    .assign-by-user-header .search-condition .condition-group,
+    .assign-by-user-header .search-condition .condition-time {
+        width: 100%;
+        margin-bottom: 15px;
+    }
+}
+
+.assign-by-user div.div-left{
+    float: left;
+    width: 40%;
+}
+
+.assign-by-user  div.div-right{
+    float: left;
+    width: 60%;
+    margin-left: -1px;
+    overflow-x: scroll;
+    overflow-y: hidden;
+}
+
+.assign-by-user div.div-right table tbody tr td{
+    white-space:nowrap;
+}
+
+.assign-by-user .left-button {
+     float: left;
+    margin-top: -89px;
+}
+
+.assign-by-user-header .group-1, .assign-by-user-header .group-2 {
+    float: left;
+}
+
+.assign-by-user-header .group-2 {
+    margin-right: 120px;
+}
+
+.assign-by-user-header .lbl-include {
+    margin-left: 778px;
+    margin-top: 15px;
+}
+
+.div-left .dataTables_paginate {
+    position: absolute;
+    margin-top: 35px;
+    margin-left: 29%;
+}
+
+.unit-cost-infor .div-left .dataTables_paginate {
+    margin-top: 70px;
+}
+
+.div-left .dataTables_info {
+    position: absolute;
+    left: 200px;
+    margin-top: -55px;
+}
+
+.div-left .dataTables_length {
+    position: absolute;
+    right: 32px;
+    margin-top: -40px;
+}
+
+.sidebar-collapse .div-left .dataTables_info {
+    left: 70px;
+}
+
+.timeUnit {
+    position: absolute;
+    width: 80px;
+    margin-left: 30px;
+    margin-top: -13px;
+}
+
+.search-date {
+    margin-top: 40px;
+}
+
+#dateRange {
+    font-weight: bold;
+    text-align: center;
+    display: inline-block;
+    vertical-align: top;
+    padding-top: 7px;
+    padding-right: 7px;
+    padding-left: 7px;
+}
+
+@media (max-width: 1300px) {
+    .assign-by-project div.div-left {
+      width: 75%;
+    }
+
+    .assign-by-project div.div-right {
+      width: 25%;
+    }
+
+    .assign-by-user div.div-right thead th, 
+    .assign-by-project div.div-right thead th {
+        min-width: 50px;
+    }
+
+    .search-date {
+         margin-top: 50px;
+    }
+
+    .timeUnit {
+        margin-top: 5px;
+    }
+}
+
+@media (max-width: 1150px) {
+    .div-left .dataTables_length {
+        right: -195px;
+    }
+}
+
+
+@media (max-width: 1024px) {
+    .assign-by-project div.div-left {
+      width: 75%;
+    }
+
+    .assign-by-project div.div-right {
+      width: 25%;
+    }
+
+    .assign-by-user div.div-right thead th, 
+    .assign-by-project div.div-right thead th {
+        min-width: 50px;
+    }
+
+    .tbl-assign-by-project td .project-detail-link {
+      min-width: 180px;
+    }
+
+
+    .search-date {
+         margin-top: 50px;
+    }
+
+    .timeUnit {
+        margin-top: 8px;
+    }
+
+    .div-left .dataTables_length {
+        right: -307px;
+    }
+}
+
+@media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) and (max-width: 1210px) {
+    .div-left .dataTables_length {
+        right: -130px;
+    }
+}
+
+@media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) and (max-width: 1150px) {
+    .div-left .dataTables_length {
+        right: -195px;
+    }
+}
+
+ @media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) and (max-width: 1024px) {
+    .div-left .dataTables_length {
+        right: -307px;
+    }
+}
+
+@media (max-width: 1120px) {
+    .assign-by-user-header .group-1 {
+        width: 100%;
+        margin-bottom: 15px;
+    }
+
+     .assign-by-user-header .group-2 {
+        margin-right: 98px;
+    }
+
+     .assign-by-user-header .lbl-duration {
+        width: 120px !important;
+    }
+
+    .assign-by-user-header .lbl-include {
+        margin: 0;
+    }
+
+     .sidebar-collapse .assign-by-user-header .group-1 {
+         float: left;
+         width:auto;
+    }
+
+     .sidebar-collapse .assign-by-user-header .group-2 {
+         margin-right: 120px;
+         float: left;
+    }
+
+    .sidebar-collapse .assign-by-user-header .lbl-duration {
+        width: 100px  !important;
+        font-weight: bold;
+        text-align: right;
+    }
+
+    .sidebar-collapse .assign-by-user-header .lbl-include {
+        margin-left: 778px;
+    }
+}
+
+@media (max-width: 1024px) {
+    .sidebar-collapse .assign-by-user-header .group-1 {
+        width: 100%;
+        margin-bottom: 15px;
+    }
+
+    .sidebar-collapse .assign-by-user-header .group-2 {
+        margin-right: 98px;
+    }
+
+    .sidebar-collapse .assign-by-user-header .lbl-duration {
+        width: 120px !important;
+    }
+
+    .sidebar-collapse .assign-by-user-header .lbl-include {
+        margin: 0;
+    }
+}
+
+@media (max-width: 1520px) and (min-width: 1500px) {
+    select {
+        padding: 0 2px;
+    }
+}
+
+.cell_left{
+    max-width:200px;
+}
+
+.longtext{
+    max-width: 100%;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    margin-left: 0px;
+    vertical-align: middle;
+    margin-bottom: 0px;
+    cursor:pointer;
+}
+
+.notification {
+    float: left;
+    padding-top: 10px;
+    width:100%;
+}
+
+.notification p {
+    padding-bottom: 9px;
+    color: red;
+}

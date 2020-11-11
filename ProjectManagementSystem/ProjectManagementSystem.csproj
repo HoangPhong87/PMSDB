@@ -1,0 +1,1006 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{1705E427-9B4A-4264-A8D3-948DF2B263AF}</ProjectGuid>
+    <ProjectTypeGuids>{E3E379DF-F4C6-4180-9B81-6769533ABE47};{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>ProjectManagementSystem</RootNamespace>
+    <AssemblyName>ProjectManagementSystem</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <MvcBuildViews>false</MvcBuildViews>
+    <UseIISExpress>true</UseIISExpress>
+    <IISExpressSSLPort>44300</IISExpressSSLPort>
+    <IISExpressAnonymousAuthentication>enabled</IISExpressAnonymousAuthentication>
+    <IISExpressWindowsAuthentication>disabled</IISExpressWindowsAuthentication>
+    <IISExpressUseClassicPipelineMode>false</IISExpressUseClassicPipelineMode>
+    <UseGlobalApplicationHostFile />
+    <Use64BitIISExpress />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Antlr3.Runtime">
+      <HintPath>..\..\..\..\..\SRCNEW\ProjectManagementSystem\bin\Antlr3.Runtime.dll</HintPath>
+    </Reference>
+    <Reference Include="ExcelCreator.Design.4, Version=1.0.5270.2109, Culture=neutral, PublicKeyToken=6e3b9cbe022c0363, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\ExcelCreator.Design.4.dll</HintPath>
+    </Reference>
+    <Reference Include="ExcelCreator.Document.4, Version=1.0.5270.2109, Culture=neutral, PublicKeyToken=4a468de17db8ce73, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\ExcelCreator.Document.4.dll</HintPath>
+    </Reference>
+    <Reference Include="ExcelCreator.PDFWriter.4, Version=1.0.5270.2109, Culture=neutral, PublicKeyToken=996ea201843d6e2e, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\ExcelCreator.PDFWriter.4.dll</HintPath>
+    </Reference>
+    <Reference Include="ExcelCreator.Shared.4, Version=1.0.5270.2109, Culture=neutral, PublicKeyToken=99a782176d7db7c0, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\ExcelCreator.Shared.4.dll</HintPath>
+    </Reference>
+    <Reference Include="ExcelCreator.View.4, Version=1.0.5270.2109, Culture=neutral, PublicKeyToken=2b7e4ea10585cb39, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\ExcelCreator.View.4.dll</HintPath>
+    </Reference>
+    <Reference Include="ExcelCreator.Xlsx.Core.4, Version=8.0.5270.2109, Culture=neutral, PublicKeyToken=fbb7dbbcfe650101, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\ExcelCreator.Xlsx.Core.4.dll</HintPath>
+    </Reference>
+    <Reference Include="ExcelCreator.Xlsx.Creator.4, Version=8.0.5270.2109, Culture=neutral, PublicKeyToken=72c0154b79407f8d, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\ExcelCreator.Xlsx.Creator.4.dll</HintPath>
+    </Reference>
+    <Reference Include="Lib.Web.Mvc">
+      <HintPath>..\..\..\..\..\SRCNEW\ProjectManagementSystem\bin\Lib.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="log4net">
+      <HintPath>E:\PMS\ProjectManagementSystem\bin\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Transactions" />
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Web.Optimization">
+      <HintPath>..\..\..\..\..\SRCNEW\ProjectManagementSystem\bin\System.Web.Optimization.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Abstractions" />
+    <Reference Include="System.Web.Routing" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.EnterpriseServices" />
+    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Web.Mvc.FixedDisplayModes, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.Mvc.FixedDisplayModes.1.0.0\lib\net40\Microsoft.Web.Mvc.FixedDisplayModes.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\packages\Newtonsoft.Json.4.5.11\lib\net40\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.Net.Http.2.0.30506.0\lib\net40\System.Net.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http.Formatting, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.4.0.30506.0\lib\net40\System.Net.Http.Formatting.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http.WebRequest">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.Net.Http.2.0.30506.0\lib\net40\System.Net.Http.WebRequest.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Helpers, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.2.0.30506.0\lib\net40\System.Web.Helpers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Http, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Core.4.0.30506.0\lib\net40\System.Web.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Http.WebHost, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.WebHost.4.0.30506.0\lib\net40\System.Web.Http.WebHost.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Mvc, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.Mvc.4.0.30506.0\lib\net40\System.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Razor, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.Razor.2.0.30506.0\lib\net40\System.Web.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.2.0.30506.0\lib\net40\System.Web.WebPages.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Deployment, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.2.0.30506.0\lib\net40\System.Web.WebPages.Deployment.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Razor, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.2.0.30506.0\lib\net40\System.Web.WebPages.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="WebGrease">
+      <HintPath>..\..\..\..\..\SRCNEW\ProjectManagementSystem\bin\WebGrease.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="App_Start\BundleConfig.cs" />
+    <Compile Include="Common\ConfigurationKeys.cs" />
+    <Compile Include="Common\Constant.cs" />
+    <Compile Include="Common\LoginUser.cs" />
+    <Compile Include="Common\PageInfo.cs" />
+    <Compile Include="Common\RandomString.cs" />
+    <Compile Include="Common\SafePassword.cs" />
+    <Compile Include="Common\SentMailAuto.cs" />
+    <Compile Include="Common\StringModelBinder.cs" />
+    <Compile Include="Common\UploadFile.cs" />
+    <Compile Include="Common\UserAuthority.cs" />
+    <Compile Include="Common\Utility.cs" />
+    <Compile Include="Controllers\CommonController.cs" />
+    <Compile Include="Controllers\ControllerBase.cs" />
+    <Compile Include="Controllers\ErrorOutOfDateController.cs" />
+    <Compile Include="Controllers\ErrorController.cs" />
+    <Compile Include="Controllers\ErrorAuthentController.cs" />
+    <Compile Include="Controllers\IRestoreStateController.cs" />
+    <Compile Include="Controllers\PMS01001Controller.cs" />
+    <Compile Include="Controllers\PMS01002Controller.cs" />
+    <Compile Include="Controllers\PMS03001Controller.cs" />
+    <Compile Include="Controllers\PMS04001Controller.cs" />
+    <Compile Include="Controllers\PMS11001Controller.cs" />
+    <Compile Include="Controllers\PMS05001Controller.cs" />
+    <Compile Include="Controllers\PMS07001Controller.cs" />
+    <Compile Include="Controllers\PMS09005Controller.cs" />
+    <Compile Include="Controllers\PMS09004Controller.cs" />
+    <Compile Include="Controllers\PMS10005Controller.cs" />
+    <Compile Include="Controllers\PMS10004Controller.cs" />
+    <Compile Include="Controllers\PMS02001Controller.cs" />
+    <Compile Include="Controllers\PMS06001Controller.cs" />
+    <Compile Include="Controllers\PMS06002Controller.cs" />
+    <Compile Include="Controllers\PMS06003Controller.cs" />
+    <Compile Include="Controllers\PMS08001Controller.cs" />
+    <Compile Include="Controllers\PMS09001Controller.cs" />
+    <Compile Include="Controllers\PMS09002Controller.cs" />
+    <Compile Include="Controllers\PMS09003Controller.cs" />
+    <Compile Include="Controllers\PMS10003Controller.cs" />
+    <Compile Include="Controllers\PMS10002Controller.cs" />
+    <Compile Include="Controllers\PMS10001Controller.cs" />
+    <Compile Include="Controllers\PMS11003Controller.cs" />
+    <Compile Include="Controllers\PMS11002Controller.cs" />
+    <Compile Include="Global.asax.cs">
+      <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="Helpers\ActionLinkExtensions.cs" />
+    <Compile Include="Helpers\ButtonExtensions.cs" />
+    <Compile Include="Helpers\DropDownListExtensions.cs" />
+    <Compile Include="Helpers\LabelExtensions.cs" />
+    <Compile Include="Helpers\TextBoxExtensions.cs" />
+    <Compile Include="Models\Entities\Budget.cs" />
+    <Compile Include="Models\Entities\BusinessLocation.cs" />
+    <Compile Include="Models\Entities\ConsumptionTax.cs" />
+    <Compile Include="Models\Entities\ContractTypeCategory.cs" />
+    <Compile Include="Models\Entities\GroupHistory.cs" />
+    <Compile Include="Models\Entities\M_OverheadCost.cs" />
+    <Compile Include="Models\Entities\OverheadCostDetailHistory.cs" />
+    <Compile Include="Models\Entities\OverheadCostHistory.cs" />
+    <Compile Include="Models\Entities\PasswordResetManagement.cs" />
+    <Compile Include="Models\Entities\AttendanceRecord.cs" />
+    <Compile Include="Models\Entities\AttendanceType.cs" />
+    <Compile Include="Models\Entities\AuthorityRole.cs" />
+    <Compile Include="Models\Entities\Category.cs" />
+    <Compile Include="Models\Entities\ContractTypePhase.cs" />
+    <Compile Include="Models\Entities\CustomerTag.cs" />
+    <Compile Include="Models\Entities\Function.cs" />
+    <Compile Include="Models\Entities\Information.cs" />
+    <Compile Include="Models\Entities\Language.cs" />
+    <Compile Include="Models\Entities\MemberAssignmentDetailHistory.cs" />
+    <Compile Include="Models\Entities\MemberAssignmentHistory.cs" />
+    <Compile Include="Models\Entities\Numbering.cs" />
+    <Compile Include="Models\Entities\OverheadCost.cs" />
+    <Compile Include="Models\Entities\OverheadCostDetail.cs" />
+    <Compile Include="Models\Entities\OverheadCostType.cs" />
+    <Compile Include="Models\Entities\PaymentDetailHistory.cs" />
+    <Compile Include="Models\Entities\ProgressHistory.cs" />
+    <Compile Include="Models\Entities\ProjectAttachFile.cs" />
+    <Compile Include="Models\Entities\ProjectInfo.cs" />
+    <Compile Include="Models\Entities\Phase.cs" />
+    <Compile Include="Models\Entities\ProjectInfoHistory.cs" />
+    <Compile Include="Models\Entities\ProjectPlanInfo.cs" />
+    <Compile Include="Models\Entities\SalesPaymentHistory.cs" />
+    <Compile Include="Models\Entities\SubCategory .cs" />
+    <Compile Include="Models\Entities\TargetCategory.cs" />
+    <Compile Include="Models\Entities\TargetFunction.cs" />
+    <Compile Include="Models\Entities\User.cs" />
+    <Compile Include="Models\Entities\Rank.cs" />
+    <Compile Include="Models\Entities\Prefecture.cs" />
+    <Compile Include="Models\Entities\Group.cs" />
+    <Compile Include="Models\Entities\Position.cs" />
+    <Compile Include="Models\Entities\Company.cs" />
+    <Compile Include="Models\Entities\TargetPhase.cs" />
+    <Compile Include="Models\Entities\Customer.cs" />
+    <Compile Include="Models\Entities\MemberActualWork.cs" />
+    <Compile Include="Models\Entities\ContractType.cs" />
+    <Compile Include="Models\Entities\SalesPayment.cs" />
+    <Compile Include="Models\Entities\SalesPaymentDetail.cs" />
+    <Compile Include="Models\Entities\MemberAssignment.cs" />
+    <Compile Include="Models\Entities\MemberAssignmentDetail.cs" />
+    <Compile Include="Models\Entities\MemberActualWorkDetail.cs" />
+    <Compile Include="Models\Entities\Holiday.cs" />
+    <Compile Include="Models\Entities\CompanySetting.cs" />
+    <Compile Include="Models\Entities\Status.cs" />
+    <Compile Include="Models\Generated\Database.cs" />
+    <Compile Include="Models\Generated\Database1.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Database.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\PetaPoco.cs" />
+    <Compile Include="Models\PetaPocoRelationExtensions.cs" />
+    <Compile Include="Common\LoginUserInvalid.cs" />
+    <Compile Include="Models\PMS01001\ResetPass.cs" />
+    <Compile Include="Models\PMS01001\UserEmail.cs" />
+    <Compile Include="Models\PMS01001\UserPlus.cs" />
+    <Compile Include="Models\PMS01002\Condition.cs" />
+    <Compile Include="Models\PMS01002\UnitPriceHistory.cs" />
+    <Compile Include="Models\PMS01002\UnitPriceHistoryPlus.cs" />
+    <Compile Include="Models\PMS01002\UserPlus.cs" />
+    <Compile Include="Models\PMS01002\UserPlusExport.cs" />
+    <Compile Include="Models\PMS03001\Condition.cs" />
+    <Compile Include="Models\PMS03001\ContractTypeListExportCSV.cs" />
+    <Compile Include="Models\PMS03001\ContractTypeCategoryPlus.cs" />
+    <Compile Include="Models\PMS03001\ContractTypePhasePlus.cs" />
+    <Compile Include="Models\PMS03001\ContractTypePlus.cs" />
+    <Compile Include="Models\PMS04001\Condition.cs" />
+    <Compile Include="Models\PMS04001\PhaseListExportCSV.cs" />
+    <Compile Include="Models\PMS04001\PhasePlus.cs" />
+    <Compile Include="Models\PMS06002\BaseUnitCost.cs" />
+    <Compile Include="Models\PMS06002\PhaseByContract.cs" />
+    <Compile Include="Models\PMS06002\PhaseInContractType.cs" />
+    <Compile Include="Models\PMS06002\PhasePlus.cs" />
+    <Compile Include="Models\PMS08001\ProjectInfor.cs" />
+    <Compile Include="Models\PMS08001\GroupInfor.cs" />
+    <Compile Include="Models\PMS08001\AttendanceRecordPlus.cs" />
+    <Compile Include="Models\PMS08001\WorkingDay.cs" />
+    <Compile Include="Models\PMS08001\UserInfor.cs" />
+    <Compile Include="Models\PMS11001\BranchListExportCSV.cs" />
+    <Compile Include="Models\PMS11001\Condition.cs" />
+    <Compile Include="Models\PMS11001\BranchPlus.cs" />
+    <Compile Include="Models\PMS05001\Condition.cs" />
+    <Compile Include="Models\PMS05001\GroupListExportCSV.cs" />
+    <Compile Include="Models\PMS05001\GroupPlus.cs" />
+    <Compile Include="Models\PMS06001\ActualWorkCondition.cs" />
+    <Compile Include="Models\PMS06001\ProjectEffort.cs" />
+    <Compile Include="Models\PMS06001\DetailCondition.cs" />
+    <Compile Include="Models\PMS06001\MemberAssignmentTotalTime.cs" />
+    <Compile Include="Models\PMS06001\OverheadCostDetailHistoryPlus.cs" />
+    <Compile Include="Models\PMS06001\OverheadCostHistoryPlus.cs" />
+    <Compile Include="Models\PMS06001\ProgressHistoryPlus.cs" />
+    <Compile Include="Models\PMS06001\TargetCategoryPlus.cs" />
+    <Compile Include="Models\PMS06001\TargetPhasePlus.cs" />
+    <Compile Include="Models\PMS07001\Condition.cs" />
+    <Compile Include="Models\PMS07001\ConsumptionTaxListExportCSV.cs" />
+    <Compile Include="Models\PMS07001\ConsumptionTaxPlus.cs" />
+    <Compile Include="Models\PMS09004\Condition.cs" />
+    <Compile Include="Models\PMS09004\PaymentSalesDetailExportCSV.cs" />
+    <Compile Include="Models\PMS09004\PaymentSalesDetail.cs" />
+    <Compile Include="Models\PMS10004\SubCategoryPlus.cs" />
+    <Compile Include="Models\PMS10004\CategoryPlusExport.cs" />
+    <Compile Include="Models\PMS10004\Condition.cs" />
+    <Compile Include="Models\PMS10004\CategoryPlus.cs" />
+    <Compile Include="Models\PMS02001\Condition.cs" />
+    <Compile Include="Models\PMS02001\CustomerPlus.cs" />
+    <Compile Include="Models\PMS02001\CustomerPlusExport.cs" />
+    <Compile Include="Models\PMS06001\MemberAssignmentDetailHistoryPlus.cs" />
+    <Compile Include="Models\PMS06001\MemberAssignmentDetailPlus.cs" />
+    <Compile Include="Models\PMS06001\MemberAssignmentHistoryPlus.cs" />
+    <Compile Include="Models\PMS06001\MemberAssignmentPlus.cs" />
+    <Compile Include="Models\PMS06001\MemberWorkTime.cs" />
+    <Compile Include="Models\PMS06001\OverheadCostDetailPlus.cs" />
+    <Compile Include="Models\PMS06001\OverheadCostPlus.cs" />
+    <Compile Include="Models\PMS06001\PaymentDetailHistoryPlus.cs" />
+    <Compile Include="Models\PMS06001\PhasePlus.cs" />
+    <Compile Include="Models\PMS06001\ProjectAttachFilePlus.cs" />
+    <Compile Include="Models\PMS06001\ProjectInfoHistoryPlus.cs" />
+    <Compile Include="Models\PMS06001\ProjectInfoPlus.cs" />
+    <Compile Include="Models\PMS06001\ProjectListExportCSV.cs" />
+    <Compile Include="Models\PMS06001\ProjectPlanInfoPlus.cs" />
+    <Compile Include="Models\PMS06001\SalesPaymentDetailPlus.cs" />
+    <Compile Include="Models\PMS06001\SalesPaymentHistoryPlus.cs" />
+    <Compile Include="Models\PMS06001\SalesPaymentPlus.cs" />
+    <Compile Include="Models\PMS06002\AttendanceDetail.cs" />
+    <Compile Include="Models\PMS06002\AttendanceInfo.cs" />
+    <Compile Include="Models\PMS06002\ActualWorkDetailNew.cs" />
+    <Compile Include="Models\PMS06002\ActualWorkPlus.cs" />
+    <Compile Include="Models\PMS06002\DetailCondition.cs" />
+    <Compile Include="Models\PMS06002\Condition.cs" />
+    <Compile Include="Models\PMS06002\HolidayInfo.cs" />
+    <Compile Include="Models\PMS06002\UpdateInfo.cs" />
+    <Compile Include="Models\PMS06002\UserActualWorkDetailExport.cs" />
+    <Compile Include="Models\PMS06002\UserActualWorkDetailPlus.cs" />
+    <Compile Include="Models\PMS06002\UserWorkInfoPlus.cs" />
+    <Compile Include="Models\PMS06002\MemberActualWorkListPlus.cs" />
+    <Compile Include="Models\PMS06002\WorkAttendanceDetailPlus.cs" />
+    <Compile Include="Models\PMS06002\WorkDetailInfo.cs" />
+    <Compile Include="Models\PMS06002\UserActualWorkDetail.cs" />
+    <Compile Include="Models\PMS06002\UserBaseInfo.cs" />
+    <Compile Include="Models\PMS06002\WorkDetailPlus.cs" />
+    <Compile Include="Models\PMS06003\UserCondition.cs" />
+    <Compile Include="Models\PMS06003\ProjectCondition.cs" />
+    <Compile Include="Models\PMS09001\Condition.cs" />
+    <Compile Include="Models\PMS09001\PersonalSalesInfoExport.cs" />
+    <Compile Include="Models\PMS09001\PersonalSalesInfo.cs" />
+    <Compile Include="Models\PMS09001\SalesProjectDetailBasicInfo.cs" />
+    <Compile Include="Models\PMS09001\ProjectSalesInfoExport.cs" />
+    <Compile Include="Models\PMS09001\SalesProjectDetailSummary.cs" />
+    <Compile Include="Models\PMS09001\SalesProjectDetailCondition.cs" />
+    <Compile Include="Models\PMS09001\SalesGroupDetailSummary.cs" />
+    <Compile Include="Models\PMS09001\ProjectSalesInfo.cs" />
+    <Compile Include="Models\PMS09001\SalesGroupDetailCondition.cs" />
+    <Compile Include="Models\PMS09002\Condition.cs" />
+    <Compile Include="Models\PMS09002\SalesDetailByPersonal.cs" />
+    <Compile Include="Models\PMS09002\SalesDetailByPersonalCondition.cs" />
+    <Compile Include="Models\PMS09002\SalesDetailByPersonalExportCSV.cs" />
+    <Compile Include="Models\PMS09003\Condition.cs" />
+    <Compile Include="Models\PMS09003\ConditionSaleProject.cs" />
+    <Compile Include="Models\PMS09003\ConditionSaleTag.cs" />
+    <Compile Include="Models\PMS09003\SalesCustomerPlusExport.cs" />
+    <Compile Include="Models\PMS09003\SalesCustomerPlus.cs" />
+    <Compile Include="Models\PMS09003\SalesProjectByCustomerPlus.cs" />
+    <Compile Include="Models\PMS09003\SalesTagByCustomerPlus.cs" />
+    <Compile Include="Models\PMS09003\SalesProjectByCustomerPlusExport.cs" />
+    <Compile Include="Models\PMS09003\SalesTagByCustomerPlusExport.cs" />
+    <Compile Include="Models\PMS10002\Condition.cs" />
+    <Compile Include="Models\PMS10002\InformationExport.cs" />
+    <Compile Include="Models\PMS10002\InformationPlus.cs" />
+    <Compile Include="Models\PMS10001\Condition.cs" />
+    <Compile Include="Models\PMS10001\CustomerTagExport.cs" />
+    <Compile Include="Models\PMS10001\CustomerTagPlus.cs" />
+    <Compile Include="Models\PMS10003\CompanySettingPlus.cs" />
+    <Compile Include="Models\PMS10003\Condition.cs" />
+    <Compile Include="Models\PMS10003\CompanyPlus.cs" />
+    <Compile Include="Models\PMS10003\CustomerPlusExport.cs" />
+    <Compile Include="Models\PMS10005\OverHeadCostPlus.cs" />
+    <Compile Include="Models\PMS10005\OverHeadCostPlusExport.cs" />
+    <Compile Include="Models\PMS10005\Condition.cs" />
+    <Compile Include="Models\PMS11003\DataSalesProfitExport.cs" />
+    <Compile Include="Models\PMS11003\ProfitData.cs" />
+    <Compile Include="Models\PMS11003\TotalContractTypeProfit.cs" />
+    <Compile Include="Models\PMS11003\TotalGrAllProfit.cs" />
+    <Compile Include="Models\PMS11003\TotalGrAll.cs" />
+    <Compile Include="Models\PMS11003\TotalContractType.cs" />
+    <Compile Include="Models\PMS11003\TotalGroupProfit.cs" />
+    <Compile Include="Models\PMS11003\TotalGroup.cs" />
+    <Compile Include="Models\PMS11003\TimeList.cs" />
+    <Compile Include="Models\PMS11003\SalesData.cs" />
+    <Compile Include="Models\PMS11003\Condition.cs" />
+    <Compile Include="Models\PMS11002\BudgetPlus.cs" />
+    <Compile Include="Models\PMS11002\TotalYearList.cs" />
+    <Compile Include="Models\PMS11002\Condition.cs" />
+    <Compile Include="Models\PMSDatabase.cs" />
+    <Compile Include="Models\Repositories\Impl\PMS01001Repository.cs" />
+    <Compile Include="Models\Repositories\Impl\PMS03001Repository.cs" />
+    <Compile Include="Models\Repositories\Impl\PMS04001Repository.cs" />
+    <Compile Include="Models\Repositories\Impl\PMS11001Repository.cs" />
+    <Compile Include="Models\Repositories\Impl\PMS05001Repository.cs" />
+    <Compile Include="Models\Repositories\Impl\PMS07001Repository.cs" />
+    <Compile Include="Models\Repositories\Impl\PMS09001Repository.cs" />
+    <Compile Include="Models\Repositories\Impl\PMS09004Repository.cs" />
+    <Compile Include="Models\Repositories\Impl\PMS09002Repository.cs" />
+    <Compile Include="Models\Repositories\Impl\PMS09003Repository.cs" />
+    <Compile Include="Models\Repositories\Impl\PMS01002Repository.cs" />
+    <Compile Include="Models\Repositories\Impl\PMS02001Repository.cs" />
+    <Compile Include="Models\Repositories\Impl\PMS06002Repository.cs" />
+    <Compile Include="Models\Repositories\Impl\PMS06003Repository.cs" />
+    <Compile Include="Models\Repositories\Impl\PMS08001Repository.cs" />
+    <Compile Include="Models\Repositories\Impl\PMS10005Repository.cs" />
+    <Compile Include="Models\Repositories\Impl\PMS10004Repository.cs" />
+    <Compile Include="Models\Repositories\Impl\PMS10003Repository.cs" />
+    <Compile Include="Models\Repositories\Impl\PMS10002Repository.cs" />
+    <Compile Include="Models\Repositories\Impl\PMS10001Repository.cs" />
+    <Compile Include="Models\Repositories\Impl\PMS11003Repository.cs" />
+    <Compile Include="Models\Repositories\Impl\PMS11002Repository.cs" />
+    <Compile Include="Models\Repositories\Impl\PMSCommonRepository.cs" />
+    <Compile Include="Models\Repositories\Impl\Repository.cs" />
+    <Compile Include="Models\Repositories\Impl\PMS06001Repository.cs" />
+    <Compile Include="Models\Repositories\IPMS01001Repository.cs" />
+    <Compile Include="Models\Repositories\IPMS03001Repository.cs" />
+    <Compile Include="Models\Repositories\IPMS04001Repository.cs" />
+    <Compile Include="Models\Repositories\IPMS11001Repository.cs" />
+    <Compile Include="Models\Repositories\IPMS05001Repository.cs" />
+    <Compile Include="Models\Repositories\IPMS07001Repository.cs" />
+    <Compile Include="Models\Repositories\IPMS09001Repository.cs" />
+    <Compile Include="Models\Repositories\IPMS09004Repository.cs" />
+    <Compile Include="Models\Repositories\IPMS09002Repository.cs" />
+    <Compile Include="Models\Repositories\IPMS09003Repository.cs" />
+    <Compile Include="Models\Repositories\IPMS01002Repository.cs" />
+    <Compile Include="Models\Repositories\IPMS02001Repository.cs" />
+    <Compile Include="Models\Repositories\IPMS06002Repository.cs" />
+    <Compile Include="Models\Repositories\IPMS06003Repository.cs" />
+    <Compile Include="Models\Repositories\IPMS08001Repository.cs" />
+    <Compile Include="Models\Repositories\IPMS10005Repository.cs" />
+    <Compile Include="Models\Repositories\IPMS10004Repository.cs" />
+    <Compile Include="Models\Repositories\IPMS10003Repository.cs" />
+    <Compile Include="Models\Repositories\IPMS10002Repository.cs" />
+    <Compile Include="Models\Repositories\IPMS10001Repository.cs" />
+    <Compile Include="Models\Repositories\IPMS11003Repository.cs" />
+    <Compile Include="Models\Repositories\IPMS11002Repository.cs" />
+    <Compile Include="Models\Repositories\IPMSCommonRepository.cs" />
+    <Compile Include="Models\Repositories\IRepository.cs" />
+    <Compile Include="Models\Repositories\IPMS06001Repository.cs" />
+    <Compile Include="Models\PMS06001\Condition.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Resources\Messages.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Messages.resx</DependentUpon>
+    </Compile>
+    <Compile Include="ViewModels\DataTablesModel.cs" />
+    <Compile Include="ViewModels\PMS01001\CompanyCodeViewModel.cs" />
+    <Compile Include="ViewModels\PMS01001\LoginViewModel.cs" />
+    <Compile Include="ViewModels\PMS01001\SetNewPasswordViewModel.cs" />
+    <Compile Include="ViewModels\PMS01001\PasswordReissueViewModel.cs" />
+    <Compile Include="ViewModels\PMS01002\PMS01002EditViewModel.cs" />
+    <Compile Include="ViewModels\PMS01002\PMS01002ListViewModel.cs" />
+    <Compile Include="ViewModels\PMS01002\PMS01002PersonalSettingViewModel.cs" />
+    <Compile Include="ViewModels\PMS03001\PMS03001EditViewModel.cs" />
+    <Compile Include="ViewModels\PMS03001\PMS03001ListViewModel.cs" />
+    <Compile Include="ViewModels\PMS04001\PMS04001EditViewModel.cs" />
+    <Compile Include="ViewModels\PMS04001\PMS04001ListViewModel.cs" />
+    <Compile Include="ViewModels\PMS11001\PMS11001EditViewModel.cs" />
+    <Compile Include="ViewModels\PMS11001\PMS11001ListViewModel.cs" />
+    <Compile Include="ViewModels\PMS05001\PMS05001EditViewModel.cs" />
+    <Compile Include="ViewModels\PMS05001\PMS05001ListViewModel.cs" />
+    <Compile Include="ViewModels\PMS06001\PMS06001ActualWorkViewModel.cs" />
+    <Compile Include="ViewModels\PMS07001\PMS07001EditViewModel.cs" />
+    <Compile Include="ViewModels\PMS07001\PMS07001ListViewModel.cs" />
+    <Compile Include="ViewModels\PMS09004\PMS09004ListViewModel.cs" />
+    <Compile Include="ViewModels\PMS10005\PMS10005EditViewModel.cs" />
+    <Compile Include="ViewModels\PMS10005\PMS10005ListViewModel.cs" />
+    <Compile Include="ViewModels\PMS10004\PMS10004EditViewModel.cs" />
+    <Compile Include="ViewModels\PMS10004\PMS10004ListViewModel.cs" />
+    <Compile Include="ViewModels\PMS02001\PMS02001EditViewModel.cs" />
+    <Compile Include="ViewModels\PMS02001\PMS02001ListViewModel.cs" />
+    <Compile Include="ViewModels\PMS06001\PMS06001DetailViewModel.cs" />
+    <Compile Include="ViewModels\PMS06001\PMS06001EditPlanViewModel.cs" />
+    <Compile Include="ViewModels\PMS06001\PMS06001EditViewModel.cs" />
+    <Compile Include="ViewModels\PMS06001\PMS06001ListViewModel.cs" />
+    <Compile Include="ViewModels\PMS06002\PMS06002ActualWorkRegistNew.cs" />
+    <Compile Include="ViewModels\PMS06002\PMS06002ActualWorkRegist.cs" />
+    <Compile Include="ViewModels\PMS06002\PMS06002DetailNewViewModel.cs" />
+    <Compile Include="ViewModels\PMS06002\PMS06002DetailViewModel.cs" />
+    <Compile Include="ViewModels\PMS06002\PMS06002ListViewModel.cs" />
+    <Compile Include="ViewModels\PMS06003\AssignmentByProjectViewModel.cs" />
+    <Compile Include="ViewModels\PMS06003\AssignmentByUserViewModel.cs" />
+    <Compile Include="ViewModels\PMS08001\PMS08001ListViewModel.cs" />
+    <Compile Include="ViewModels\PMS09001\PMS09001ListViewModel.cs" />
+    <Compile Include="ViewModels\PMS09001\PMS09001SalesProjectDetailViewModel.cs" />
+    <Compile Include="ViewModels\PMS09001\PMS09001SalesGroupDetailViewModel.cs" />
+    <Compile Include="ViewModels\PMS09002\PMS09002DetailViewModel.cs" />
+    <Compile Include="ViewModels\PMS09002\PMS09002ListViewModel.cs" />
+    <Compile Include="ViewModels\PMS09003\PMS09003SalesProjectByCustomerViewModel.cs" />
+    <Compile Include="ViewModels\PMS09003\PMS09003SalesTagByCustomerViewModel.cs" />
+    <Compile Include="ViewModels\PMS09003\PMS09003SalesViewModel.cs" />
+    <Compile Include="ViewModels\PMS10002\PMS10002EditViewModel.cs" />
+    <Compile Include="ViewModels\PMS10002\PMS10002ListViewModel.cs" />
+    <Compile Include="ViewModels\PMS10001\PMS10001EditViewModel.cs" />
+    <Compile Include="ViewModels\PMS10001\PMS10001ListViewModel.cs" />
+    <Compile Include="ViewModels\PMS10003\PMS10003CompanyDetailViewModel.cs" />
+    <Compile Include="ViewModels\PMS10003\PMS10003CompanyInfoViewModel.cs" />
+    <Compile Include="ViewModels\PMS11003\PMS11003ProfitBudget.cs" />
+    <Compile Include="ViewModels\PMS11003\PMS11003SalesBudget.cs" />
+    <Compile Include="ViewModels\PMS11002\PMS11002EditViewModel.cs" />
+    <Compile Include="ViewModels\PMS11002\PMS11002ListViewModel.cs" />
+    <Compile Include="ViewModels\ViewModelBase.cs" />
+    <Compile Include="WorkerServices\Impl\PMS01001Service.cs" />
+    <Compile Include="WorkerServices\Impl\PMS03001Service.cs" />
+    <Compile Include="WorkerServices\Impl\PMS04001Service.cs" />
+    <Compile Include="WorkerServices\Impl\PMS11001Service.cs" />
+    <Compile Include="WorkerServices\Impl\PMS05001Service.cs" />
+    <Compile Include="WorkerServices\Impl\PMS07001Service.cs" />
+    <Compile Include="WorkerServices\Impl\PMS09001Service.cs" />
+    <Compile Include="WorkerServices\Impl\PMS09004Service.cs" />
+    <Compile Include="WorkerServices\Impl\PMS09002Service.cs" />
+    <Compile Include="WorkerServices\Impl\PMS09003Service.cs" />
+    <Compile Include="WorkerServices\Impl\PMS01002Service.cs" />
+    <Compile Include="WorkerServices\Impl\PMS02001Service.cs" />
+    <Compile Include="WorkerServices\Impl\PMS06001Service.cs" />
+    <Compile Include="WorkerServices\Impl\PMS06002Service.cs" />
+    <Compile Include="WorkerServices\Impl\PMS06003Service.cs" />
+    <Compile Include="WorkerServices\Impl\PMS08001Service.cs" />
+    <Compile Include="WorkerServices\Impl\PMS10005Service.cs" />
+    <Compile Include="WorkerServices\Impl\PMS10004Service.cs" />
+    <Compile Include="WorkerServices\Impl\PMS10003Service.cs" />
+    <Compile Include="WorkerServices\Impl\PMS10002Service.cs" />
+    <Compile Include="WorkerServices\Impl\PMS10001Service.cs" />
+    <Compile Include="WorkerServices\Impl\PMS11003Service.cs" />
+    <Compile Include="WorkerServices\Impl\PMS11002Service.cs" />
+    <Compile Include="WorkerServices\Impl\PMSCommonService.cs" />
+    <Compile Include="WorkerServices\IPMS01001Service.cs" />
+    <Compile Include="WorkerServices\IPMS03001Service.cs" />
+    <Compile Include="WorkerServices\IPMS04001Service.cs" />
+    <Compile Include="WorkerServices\IPMS11001Service.cs" />
+    <Compile Include="WorkerServices\IPMS05001Service.cs" />
+    <Compile Include="WorkerServices\IPMS07001Service.cs" />
+    <Compile Include="WorkerServices\IPMS09001Service.cs" />
+    <Compile Include="WorkerServices\IPMS09004Service.cs" />
+    <Compile Include="WorkerServices\IPMS09002Service.cs" />
+    <Compile Include="WorkerServices\IPMS09003Service.cs" />
+    <Compile Include="WorkerServices\IPMS01002Service.cs" />
+    <Compile Include="WorkerServices\IPMS02001Service.cs" />
+    <Compile Include="WorkerServices\IPMS06001Service.cs" />
+    <Compile Include="WorkerServices\IPMS06002Service.cs" />
+    <Compile Include="WorkerServices\IPMS06003Service.cs" />
+    <Compile Include="WorkerServices\IPMS08001Service.cs" />
+    <Compile Include="WorkerServices\IPMS10005Service.cs" />
+    <Compile Include="WorkerServices\IPMS10004Service.cs" />
+    <Compile Include="WorkerServices\IPMS10003Service.cs" />
+    <Compile Include="WorkerServices\IPMS10002Service.cs" />
+    <Compile Include="WorkerServices\IPMS10001Service.cs" />
+    <Compile Include="WorkerServices\IPMS11003Service.cs" />
+    <Compile Include="WorkerServices\IPMS11002Service.cs" />
+    <Compile Include="WorkerServices\IPMSCommonService.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="App_Start\FilterConfig.cs" />
+    <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="App_Start\WebApiConfig.cs" />
+    <Content Include="bin\Antlr3.Runtime.dll" />
+    <Content Include="bin\Lib.Web.Mvc.dll" />
+    <Content Include="bin\log4net.dll" />
+    <Content Include="bin\Microsoft.Web.Infrastructure.dll" />
+    <Content Include="bin\Microsoft.Web.Mvc.FixedDisplayModes.dll" />
+    <Content Include="bin\Newtonsoft.Json.dll" />
+    <Content Include="bin\ProjectManagementSystem.dll" />
+    <Content Include="bin\ProjectManagementSystem.pdb" />
+    <Content Include="bin\System.Net.Http.dll" />
+    <Content Include="bin\System.Net.Http.Formatting.dll" />
+    <Content Include="bin\System.Net.Http.WebRequest.dll" />
+    <Content Include="bin\System.Web.Helpers.dll" />
+    <Content Include="bin\System.Web.Http.dll" />
+    <Content Include="bin\System.Web.Http.WebHost.dll" />
+    <Content Include="bin\System.Web.Mvc.dll" />
+    <Content Include="bin\System.Web.Optimization.dll" />
+    <Content Include="bin\System.Web.Razor.dll" />
+    <Content Include="bin\System.Web.WebPages.Deployment.dll" />
+    <Content Include="bin\System.Web.WebPages.dll" />
+    <Content Include="bin\System.Web.WebPages.Razor.dll" />
+    <Content Include="bin\WebGrease.dll" />
+    <Content Include="Content\cm-form.css" />
+    <Content Include="Content\cm-layout.css" />
+    <Content Include="Content\css\AdminLTE.css" />
+    <Content Include="Content\css\bootstrap-slider\slider.css" />
+    <Content Include="Content\css\bootstrap-theme.css" />
+    <Content Include="Content\css\bootstrap-wysihtml5\bootstrap3-wysihtml5.css" />
+    <Content Include="Content\css\bootstrap-wysihtml5\bootstrap3-wysihtml5.min.css" />
+    <Content Include="Content\css\bootstrap.css" />
+    <Content Include="Content\css\datatables\dataTables.bootstrap.css" />
+    <Content Include="Content\css\datatables\images\sort_asc.png" />
+    <Content Include="Content\css\datatables\images\sort_asc_disabled.png" />
+    <Content Include="Content\css\datatables\images\sort_both.png" />
+    <Content Include="Content\css\datatables\images\sort_desc.png" />
+    <Content Include="Content\css\datatables\images\sort_desc_disabled.png" />
+    <Content Include="Content\css\daterangepicker\daterangepicker-bs3.css" />
+    <Content Include="Content\css\skins\skin-black.css" />
+    <Content Include="Content\css\skins\skin-black.min.css" />
+    <Content Include="Content\css\skins\skin-blue.css" />
+    <Content Include="Content\css\skins\skin-blue.min.css" />
+    <Content Include="Content\css\skins\skin-green.css" />
+    <Content Include="Content\css\skins\skin-green.min.css" />
+    <Content Include="Content\css\skins\skin-purple.css" />
+    <Content Include="Content\css\skins\skin-purple.min.css" />
+    <Content Include="Content\css\skins\skin-red.css" />
+    <Content Include="Content\css\skins\skin-red.min.css" />
+    <Content Include="Content\css\skins\skin-yellow.css" />
+    <Content Include="Content\css\skins\skin-yellow.min.css" />
+    <Content Include="Content\css\skins\_all-skins.css" />
+    <Content Include="Content\css\skins\_all-skins.min.css" />
+    <Content Include="Content\dataTables.colReorder.css" />
+    <Content Include="Content\datepicker.css" />
+    <Content Include="Content\Error.css" />
+    <Content Include="Content\fontawesome\css\font-awesome.css" />
+    <Content Include="Content\fontawesome\css\fonts\fontawesome-webfont.svg" />
+    <Content Include="Content\cm-table-paging.css" />
+    <Content Include="Content\dataTables_lang.txt" />
+    <Content Include="Content\img\breadcrumbs-bg.gif" />
+    <Content Include="Content\img\bx_loader.gif" />
+    <Content Include="Content\img\calendar.gif" />
+    <Content Include="Content\img\controls.png" />
+    <Content Include="Content\img\gray_jean.png" />
+    <Content Include="Content\img\icon-arrow-right.png" />
+    <Content Include="Content\img\loginImage.png" />
+    <Content Include="Content\img\logo.png" />
+    <Content Include="Content\PMS01001.css" />
+    <Content Include="Content\PMS03001.css" />
+    <Content Include="Content\PMS04001.css" />
+    <Content Include="Content\PMS11001.css" />
+    <Content Include="Content\PMS05001.css" />
+    <Content Include="Content\PMS07001.css" />
+    <Content Include="Content\PMS09005.css" />
+    <Content Include="Content\PMS09004.css" />
+    <Content Include="Content\PMS10005.css" />
+    <Content Include="Content\PMS10004.css" />
+    <Content Include="Content\PMS10003.css" />
+    <Content Include="Content\PMS09001.css" />
+    <Content Include="Content\PMS09002.css" />
+    <Content Include="Content\PMS09003.css" />
+    <Content Include="Content\PMS01002.css" />
+    <Content Include="Content\PMS02001.css" />
+    <Content Include="Content\PMS06001.css" />
+    <Content Include="Content\PMS06003.css" />
+    <Content Include="Content\PMS06002.css" />
+    <Content Include="Content\PMS08001.css" />
+    <Content Include="Content\PMS10001.css" />
+    <Content Include="Content\PMS10002.css" />
+    <Content Include="Content\PMS11003.css" />
+    <Content Include="Content\PMS11002.css" />
+    <Content Include="Content\themes\base\images\animated-overlay.gif" />
+    <Content Include="Content\themes\base\images\ui-bg_flat_0_aaaaaa_40x100.png" />
+    <Content Include="Content\themes\base\images\ui-bg_flat_75_ffffff_40x100.png" />
+    <Content Include="Content\themes\base\images\ui-bg_glass_55_fbf9ee_1x400.png" />
+    <Content Include="Content\themes\base\images\ui-bg_glass_65_ffffff_1x400.png" />
+    <Content Include="Content\themes\base\images\ui-bg_glass_75_dadada_1x400.png" />
+    <Content Include="Content\themes\base\images\ui-bg_glass_75_e6e6e6_1x400.png" />
+    <Content Include="Content\themes\base\images\ui-bg_glass_95_fef1ec_1x400.png" />
+    <Content Include="Content\themes\base\images\ui-bg_highlight-soft_75_cccccc_1x100.png" />
+    <Content Include="Content\themes\base\images\ui-icons_222222_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_2e83ff_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_454545_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_888888_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_cd0a0a_256x240.png" />
+    <Content Include="Content\themes\base\jquery-ui.css" />
+    <Content Include="Content\themes\base\jquery.ui.accordion.css" />
+    <Content Include="Content\themes\base\jquery.ui.all.css" />
+    <Content Include="Content\themes\base\jquery.ui.autocomplete.css" />
+    <Content Include="Content\themes\base\jquery.ui.base.css" />
+    <Content Include="Content\themes\base\jquery.ui.button.css" />
+    <Content Include="Content\themes\base\jquery.ui.core.css" />
+    <Content Include="Content\themes\base\jquery.ui.datepicker.css" />
+    <Content Include="Content\themes\base\jquery.ui.dialog.css" />
+    <Content Include="Content\themes\base\jquery.ui.menu.css" />
+    <Content Include="Content\themes\base\jquery.ui.progressbar.css" />
+    <Content Include="Content\themes\base\jquery.ui.resizable.css" />
+    <Content Include="Content\themes\base\jquery.ui.selectable.css" />
+    <Content Include="Content\themes\base\jquery.ui.slider.css" />
+    <Content Include="Content\themes\base\jquery.ui.spinner.css" />
+    <Content Include="Content\themes\base\jquery.ui.tabs.css" />
+    <Content Include="Content\themes\base\jquery.ui.theme.css" />
+    <Content Include="Content\themes\base\jquery.ui.tooltip.css" />
+    <Content Include="Content\themes\base\minified\images\animated-overlay.gif" />
+    <Content Include="Content\themes\base\minified\images\ui-bg_flat_0_aaaaaa_40x100.png" />
+    <Content Include="Content\themes\base\minified\images\ui-bg_flat_75_ffffff_40x100.png" />
+    <Content Include="Content\themes\base\minified\images\ui-bg_glass_55_fbf9ee_1x400.png" />
+    <Content Include="Content\themes\base\minified\images\ui-bg_glass_65_ffffff_1x400.png" />
+    <Content Include="Content\themes\base\minified\images\ui-bg_glass_75_dadada_1x400.png" />
+    <Content Include="Content\themes\base\minified\images\ui-bg_glass_75_e6e6e6_1x400.png" />
+    <Content Include="Content\themes\base\minified\images\ui-bg_glass_95_fef1ec_1x400.png" />
+    <Content Include="Content\themes\base\minified\images\ui-bg_highlight-soft_75_cccccc_1x100.png" />
+    <Content Include="Content\themes\base\minified\images\ui-icons_222222_256x240.png" />
+    <Content Include="Content\themes\base\minified\images\ui-icons_2e83ff_256x240.png" />
+    <Content Include="Content\themes\base\minified\images\ui-icons_454545_256x240.png" />
+    <Content Include="Content\themes\base\minified\images\ui-icons_888888_256x240.png" />
+    <Content Include="Content\themes\base\minified\images\ui-icons_cd0a0a_256x240.png" />
+    <Content Include="Content\themes\base\minified\jquery-ui.min.css" />
+    <Content Include="Content\themes\base\minified\jquery.ui.accordion.min.css" />
+    <Content Include="Content\themes\base\minified\jquery.ui.autocomplete.min.css" />
+    <Content Include="Content\themes\base\minified\jquery.ui.button.min.css" />
+    <Content Include="Content\themes\base\minified\jquery.ui.core.min.css" />
+    <Content Include="Content\themes\base\minified\jquery.ui.datepicker.min.css" />
+    <Content Include="Content\themes\base\minified\jquery.ui.dialog.min.css" />
+    <Content Include="Content\themes\base\minified\jquery.ui.menu.min.css" />
+    <Content Include="Content\themes\base\minified\jquery.ui.progressbar.min.css" />
+    <Content Include="Content\themes\base\minified\jquery.ui.resizable.min.css" />
+    <Content Include="Content\themes\base\minified\jquery.ui.selectable.min.css" />
+    <Content Include="Content\themes\base\minified\jquery.ui.slider.min.css" />
+    <Content Include="Content\themes\base\minified\jquery.ui.spinner.min.css" />
+    <Content Include="Content\themes\base\minified\jquery.ui.tabs.min.css" />
+    <Content Include="Content\themes\base\minified\jquery.ui.theme.min.css" />
+    <Content Include="Content\themes\base\minified\jquery.ui.tooltip.min.css" />
+    <Content Include="Content\thickbox.css" />
+    <Content Include="Global.asax" />
+    <Content Include="Images\ajax-loader.gif" />
+    <Content Include="Images\bg.png" />
+    <Content Include="Images\btn_down.png" />
+    <Content Include="Images\btn_icon_slice\budget.png" />
+    <Content Include="Images\btn_icon_slice\ico_allocation.png" />
+    <Content Include="Images\btn_icon_slice\ico_assign.png" />
+    <Content Include="Images\btn_icon_slice\ico_back.png" />
+    <Content Include="Images\btn_icon_slice\ico_back_gray.png" />
+    <Content Include="Images\btn_icon_slice\ico_budget.png" />
+    <Content Include="Images\btn_icon_slice\ico_carender.png" />
+    <Content Include="Images\btn_icon_slice\ico_carender_gray.png" />
+    <Content Include="Images\btn_icon_slice\ico_check.png" />
+    <Content Include="Images\btn_icon_slice\ico_clear.png" />
+    <Content Include="Images\btn_icon_slice\ico_clear_gray.png" />
+    <Content Include="Images\btn_icon_slice\ico_clip.png" />
+    <Content Include="Images\btn_icon_slice\ico_clip_gray.png" />
+    <Content Include="Images\btn_icon_slice\ico_close.png" />
+    <Content Include="Images\btn_icon_slice\ico_copy.png" />
+    <Content Include="Images\btn_icon_slice\ico_copy_gray.png" />
+    <Content Include="Images\btn_icon_slice\ico_download.png" />
+    <Content Include="Images\btn_icon_slice\ico_download_gray.png" />
+    <Content Include="Images\btn_icon_slice\ico_filter.png" />
+    <Content Include="Images\btn_icon_slice\ico_header_close.png" />
+    <Content Include="Images\btn_icon_slice\ico_header_open.png" />
+    <Content Include="Images\btn_icon_slice\ico_mastermaintenance.png" />
+    <Content Include="Images\btn_icon_slice\ico_menu_close.png" />
+    <Content Include="Images\btn_icon_slice\ico_menu_open.png" />
+    <Content Include="Images\btn_icon_slice\ico_minus.png" />
+    <Content Include="Images\btn_icon_slice\ico_minus_gray.png" />
+    <Content Include="Images\btn_icon_slice\ico_open.png" />
+    <Content Include="Images\btn_icon_slice\ico_pj.png" />
+    <Content Include="Images\btn_icon_slice\ico_plus.png" />
+    <Content Include="Images\btn_icon_slice\ico_plus_gray.png" />
+    <Content Include="Images\btn_icon_slice\ico_register.png" />
+    <Content Include="Images\btn_icon_slice\ico_register_gray.png" />
+    <Content Include="Images\btn_icon_slice\ico_running.png" />
+    <Content Include="Images\btn_icon_slice\ico_running_gray.png" />
+    <Content Include="Images\btn_icon_slice\ico_sales.png" />
+    <Content Include="Images\btn_icon_slice\ico_search.png" />
+    <Content Include="Images\btn_icon_slice\ico_search_gray.png" />
+    <Content Include="Images\btn_icon_slice\ico_send.png" />
+    <Content Include="Images\btn_icon_slice\ico_send_gray.png" />
+    <Content Include="Images\btn_icon_slice\ico_split.png" />
+    <Content Include="Images\btn_icon_slice\ico_split_gray.png" />
+    <Content Include="Images\btn_icon_slice\ico_upload.png" />
+    <Content Include="Images\btn_icon_slice\ico_upload_gray.png" />
+    <Content Include="Images\btn_icon_slice\ico_user.png" />
+    <Content Include="Images\btn_up.png" />
+    <Content Include="Images\favicon.ico" />
+    <Content Include="Images\favicon_16.ico" />
+    <Content Include="Images\ico_service.png" />
+    <Content Include="Images\ienter_logo.png" />
+    <Content Include="Images\img_building.png" />
+    <Content Include="Images\img_user.png" />
+    <Content Include="Images\insert.png" />
+    <Content Include="Images\loadingAnimation.gif" />
+    <Content Include="Images\logo.png" />
+    <Content Include="Images\logo_login.png" />
+    <Content Include="Images\logo_reissue.png" />
+    <Content Include="Images\sort_asc.png" />
+    <Content Include="Images\sort_asc_disabled.png" />
+    <Content Include="Images\sort_both.png" />
+    <Content Include="Images\sort_desc.png" />
+    <Content Include="Images\sort_desc_disabled.png" />
+    <Content Include="Scripts\bootstrap-filestyle.min.js" />
+    <Content Include="Scripts\jquery-filestyle.min.js" />
+    <Content Include="Scripts\jquery.vgrid.min.js" />
+    <Content Include="Scripts\bootstrap.js" />
+    <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="Scripts\ColReorderWithResize.js" />
+    <Content Include="Scripts\dataTables.colReorder.js" />
+    <Content Include="Scripts\jquery.dataTables.js" />
+    <Content Include="Scripts\pace.js" />
+    <Content Include="Scripts\plugins\app.min.js" />
+    <Content Include="Scripts\plugins\bootstrap-dialog.min.js" />
+    <Content Include="Scripts\plugins\bootstrap-slider\bootstrap-slider.js" />
+    <Content Include="Scripts\plugins\bootstrap-wysihtml5\bootstrap3-wysihtml5.all.min.js" />
+    <Content Include="Scripts\plugins\bootstrap-wysihtml5\bootstrap3-wysihtml5.js" />
+    <Content Include="Scripts\plugins\datatables\dataTables.bootstrap.js" />
+    <Content Include="Scripts\fnStandingRedraw.js" />
+    <Content Include="Scripts\plugins\datatables\jquery.dataTables.js" />
+    <Content Include="Scripts\plugins\datepicker\bootstrap-datepicker.js" />
+    <Content Include="Scripts\plugins\datepicker\locales\bootstrap-datepicker.ja.js" />
+    <Content Include="Scripts\plugins\daterangepicker\daterangepicker.js" />
+    <Content Include="Scripts\plugins\drag-on.js" />
+    <Content Include="Scripts\plugins\jQueryUI\jquery-ui-1.10.3.js" />
+    <Content Include="Scripts\plugins\jQueryUI\jquery-ui-1.10.3.min.js" />
+    <Content Include="Scripts\plugins\jQuery\jQuery-2.1.3.min.js" />
+    <Content Include="Scripts\PMS.ActualWorkRegistNew.js" />
+    <Content Include="Scripts\PMS.ActualWorkRegist.js" />
+    <Content Include="Scripts\PMS.CmnEventUtil.js" />
+    <Content Include="Scripts\PMS.dataTables.js" />
+    <Content Include="Scripts\PMS.numeric.js" />
+    <Content Include="Scripts\PMS.ProjectHistory.js" />
+    <Content Include="Scripts\PMS.Utility.js" />
+    <Content Include="Scripts\PMS.windowControl.js" />
+    <Content Include="Models\Generated\Database.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Database1.cs</LastGenOutput>
+    </Content>
+    <Content Include="Models\Generated\PetaPoco.Core.ttinclude" />
+    <Content Include="Models\Generated\PetaPoco.Generator.ttinclude" />
+    <Content Include="Config\PMS.config">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Config\log.config">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="bin\ProjectManagementSystem.dll.config" />
+    <Content Include="Content\css\bootstrap.css.map" />
+    <Content Include="Content\fontawesome\css\fonts\fontawesome-webfont.eot" />
+    <Content Include="Content\fontawesome\css\fonts\fontawesome-webfont.ttf" />
+    <Content Include="Content\fontawesome\css\fonts\fontawesome-webfont.woff" />
+    <Content Include="Content\fontawesome\css\fonts\fontawesome-webfont.woff2" />
+    <Content Include="Content\fontawesome\css\fonts\FontAwesome.otf" />
+    <Content Include="App_Data\Data\KEN_ALL.CSV" />
+    <Content Include="App_Data\Data\【○△□案件】プロジェクト計画書.xlsx" />
+    <Content Include="App_Data\Data\勤務表.xlsm" />
+    <Content Include="App_Data\Data\合計請求書テンプレート.xlsx" />
+    <Content Include="App_Data\Data\所属別予実一覧.xlsx" />
+    <Content Include="App_Data\Data\勤務表.xlsx" />
+    <None Include="Properties\PublishProfiles\iPro-BudgetSetting.pubxml" />
+    <None Include="Properties\PublishProfiles\iPro.pubxml" />
+    <None Include="Scripts\jquery-1.9.1.intellisense.js" />
+    <Content Include="Scripts\jquery-1.9.1.js" />
+    <Content Include="Scripts\jquery-1.9.1.min.js" />
+    <Content Include="Scripts\jquery-ui-1.10.3.js" />
+    <Content Include="Scripts\jquery-ui-1.10.3.min.js" />
+    <Content Include="Scripts\jquery.numeric.js" />
+    <Content Include="Scripts\jquery.numeric.min.js" />
+    <Content Include="Scripts\kickstart.js" />
+    <Content Include="Scripts\PMS.ProjectRegist.js" />
+    <Content Include="Scripts\thickbox.js" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Web.Debug.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+    <Content Include="Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+    <Content Include="Views\PMS06001\List.cshtml" />
+    <Content Include="Views\PMS06001\Edit.cshtml" />
+    <Content Include="Views\PMS01001\Login.cshtml" />
+    <Content Include="Views\PMS06003\AssignmentByProject.cshtml" />
+    <Content Include="Views\PMS06003\AssignmentByUser.cshtml" />
+    <Content Include="Views\PMS01002\Edit.cshtml" />
+    <Content Include="Views\PMS01002\List.cshtml" />
+    <Content Include="Views\PMS02001\Edit.cshtml" />
+    <Content Include="Views\PMS02001\List.cshtml" />
+    <Content Include="Views\PMS01002\Select.cshtml" />
+    <Content Include="Views\PMS02001\Select.cshtml" />
+    <Content Include="Views\PMS06001\Detail.cshtml" />
+    <Content Include="Views\PMS08001\List.cshtml" />
+    <Content Include="Views\PMS06002\List.cshtml" />
+    <Content Include="Views\PMS01002\PersonalSetting.cshtml" />
+    <Content Include="Views\PMS06002\Detail.cshtml" />
+    <Content Include="Views\PMS06002\Register.cshtml" />
+    <Content Include="Views\PMS01001\PasswordReissue.cshtml" />
+    <Content Include="Views\Shared\ErrorAuthent.cshtml" />
+    <Content Include="Views\Shared\_LayoutSelect.cshtml" />
+    <Content Include="Views\Web.config">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Views\PMS06002\RegisterNew.cshtml" />
+    <Content Include="Views\PMS09003\Index.cshtml" />
+    <Content Include="Views\PMS06002\DetailNew.cshtml" />
+    <Content Include="Views\PMS09001\List.cshtml" />
+    <Content Include="Views\PMS09002\List.cshtml" />
+    <Content Include="Views\PMS10001\Edit.cshtml" />
+    <Content Include="Views\PMS10001\List.cshtml" />
+    <Content Include="Views\PMS10002\Edit.cshtml" />
+    <Content Include="Views\PMS10002\List.cshtml" />
+    <Content Include="Views\PMS06001\History.cshtml" />
+    <Content Include="Views\PMS06001\Plan.cshtml" />
+    <Content Include="Views\PMS09001\SalesGroupDetail.cshtml" />
+    <Content Include="Views\PMS10003\CompanyInfo.cshtml" />
+    <Content Include="Views\PMS09001\SalesProjectDetail.cshtml" />
+    <Content Include="Views\PMS09003\SaleTagByCustomer.cshtml" />
+    <Content Include="Views\PMS09003\SaleProjectByCustomer.cshtml" />
+    <Content Include="Views\PMS09002\Detail.cshtml" />
+    <Content Include="Views\PMS10003\CompanyDetail.cshtml" />
+    <Content Include="Views\PMS10004\List.cshtml" />
+    <Content Include="Views\PMS01001\SetNewPassword.cshtml" />
+    <Content Include="Views\PMS01001\ErrorResetPassword.cshtml" />
+    <Content Include="Views\PMS10004\Edit.cshtml" />
+    <Content Include="Views\PMS04001\Edit.cshtml" />
+    <Content Include="Views\PMS04001\List.cshtml" />
+    <Content Include="Views\PMS05001\Edit.cshtml" />
+    <Content Include="Views\PMS05001\List.cshtml" />
+    <Content Include="Views\PMS07001\Edit.cshtml" />
+    <Content Include="Views\PMS07001\List.cshtml" />
+    <Content Include="Views\PMS03001\Edit.cshtml" />
+    <Content Include="Views\PMS03001\List.cshtml" />
+    <Content Include="Views\Shared\_Footer1.cshtml" />
+    <Content Include="Views\Shared\_Header1.cshtml" />
+    <Content Include="Views\Shared\_SideMenu.cshtml" />
+    <Content Include="Views\PMS01001\RecoverPassword.cshtml" />
+    <Content Include="Views\Shared\_SideMenuSmall.cshtml" />
+    <Content Include="Views\Shared\ShowHideHeaderContent.cshtml" />
+    <Content Include="Views\PMS09004\Index.cshtml" />
+    <Content Include="Views\PMS10005\Index.cshtml" />
+    <Content Include="Views\PMS10005\Edit.cshtml" />
+    <Content Include="Views\PMS06001\ActualWork.cshtml" />
+    <Content Include="Views\PMS09005\List.cshtml" />
+    <Content Include="Views\PMS11001\Edit.cshtml" />
+    <Content Include="Views\PMS11001\List.cshtml" />
+    <Content Include="Views\PMS11002\List.cshtml" />
+    <Content Include="Views\PMS11003\SalesBudget.cshtml" />
+    <Content Include="Views\PMS06003\UnitPriceInfor.cshtml" />
+    <Content Include="Views\PMS06002\ActualListByIndividualPhase.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="App_Data\logs\" />
+    <Folder Include="bin\ja\" />
+    <Folder Include="logs\" />
+    <Folder Include="obj\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Scripts\jquery-1.9.1.min.map" />
+    <Content Include="Views\Shared\Error.cshtml" />
+    <Content Include="Views\Shared\_CommonScript.cshtml" />
+    <Content Include="Views\Shared\_Layout.cshtml" />
+    <Content Include="Views\_ViewStart.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\Messages.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Messages.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+  <Target Name="MvcBuildViews" AfterTargets="AfterBuild" Condition="'$(MvcBuildViews)'=='true'">
+    <AspNetCompiler VirtualPath="temp" PhysicalPath="$(WebProjectOutputDir)" />
+  </Target>
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>True</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>9861</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>http://localhost:29222/</IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target> -->
+</Project>

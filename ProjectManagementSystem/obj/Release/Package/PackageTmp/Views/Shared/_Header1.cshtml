@@ -1,0 +1,107 @@
+﻿@using ProjectManagementSystem.Common;
+@using ProjectManagementSystem.Resources;
+
+@{
+    var currentUser = HttpContext.Current.Session[Constant.SESSION_LOGIN_USER] as LoginUser;
+
+    <nav class="navbar navbar-static-top" role="navigation">
+        <a href="/PMS08001/">
+            <img class="logo" src="~/Images/ico_service.png" />
+        </a>
+        <div class="navbar-custom-menu">
+            <ul class="nav navbar-nav">
+                <li class="dropdown">
+                    @if (string.IsNullOrEmpty(currentUser.ImageFilePath))
+                    {
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-delay="500" aria-expanded="false">
+                            <i class="btn-user"></i>
+                        </a>
+                    }
+                    else
+                    {
+                        <img id="profile" src="" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-delay="500" aria-expanded="false" />
+
+                        <script type="text/javascript" charset="utf-8">
+                            if ($("#profile").length > 0)
+                                getProfileImage();
+
+                            var displayProfileImage = function (base64Data) {
+                                var img = "<img class='dropdown-toggle' data-toggle='dropdown' data-hover='dropdown' data-delay='500' aria-expanded='false' id='profile' "
+                                            + "src='" + "data:image/jpg;base64,"
+                                            + base64Data + "'/>";
+                                $("#profile").after(img).remove();
+                            };
+
+                            function getProfileImage() {
+                                PMS.utility.getImageByAjax('/Common/GetImage', { id: '@currentUser.UserId', type: '@Constant.GetImage.USER_IMAGE' }, function (data) {
+                                    if (data != null) {
+                                        displayProfileImage(data.base64imgage);
+                                    }
+                                    else {
+                                        var img = '<a href="#" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-delay="500" aria-expanded="false">'
+                                                + '<i class="btn-user"></i>'
+                                                + '</a>'
+                                        $("#profile").after(img).remove();
+                                    }
+                                });
+                            }
+                        </script>
+                    }
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a href="/PMS01002/PersonalSetting">
+                                <span class="session-company-name">@currentUser.CompanyName</span>
+                                <br />
+                                <span class="session-user-name">@currentUser.DisplayName</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" class="action-logout"><i class="fa fa-angle-right pull-left"></i><span class="log-out">ログアウト</span></a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+        @if (!string.IsNullOrEmpty(currentUser.CompanyLogoImgPath))
+        {
+            <img id="companyImage" src="" />
+
+            <script type="text/javascript" charset="utf-8">
+                if ($("#companyImage").length > 0)
+                    getCompanyImage();
+
+                var displayImage = function (base64Data) {
+                    var img = "<img id='companyImage' "
+                             + "src='" + "data:image/jpg;base64,"
+                             + base64Data + "'/>";
+
+                    $("#companyImage").after(img).remove();
+                };
+
+                function getCompanyImage() {
+                    PMS.utility.getImageByAjax('/Common/GetImage', { type: '@Constant.GetImage.COMPANY_IMAGE' }, function (data) {
+                        if (data != null)
+                            displayImage(data.base64imgage);
+                        else
+                            $("#companyImage").remove();
+                    });
+                }
+            </script>
+        }
+        else
+        {
+            <img id="companyImage" src="" />
+        }
+    </nav>
+}
+
+@if (Request.Path != "/PMS01002/PersonalSetting" && Request.Path.IndexOf("/PMS06001/Edit") == -1)// && Request.Path.IndexOf("/PMS06001/Detail") == -1)
+{
+    HttpContext.Current.Session[Constant.SESSION_TRANSITION_DESTINATION] = Request.Path;
+}
+
+<script>
+    $('.action-logout').click(function () {
+        PMS.utility.showSubmitConfirmDialog('@Messages.E064', null, '/PMS01001/Logout');
+    });
+</script>

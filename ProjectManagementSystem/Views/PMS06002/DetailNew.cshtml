@@ -1,0 +1,1112 @@
+﻿@using ProjectManagementSystem.Common;
+@using ProjectManagementSystem.Resources;
+@using ProjectManagementSystem.Models.PMS06002;
+@model ProjectManagementSystem.ViewModels.PMS06002.PMS06002DetailNewViewModel
+@Scripts.Render("~/bundles/dragOn")
+@{
+    ViewBag.Title = "個人稼働実績";
+    ViewBag.FieldTitle = "メンバー情報";
+    var currentUser = HttpContext.Current.Session[Constant.SESSION_LOGIN_USER] as LoginUser;
+    var workTimeUnit = Constant.TimeUnit.Items.Contains(@Model.Condition.WorkTimeUnit) ? Constant.TimeUnit.Items[@Model.Condition.WorkTimeUnit] : "";
+    bool allowLinkProjectPlan = ((currentUser.PlanFunctionList.Contains(Constant.FunctionID.ProjectPlanRegist) && currentUser.FunctionList.Contains(Constant.FunctionID.ProjectPlanRegist))
+    || (currentUser.PlanFunctionList.Contains(Constant.FunctionID.ProjectPlanReadOnly) && currentUser.FunctionList.Contains(Constant.FunctionID.ProjectPlanReadOnly)));
+}
+
+<script src="http://code.jquery.com/jquery-migrate-1.2.1.js">
+</script>
+<script type="text/javascript" charset="utf-8">
+    $(function () {
+        $('.div-container-content-new').dragOn();
+        $('#containerSummary').dragOn();
+        $('#containerTotal').dragOn();
+        function MemberActualWork(company_code, user_sys_id, actual_work_year, actual_work_month, total_actual_work, regist_type) {
+            this.company_code = company_code;
+            this.user_sys_id = user_sys_id;
+            this.actual_work_year = actual_work_year;
+            this.actual_work_month = actual_work_month;
+            this.total_actual_work = total_actual_work;
+            this.regist_type = regist_type;
+        }
+
+        // JS class represent the AttendanceRecord entity class
+        function AttendanceRecord(company_code, user_sys_id, actual_work_year, actual_work_month, actual_work_date, work_start_time, work_end_time, clock_in_start_time, clock_in_end_time, rest_time, attendance_type_id, remarks) {
+            this.company_code = company_code;
+            this.user_sys_id = user_sys_id;
+            this.actual_work_year = actual_work_year;
+            this.actual_work_month = actual_work_month;
+            this.actual_work_date = actual_work_date;
+            this.work_start_time = work_start_time;
+            this.work_end_time = work_end_time;
+            this.clock_in_start_time = clock_in_start_time;
+            this.clock_in_end_time = clock_in_end_time;
+            this.rest_time = rest_time;
+            this.attendance_type_id = attendance_type_id;
+            this.remarks = remarks;
+        }
+
+        $("button#btnNextMonth").click(function () {
+            var year = $("#Condition_SelectedYear").val();
+            var month = $("#Condition_SelectedMonth").val();
+
+            if (month++ == 12) {
+                month = 1;
+                year++;
+            }
+            $("#Condition_SelectedYear").val(year);
+            $("#Condition_SelectedMonth").val(month);
+
+            $("#formDetail").attr("action", "/PMS06002/Detail");
+            $("#formDetail").submit();
+            return true;
+        });
+
+        $("button#btnPrevMonth").click(function () {
+            var year = $("#Condition_SelectedYear").val();
+            var month = $("#Condition_SelectedMonth").val();
+
+            if (month-- == 1) {
+                month = 12;
+                year--;
+            }
+            $("#Condition_SelectedYear").val(year);
+            $("#Condition_SelectedMonth").val(month);
+
+            $("#formDetail").attr("action", "/PMS06002/Detail");
+            $("#formDetail").submit();
+            return true;
+        });
+
+        $('button#btnDownload').click(function () {
+            $("#formDetail").attr("action", "/PMS06002/DownloadXlsxFile");
+            $("#formDetail").submit();
+        });
+
+        // Caculate Total actual work hour
+        function CaculateActualWorkHour() {
+            var totalHour1 = 0;
+            var totalMinute1 = 0;
+            var totalHour2 = 0;
+            var totalMinute2 = 0;
+
+            $('.tbl-left-content-new tbody tr td.restTime div').find('div:first input[type="hidden"]').each(function (col) {
+                totalHour1 += parseInt($(this).data('hour'));
+                totalMinute1 += parseInt($(this).data('minute'));
+            });
+            if (totalMinute1 >= 60){
+                var tempHour = totalMinute1 / 60;
+                var plusHour = parseInt(tempHour.toString().split('.')[0]);
+
+                totalHour1 += plusHour;
+                totalMinute1 -= plusHour * 60;
+            }
+            var totalHour1Format = formatNumber(totalHour1);
+            var totalMinute1Format = formatNumber(totalMinute1);
+
+            $('.tbl-left-content-new tbody tr td.restTime div').find('div:last input[type="hidden"]').each(function (col) {
+                totalHour2 += parseInt($(this).data('hour'));
+                totalMinute2 += parseInt($(this).data('minute'));
+            });
+            if (totalMinute2 >= 60){
+                var tempHour = totalMinute2 / 60;
+                var plusHour = parseInt(tempHour.toString().split('.')[0]);
+
+                totalHour2 += plusHour;
+                totalMinute2 -= plusHour * 60;
+            }
+            var totalHour2Format = formatNumber(totalHour2);
+            var totalMinute2Format = formatNumber(totalMinute2);
+
+            $(".totalWork").html("<div class='time-scale'><div>" + totalHour1Format + "<span class='space_total'>:</span>" + totalMinute1Format + "</div><div>"
+                + totalHour2Format + "<span class='space_total'>:</span>" + totalMinute2Format + "</div></div>");
+
+            var numOfProject = @Model.UserActualWorkDetailPlus.Count;
+            for (var i = 0; i < numOfProject; i++)
+            {
+                var totalHour = 0;
+                var totalMinute = 0;
+
+                $(".tbl-container-content-new tbody tr td.project-actual-work-"+ i + " div").find('input[type="hidden"]').each(function (col) {
+                    totalHour += parseInt($(this).data('hour'));
+                    totalMinute += parseInt($(this).data('minute'));
+                });
+
+                if (totalMinute >= 60) {
+                    var tempHour = totalMinute / 60;
+                    var plusHour = parseInt(tempHour.toString().split('.')[0]);
+
+                    totalHour += plusHour;
+                    totalMinute -= plusHour * 60;
+                }
+
+                var totalHourByProject = formatNumber(totalHour);
+                var totalMinByProject = formatNumber(totalMinute);
+
+                $(".sum-project-actual-work-" + i).html(totalHourByProject + '<span> : </span>' + totalMinByProject);
+            }
+        };
+
+        $('#UpdateInfo_regist_type').on('change', function () {
+            $('#btnRegistType').click();
+        });
+
+        var flag = true;
+        $(document).off('#btnRegistType');
+        $(document).on('click', '#btnRegistType', function () {
+            if(flag)
+            {
+                flag = false;
+                var hiddenRegistType = $('#CbRegistType').val() == "True" || $('#CbRegistType').val() == "true" ? false : true;
+                $('#CbRegistType').val(hiddenRegistType);
+
+                var registType = hiddenRegistType ? "1" : "0";
+                $('input[name="registerType"]').val(registType);
+
+                var company_code = null;
+                var user_sys_id = parseInt(@Model.Condition.UserId);
+                var month = parseInt(@Model.Condition.SelectedMonth);
+                var year = parseInt(@Model.Condition.SelectedYear);
+                var memberActualWork = null;
+
+                var memberActualWork = new MemberActualWork(
+                        company_code,
+                        user_sys_id,
+                        year,
+                        month,
+                        0,
+                        registType);
+
+                var dataToSend = JSON.stringify({
+                    dataMemberActualWork: memberActualWork,
+                });
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("ChangeRegistType", "PMS06002")',
+                    dataType: "json",
+                    contentType: "application/json; charset=utf-8",
+                    data: dataToSend,
+                    success: function (result) {
+                        flag = true;
+                        $("#errorMsg").html("");
+                        if (typeof (result) == 'object') {
+                            $('label[for="UpdateInfo_last_update_date"]').text(result.last_update_date);
+                            $('label[for="UpdateInfo_last_update_person"]').text(result.last_update_person);
+                            $('label[for="UpdateInfo_last_update_person"]').attr('title', result.last_update_person);
+                            if ($('label[for="UpdateInfo_insert_date"]').text() == ' ' && $('label[for="UpdateInfo_insert_person"]').text() == ' ') {
+                                $('label[for="UpdateInfo_insert_date"]').text(result.last_update_date);
+                                $('label[for="UpdateInfo_insert_person"]').text(result.last_update_person);
+                                $('label[for="UpdateInfo_insert_person"]').attr('title', result.last_update_person);
+                            }
+
+                            if(hiddenRegistType) // Temp regist
+                            {
+                                $('#btnRegistType').html('@Constant.RegistType.TEMP_REGIST');
+                                $('#btnImportCSV').removeAttr('disabled');
+                                $('#btnImportCSV').removeClass('disabled');
+                                $('#btnImportCSV').addClass('blue');
+                            }
+                            else // Real Regist
+                            {
+                                $('#btnRegistType').html('@Constant.RegistType.ACTUAL_REGIST');
+                                $('#btnImportCSV').attr('disabled', 'disabled');
+                                $('#btnImportCSV').removeClass('blue');
+                                $('#btnImportCSV').addClass('disabled');
+                            }
+                        }
+                        else if (result == 'INVALID') {
+                            PMS.utility.showMessageDialog(PMS.utility.htmlDecode('@Constant.DialogType.WARNING'), '@Messages.E049');
+                            $('#CbRegistType').val(!hiddenRegistType);
+                            $('#UpdateInfo_regist_type').val('@Constant.RegistType.TEMP_REGIST')
+                            $('input[name="registerType"]').val(hiddenRegistType ? '0' : '1');
+                        } else {
+                            PMS.utility.showMessageDialog(PMS.utility.htmlDecode('@Constant.DialogType.WARNING'), result);
+                            $('#UpdateInfo_regist_type').val('@Constant.RegistType.TEMP_REGIST')
+                        }
+                    },
+                    error: function (error) {
+                        flag = true;
+
+                        if (error.status == 419) { //419: Authentication Timeout
+                            window.location.href = '/PMS01001/Login/timeout';
+                        } else if (error.status == 420) { // out of date license
+                            window.location.href = '/ErrorOutOfDate';
+                        }
+                        else {
+                            window.location.href = '/Error';
+                        }
+                    }
+                });
+            }
+        });
+
+        $(document).off('.project-detail-link');
+        $(document).on('click', '.project-detail-link', function(){
+            $('#project-id').val($(this).attr("project-id"));
+            $("#formProjectDetail").submit();
+        });
+
+        $('button#btnImportCSV').click(function () {
+            $("#fileCSV").click();
+        });
+
+        $(document).off('#fileCSV');
+        $(document).on('change', '#fileCSV', function () {
+            var result = PMS.utility.getDataByAjax('/Common/CheckTimeOut', null);
+
+            if (result == null)
+                return;
+
+            var file = $('#fileCSV').val();
+            if (file == '') {
+                return;
+            }
+            var sFileExtension = file.split('.')[file.split('.').length - 1].toLowerCase();
+            if (sFileExtension !== 'csv') {
+                PMS.utility.showMessageDialog(PMS.utility.htmlDecode('@Constant.DialogType.WARNING'), '@string.Format(Messages.E046)');
+                return;
+            }
+            $('#onloadDiv h2').hide();
+            $('#onloadDiv, #onloadDiv img').show();
+            submitFile();
+        });
+
+        function submitFile()
+        {
+            var formdata = new FormData(); //FormData object
+            var fileInput = document.getElementById('fileCSV');
+            if (fileInput.files.length == 0) {
+                return;
+            }
+
+            //Iterating through each files selected in fileInput
+            for (i = 0; i < fileInput.files.length; i++) {
+                //Appending each file to FormData object
+                formdata.append(fileInput.files[i].name, fileInput.files[i]);
+            }
+
+            formdata.append('employee_no', $('input[name="employee_no"]').val());
+            formdata.append('month', $('input[name="target_month"]').val());
+            formdata.append('year', $('input[name="target_year"]').val());
+            formdata.append('user_id', $('input[name="user_id"]').val());
+
+            //Creating an XMLHttpRequest and sending
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', '/PMS06002/CheckImportCSV');
+            xhr.send(formdata);
+            xhr.onload = function (data) {
+                $('#fileCSV').val('');
+                $("#errorMsg").html("");
+                $('#onloadDiv').hide();
+                var res = JSON.parse(xhr.responseText);
+                if (typeof (res) == 'string') // has error
+                    PMS.utility.showMessageDialog(PMS.utility.htmlDecode('@Constant.DialogType.WARNING'), res);
+                else { // rebind data
+                    PMS.utility.showSubmitConfirmDialog("@Messages.I019", null, null, function (action) {
+                        if (action) {
+                            var dataList = new Array();
+                            var user_sys_id = parseInt(@Model.Condition.UserId);
+                            var month = parseInt(@Model.Condition.SelectedMonth);
+                            var year = parseInt(@Model.Condition.SelectedYear);
+
+                            for (var row in res) {
+                                var rowData = res[row];
+                                var startTime = rowData['4'].split(':');
+                                var endTime = rowData['5'].split(':');
+                                var start = parseInt(startTime[0]) + parseInt(startTime[1]) / 60.0;
+                                var end = parseInt(endTime[0]) + parseInt(endTime[1]) / 60.0;
+                                var clockInStartTime = rowData['9'].split(":");
+                                var clockInEndTime = rowData['10'].split(":");
+                                var ciStart = parseInt(clockInStartTime[0]) + parseInt(clockInStartTime[1]) / 60.0;
+                                var ciEnd = parseInt(clockInEndTime[0]) + parseInt(clockInEndTime[1]) / 60.0;
+                                var date = new Date(rowData['3']).getDate();
+                                var attendenceType = ($('.tbl-left-content-new tr').children('td.attendenceType').find('input#attendenceType')[parseInt(date) - 1]).value;
+
+                                if(attendenceType == ""){
+                                    var attendanceRecord = new AttendanceRecord(
+                                    null,
+                                    user_sys_id,
+                                    year,
+                                    month,
+                                    date,
+                                    start,
+                                    end,
+                                    ciStart,
+                                    ciEnd,
+                                    0,
+                                    null,
+                                    null);
+                                    dataList.push(attendanceRecord);
+                                }
+                            }
+
+                            submitData(user_sys_id, month, year, dataList);
+                            BootstrapDialog.closeAll();
+                        }
+                    });
+                }
+            }
+        }
+
+        function submitData(user_sys_id, month, year, dataListAttendanceRecord) {
+            var dataToSend = JSON.stringify({
+                userId: user_sys_id,
+                month: month,
+                year: year,
+                dataListAttendanceRecord: dataListAttendanceRecord
+            });
+
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("ImportCSVNew", "PMS06002")',
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                data: dataToSend,
+                success: function (result) {
+                    $('.ui-dialog *').remove();
+                    $("#errorMsg").html("");
+                    if (typeof (result) == 'object') {
+                        $("#formDetail").attr("action", "/PMS06002/Detail");
+                        PMS.utility.showMessageDialog(PMS.utility.htmlDecode('@Constant.DialogType.INFORMATION'), "@Messages.E050", null, "#formDetail");
+                    }
+                    else {
+                        PMS.utility.showMessageDialog(PMS.utility.htmlDecode('@Constant.DialogType.WARNING'), result);
+                    }
+                },
+                error: function (error) {
+                    $('.ui-dialog *').remove();
+                    if (error.status == 419) {
+                        //419: Authentication Timeout
+                        window.location.href = '/PMS01001/Login/timeout';
+                    }
+                }
+            });
+        }
+
+        $('button#btnExport').click(function () {
+            $("#formDetail").attr("action", "/PMS06002/ExportCsv");
+            $("#formDetail").submit();
+        });
+
+        CaculateActualWorkHour();
+
+        $('input[name="registerType"]').val($('#CbRegistType').val() == 'true' || $('#CbRegistType').val() == 'True' ? '1' : '0');
+
+        if(@Model.UserActualWorkDetailPlus.Count <= 5)
+        {
+            $("#containerSummary").css("overflow", "hidden");
+        }
+        //check if this is Safari on windows, fix size of table header
+        if(!!navigator.userAgent.match('Safari/534.57.2')){
+            $('.threeRows').css('height', 63.5);
+        }
+    });
+</script>
+
+<section class="content-header">
+    <h1 style="display: inline-block">@ViewBag.Title</h1>
+    @Html.LabelFor(m => m.GroupName, @Model.GroupName, new { @class = "GroupName longtext1", title = @Model.GroupName })
+    @Html.LabelFor(m => m.UserName, @Model.UserName, new { @class = "UserName longtext1", title = @Model.UserName })
+
+    <div class="btn-header">
+        <button type="button" id="btnPrevMonth" name="btnPrevMonth" class="btn light btnNoStyleDisable">前月</button>
+        <span id="dateRange">@Model.CurrentYearMonth</span>
+        <button type="button" id="btnNextMonth" name="btnNextMonth" class="btn light btnNoStyleDisable">翌月</button>
+        <button id="btnRegistType" name="btnRegistType" class="btn dark btn-regist-type hide">@Model.UpdateInfo.regist_type</button>
+        <label id="lblRegistType">登録区分</label>
+        @Html.DropDownListFor(m => m.UpdateInfo.regist_type, new SelectList(Constant.RegistType.Items, "Key", "Value"), new { @class = "" })
+    </div>
+
+    @Html.HiddenFor(m => m.CbRegistType)
+
+    <div class="search-form">
+        <div class="search-condition row none-button-search">
+            <div class="col-md-12">
+                <div class="form-group">
+                    @Html.Label("", "予定工数合計", new { @class = "right title-width" })
+                    @Html.LabelFor(m => m.EstimatedTime, @Model.EstimatedTime + workTimeUnit, new { @class = "label-width font-normal" })
+
+                    @Html.Label("", "実績工数合計", new { @class = "right title-width" })
+                    @Html.LabelFor(m => m.ActualTime, @Model.ActualTime + workTimeUnit, new { @class = "label-width font-normal" })
+
+                    @Html.Label("", "更新日時", new { @class = "right title-width" })
+                    @Html.LabelFor(m => m.UpdateInfo.last_update_date, @Model.UpdateInfo.last_update_date, new { @class = "label-width2" })
+
+                    @Html.Label("", "更新者", new { @class = "right title-width" })
+                    @Html.LabelFor(m => m.UpdateInfo.last_update_person, @Model.UpdateInfo.last_update_person, new { @class = "update-user font-normal longtext2", title = @Model.UpdateInfo.last_update_person })
+                </div>
+                <div class="form-group form-group-2">
+                    @Html.Label("", "予定原価合計", new { @class = "right title-width" })
+                    @Html.LabelFor(m => m.EstimatedTimeTotal, @Model.EstimatedTimeTotal + "円", new { @class = "label-width font-normal" })
+
+                    @Html.Label("", "実原価合計", new { @class = "right title-width" })
+                    @Html.LabelFor(m => m.TotalCost, @Model.TotalCost + "円", new { @class = "label-width font-normal" })
+
+                    @Html.Label("", "利益合計", new { @class = "right title-width" })
+                    @Html.LabelFor(m => m.TotalIncome, @Model.TotalIncome + "円", new { @class = "label-width font-normal" })
+
+                    @*@Html.Label("", "登録日時", new { @class = "col-sm-4 right" })*@
+                    @*@Html.LabelFor(m => m.UpdateInfo.insert_date, @Model.UpdateInfo.insert_date, new { @class = "col-sm-8 font-normal col_wrap" })*@
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</section>
+
+@RenderPage("~/Views/Shared/ShowHideHeaderContent.cshtml")
+
+<div class="callout clearfix data-list detail-new content" style="visibility:hidden">
+
+    <div id="bigContainer" class="col_12">
+        <div id="leftContainer-new" class="leftContainer-new">
+            @{
+                string scroll = string.Empty;
+                if (Model.UserActualWorkDetailPlus.Count == 0)
+                {
+                    scroll = "scroll_left";
+                }
+            }
+            <div class="div-left-content-new @scroll">
+
+                <table class="dataTable tbl-left-content-new" width="100%">
+                    <thead>
+                        <tr>
+
+                            <th class="date-header threeRows"></th>
+                            <th class="attendenceType-header threeRows">勤務区分</th>
+                            <th class="startTime-header threeRows">勤務開始<br />勤務終了</th>
+                            <th class="restTime-header threeRows">休憩時間<br />実働時間</th>
+                            <th class="restTime-header threeRows">作業時間</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        @{
+                            int count = 0;
+                        }
+                        @for (var i = 0; i < Model.ActualWorkDetailNew.Count(); i++)
+                        {
+
+                            var date = Model.ActualWorkDetailNew[i].Values.ElementAt(0).ToString();
+                            DateTime d = Convert.ToDateTime("" + @Model.Condition.SelectedMonth + "/" + @date + "/" + @Model.Condition.SelectedYear);
+                            string value = date;
+                            string holiday = string.Empty;
+                            string oddeven = string.Empty;
+                            if (Model.HolidayInfo.special_holiday.Contains(d) || Model.HolidayInfo.weekly_holiday.Contains(d.DayOfWeek))
+                            {
+                                holiday = "holiday";
+                            }
+
+                            switch (d.DayOfWeek)
+                            {
+                                case DayOfWeek.Monday:
+                                    value += "（月）";
+                                    break;
+                                case DayOfWeek.Tuesday:
+                                    value += "（火）";
+                                    break;
+                                case DayOfWeek.Wednesday:
+                                    value += "（水）";
+                                    break;
+                                case DayOfWeek.Thursday:
+                                    value += "（木）";
+                                    break;
+                                case DayOfWeek.Friday:
+                                    value += "（金）";
+                                    break;
+                                case DayOfWeek.Saturday:
+                                    value += "（土）";
+                                    break;
+                                case DayOfWeek.Sunday:
+                                    value += "（日）";
+                                    break;
+                            }
+
+                            if (!holiday.Equals("holiday"))
+                            {
+                                count++;
+                                if (count % 2 == 0)
+                                {
+                                    oddeven = "even";
+                                }
+                                else
+                                {
+                                    oddeven = "odd";
+                                }
+                            }
+                            <tr class="@oddeven">
+                                <td class="date @holiday">
+                                    @if (HttpContext.Current.Session[Constant.SESSION_LOGIN_USER] != null)
+                                    {
+                                        if (currentUser != null && currentUser.PlanFunctionList.Contains(Constant.FunctionID.ActualWorkRegist) && currentUser.FunctionList.Contains(Constant.FunctionID.ActualWorkRegist))
+                                        {
+                                    <form action='/PMS06002/RegisterNew' method='post'>
+                                        <input type='hidden' name='userId' value='@Model.Condition.UserId' />
+                                        <input type='hidden' name='year' value='@Model.Condition.SelectedYear' />
+                                        <input type='hidden' name='month' value='@Model.Condition.SelectedMonth' />
+                                        <input type='hidden' name='day' value='@date' />
+                                        <input type='hidden' name='registerType' value='0' />
+                                        <a href='#'><button type='submit' class='formSubmitLink left'>@value</button></a>
+                                    </form>
+                                        }
+                                        else
+                                        {
+                                    @value
+                                        }
+                                    }
+                                </td>
+
+                                <td class="attendenceType @holiday">
+                                    <input type="hidden" id="attendenceType" value="@Model.ActualWorkDetailNew[i].Values.ElementAt(4)" />
+                                    @Model.ActualWorkDetailNew[i].Values.ElementAt(4)
+                                </td>
+
+                                <td class="startTime @holiday">
+                                    <div class="time-scale">
+                                        @if (@Model.ActualWorkDetailNew[i].Values.ElementAt(1) != null)
+                                        {
+                                        <div>
+                                            @Utility.getHourOfDecimal((decimal?)Model.ActualWorkDetailNew[i].Values.ElementAt(1))
+                                            <span class="">:</span>
+                                            @Utility.getMinuteOfDecimal((decimal?)Model.ActualWorkDetailNew[i].Values.ElementAt(1))
+                                            <input type='hidden' name='value' value='@Model.ActualWorkDetailNew[i].Values.ElementAt(1)' />
+                                        </div>
+                                        }
+
+                                        @if (@Model.ActualWorkDetailNew[i].Values.ElementAt(2) != null)
+                                        {
+                                        <div>
+                                            @Utility.getHourOfDecimal((decimal?)Model.ActualWorkDetailNew[i].Values.ElementAt(2))
+                                            <span class="">:</span>
+                                            @Utility.getMinuteOfDecimal((decimal?)Model.ActualWorkDetailNew[i].Values.ElementAt(2))
+                                            <input type='hidden' name='value' value='@Model.ActualWorkDetailNew[i].Values.ElementAt(2)' />
+                                        </div>
+                                        }
+                                    </div>
+                                </td>
+                                <td class="restTime @holiday">
+                                    <div class="time-scale">
+                                        @if (@Model.ActualWorkDetailNew[i].Values.ElementAt(3) != null)
+                                        {
+                                        <div>
+                                            @Utility.getHourOfDecimal((decimal?)Model.ActualWorkDetailNew[i].Values.ElementAt(3))
+                                            <span class="">:</span>
+                                            @Utility.getMinuteOfDecimal((decimal?)Model.ActualWorkDetailNew[i].Values.ElementAt(3))
+                                            <input type='hidden' name='value' data-hour="@Utility.getHourOfDecimal((decimal?)Model.ActualWorkDetailNew[i].Values.ElementAt(3))" data-minute= "@Utility.getMinuteOfDecimal((decimal?)Model.ActualWorkDetailNew[i].Values.ElementAt(3))"/>
+                                        </div>
+                                        }
+
+                                        @if (@Model.ActualWorkDetailNew[i].Values.ElementAt(2) != null)
+                                        {
+                                        <div>
+                                            @Utility.getHourOfDecimal((decimal?)Model.ActualWorkDetailNew[i].Values.ElementAt(5))
+                                            <span class="">:</span>
+                                            @Utility.getMinuteOfDecimal((decimal?)Model.ActualWorkDetailNew[i].Values.ElementAt(5))
+                                            <input type='hidden' name='value' data-hour="@Utility.getHourOfDecimal((decimal?)Model.ActualWorkDetailNew[i].Values.ElementAt(5))" data-minute="@Utility.getMinuteOfDecimal((decimal?)Model.ActualWorkDetailNew[i].Values.ElementAt(5))" />
+                                        </div>
+                                        }
+                                    </div>
+
+                                </td>
+                                <td class="workingTime @holiday"></td>
+
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="div-left-content-new-2">
+                <table class="tbl-left-header-new" width="100%">
+                    <tbody>
+                        <tr>
+                            <td colspan="3" class="leftHidden noborder"></td>
+                            <td class="totalWorkTitle bg-color-total-1">合計</td>
+                            <td class="totalWork bg-color-total-1">&nbsp;</td>
+                            <td class="workingTimeTotal bg-color-total-1">&nbsp;</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            @if (Model.UserActualWorkDetailPlus.Count != 0)
+            {
+                <div class="div-left-content-new-3">
+                    <table class="tbl-left-header-new tablesummary" width="100%">
+                        <tbody>
+                            <tr>
+                                <td colspan="4" class="leftHidden"></td>
+                                <td class="leftHeader">ランク</td>
+                            </tr>
+                            <tr>
+                                <td colspan="4" class="leftHidden"></td>
+                                <td class="leftHeader">進捗</td>
+                            </tr>
+                            <tr>
+                                <td colspan="4" class="leftHidden"></td>
+                                <td class="leftHeader">実績工数/予定工数</td>
+                            </tr>
+                            <tr>
+                                <td colspan="4" class="leftHidden"></td>
+                                <td class="leftHeader leftHeader-last">個人利益率（PJ利益率）</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            }
+        </div>
+
+        @if (Model.UserActualWorkDetailPlus.Count != 0)
+        {
+            <div id="containerInfo">
+                <div class="div-container-content-new">
+                    <table class="dataTable tbl-container-content-new" width="100%">
+                        <thead>
+                            <tr>
+                                @if (HttpContext.Current.Session[Constant.SESSION_LOGIN_USER] != null)
+                                {
+                                    if (currentUser != null && currentUser.PlanFunctionList.Contains(Constant.FunctionID.ProjectDetail) && currentUser.FunctionList.Contains(Constant.FunctionID.ProjectDetail))
+                                    {
+                                        for (var i = 0; i < @Model.UserActualWorkDetailPlus.Count; i++)
+                                        {
+                                            <th class="fourRows">
+                                                @{bool allowDisplayProjectPlanLink = (allowLinkProjectPlan
+                    && Model.UserActualWorkDetailPlus[i].count_project_plan > 0);}
+
+                                                @if (allowDisplayProjectPlanLink)
+                                                {
+                                                    <a href="#" class="project-plan-link" data-project-sys-id="@Model.UserActualWorkDetailPlus[i].project_sys_id">計画書</a>
+                                                }
+
+                                                @if (Model.UserActualWorkDetailPlus[i].sales_type == 2)
+                                                {
+                                                    <span class="inactive-project">【@Model.UserActualWorkDetailPlus[i].status】</span>
+                                                }
+
+                                                @if (Model.UserActualWorkDetailPlus[i].sales_type == 2 || allowDisplayProjectPlanLink)
+                                                {
+                                                    <hr />
+                                                }
+
+                                                <div class="project_name">
+                                                    <a href="#" title="@Model.UserActualWorkDetailPlus[i].project_name" class="project-detail-link" project-id="@Model.UserActualWorkDetailPlus[i].project_sys_id">
+                                                        @*@Utility.Shorten(Model.UserActualWorkDetailPlus[i].project_name, 20)*@
+                                                        @Model.UserActualWorkDetailPlus[i].project_name
+                                                    </a>
+                                                </div>
+                                            </th>
+                                                        }
+                                                    }
+                                                    else
+                                                    {
+                                                        for (var i = 0; i < @Model.UserActualWorkDetailPlus.Count; i++)
+                                                        {
+                                                            <th class="fourRows">
+                                                                @if (allowLinkProjectPlan
+&& Model.UserActualWorkDetailPlus[i].count_project_plan > 0)
+                                                                {
+                                                                    <a href="#" class="project-plan-link" data-project-sys-id="@Model.UserActualWorkDetailPlus[i].project_sys_id">計画書</a>
+                                                                    <hr />
+                                                                }
+
+                                                                <div class="project_name">
+                                                                    <label title="@Model.UserActualWorkDetailPlus[i].project_name" style="margin: 0; padding: 0;">
+                                                                        @*@Utility.Shorten(Model.UserActualWorkDetailPlus[i].project_name, 20)*@
+                                                                        @Model.UserActualWorkDetailPlus[i].project_name
+                                                                    </label>
+                                                                </div>
+                                                            </th>
+                                                            }
+                                                        }
+                                                    }
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            @{
+                                count = 0;
+                            }
+                            @for (int i = 0, m = 0; i < Model.ActualWorkDetailNew.Count(); i++)
+                            {
+                                var date = Model.ActualWorkDetailNew[i].Values.ElementAt(0).ToString();
+                                DateTime d = DateTime.Parse("" + @Model.Condition.SelectedMonth + "/" + @date + "/" + @Model.Condition.SelectedYear);
+                                string value = date;
+                                string holiday = string.Empty;
+                                string oddeven = string.Empty;
+
+                                if (Model.HolidayInfo.special_holiday.Contains(d) || Model.HolidayInfo.weekly_holiday.Contains(d.DayOfWeek))
+                                {
+                                    holiday = "holiday";
+                                }
+                                if (!holiday.Equals("holiday"))
+                                {
+                                    count++;
+                                    if (count % 2 == 0)
+                                    {
+                                        oddeven = "even";
+                                    }
+                                    else
+                                    {
+                                        oddeven = "odd";
+                                    }
+
+                                }
+                                <tr class="row-work-project @oddeven">
+                                    @for (var j = 6; j < Model.ActualWorkDetailNew[0].Values.Count(); j++, m++)
+                                    {
+                                        var popover_data = Model.UserActualWorkDetailPlus[j - 6];
+                                        var actual_effort = popover_data.actual_effort != null ? popover_data.actual_effort.ToString("#,##0.00") : "0";
+                                        var plan_effort = popover_data.plan_effort != null ? popover_data.plan_effort.ToString("#,##0.00") : "0";
+                                        var personal_profit_rate = popover_data.personal_profit_rate != null ? Utility.RoundNumber(popover_data.personal_profit_rate, (Session[Constant.SESSION_LOGIN_USER] as LoginUser).DecimalCalculationType, true).ToString() + "%" : "0%";
+                                        var project_actual_profit = popover_data.project_actual_profit != null ? Utility.RoundNumber(popover_data.project_actual_profit, (Session[Constant.SESSION_LOGIN_USER] as LoginUser).DecimalCalculationType, true).ToString() + "%" : "0%";
+
+                                        <td class="work-project project-actual-work-@m @holiday">
+
+                                            <div class="popover_data show_data" rel=" popover" data-content="
+                                            <div><label class='popover_label'>実績工数</label>@actual_effort</div>
+                                            <div><label class='popover_label'>予定工数</label>@plan_effort</div>
+                                            <div><label class='popover_label'>個人利益率</label>@personal_profit_rate</div>
+                                            <div><label class='popover_label'>PJ利益率</label>@project_actual_profit</div>">
+                                            @if (Model.ActualWorkDetailNew[i].Values.ElementAt(j) != null)
+                                            {
+                                                if (@Utility.getHourOfDecimal((decimal?)Model.ActualWorkDetailNew[i].Values.ElementAt(j)) != "00" ||
+                                                            @Utility.getMinuteOfDecimal((decimal?)Model.ActualWorkDetailNew[i].Values.ElementAt(j)) != "00")
+                                                {
+                                                @Utility.getHourOfDecimal((decimal?)Model.ActualWorkDetailNew[i].Values.ElementAt(j))
+                <span class="">:</span>
+                                                @Utility.getMinuteOfDecimal((decimal?)Model.ActualWorkDetailNew[i].Values.ElementAt(j))
+    <input type='hidden' name='value' class="hdnWorkTimeByProject" value='@Model.ActualWorkDetailNew[i].Values.ElementAt(j)' data-hour="@Utility.getHourOfDecimal((decimal?)Model.ActualWorkDetailNew[i].Values.ElementAt(j))" data-minute="@Utility.getMinuteOfDecimal((decimal?)Model.ActualWorkDetailNew[i].Values.ElementAt(j))" />
+                                                }
+                                            }
+                                            </div>
+                                        </td>
+                                    }
+                                    @{
+                                        int displayItems = Model.UserActualWorkDetailPlus.Count < 1 ? 1 : Model.UserActualWorkDetailPlus.Count;
+                                        int remainItem2 = displayItems - (Model.ActualWorkDetailNew[0].Values.Count() - 6);
+
+                                        for (int k = 0; k < remainItem2; k++, m++)
+                                        {
+                                            var popover_data1 = Model.UserActualWorkDetailPlus[k];
+                                            var actual_effort1 = popover_data1.actual_effort != null ? popover_data1.actual_effort.ToString("#,##0.00") : "0";
+                                            var plan_effort1 = popover_data1.plan_effort != null ? popover_data1.plan_effort.ToString("#,##0.00") : "0";
+                                            var personal_profit_rate1 = popover_data1.personal_profit_rate != null ? Utility.RoundNumber(popover_data1.personal_profit_rate, (Session[Constant.SESSION_LOGIN_USER] as LoginUser).DecimalCalculationType, true).ToString() + "%" : "0%";
+                                            var project_actual_profit1 = popover_data1.project_actual_profit != null ? Utility.RoundNumber(popover_data1.project_actual_profit, (Session[Constant.SESSION_LOGIN_USER] as LoginUser).DecimalCalculationType, true).ToString() + "%" : "0%";
+
+                                            <td class="work-project project-actual-work-@m @holiday">
+
+                                                <div class="popover_data show_data" rel=" popover" data-content="
+                                                <div><label class='popover_label'>実績工数</label>@actual_effort1</div>
+                                                <div><label class='popover_label'>予定工数</label>@plan_effort1</div>
+                                                <div><label class='popover_label'>個人利益率</label>@personal_profit_rate1</div>
+                                                <div><label class='popover_label'>PJ利益率</label>@project_actual_profit1</div>">
+                                                &nbsp;
+                                            </div>
+
+                                            </td>
+                                        }
+                                    }
+                                </tr>
+                                            m = 0;
+                                        }
+                        </tbody>
+                    </table>
+
+                </div>
+                <div id="containerTotal">
+                    <table class="tbl-container-content-new" width="100%">
+                        <tbody>
+
+                            <tr>
+                                @{int n = 0;}
+                                @for (int j = 6; j < Model.ActualWorkDetailNew[0].Values.Count(); j++, n++)
+                                {
+                                    <td class="dataTotal sum-project-actual-work-@n bg-color-total-1">&nbsp;</td>
+                                }
+                                @{
+                                    int displayItems2 = Model.UserActualWorkDetailPlus.Count < 1 ? 1 : Model.UserActualWorkDetailPlus.Count;
+                                    int remainItem3 = displayItems2 - (Model.ActualWorkDetailNew[0].Values.Count() - 6);
+                                    for (int k = 0; k < remainItem3; k++, n++)
+                                    {
+                                        <td class="dataTotal sum-project-actual-work-@n bg-color-total-1">&nbsp;</td>
+                                    }
+                                }
+                            </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+                <div id="containerSummary">
+                    <table class="tbl-container-content-new" width="100%">
+                        <tbody>
+                            <tr>
+                                @foreach (var t in @Model.UserActualWorkDetailPlus)
+                                {
+                                    if (t.rank != null)
+                                    {
+                                        <td colspan="1" class="project-actual-work">@t.rank</td>
+                                    }
+                                    else
+                                    {
+                                        <td colspan="1" class="project-actual-work">&nbsp;</td>
+                                    }
+                                }
+                            </tr>
+                            <tr>
+                                @foreach (var t in @Model.UserActualWorkDetailPlus)
+                                {
+                                    <td class="project-actual-work">@( t.progress != null ? Utility.RoundNumber(t.progress, (Session[Constant.SESSION_LOGIN_USER] as LoginUser).DecimalCalculationType, true).ToString() + "%" : "")</td>
+                                }
+                            </tr>
+                            <tr>
+                                @foreach (var t in @Model.UserActualWorkDetailPlus)
+                                {
+                                    <td class="project-actual-work">@( (t.actual_effort != null ? t.actual_effort.ToString("#,##0.00") : "0") + "/" + (t.plan_effort != null ? t.plan_effort.ToString("#,##0.00") : "0"))</td>
+                                }
+
+                            </tr>
+                            <tr>
+                                @foreach (var t in @Model.UserActualWorkDetailPlus)
+                                {
+                                    <td class="project-actual-work">
+                                        @(
+ (t.personal_profit_rate != null ? Utility.RoundNumber(t.personal_profit_rate, (Session[Constant.SESSION_LOGIN_USER] as LoginUser).DecimalCalculationType, true).ToString() + "%" : "0%") +
+                                "(" + (t.project_actual_profit != null ? Utility.RoundNumber(t.project_actual_profit, (Session[Constant.SESSION_LOGIN_USER] as LoginUser).DecimalCalculationType, true).ToString() + "%" : "0%") + ")"
+                                        )
+                                    </td>
+                                }
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+                                    }
+    </div>
+    <div class="col_12">
+
+    </div>
+    <div class="group-btn-action">
+        <div style="float: left">
+            <button id="btnImportCSV" name="btnImportCSV" class="btn dark"><i class="btn-icon btn-input-csv"></i>CSV取込</button>
+            <button id="btnExport" name="btnExport" class="btn dark"><i class="btn-icon btn-output-csv"></i>CSV出力</button>
+            @if (currentUser != null && currentUser.PlanFunctionList.Contains(Constant.FunctionID.OutputExcel) && currentUser.FunctionList.Contains(Constant.FunctionID.OutputExcel))
+            {
+                <button id="btnDownload" name="btnDownload" class="btn dark"><i class="btn-icon btn-output-csv"></i>ダウンロード</button>
+            }
+            <form method="POST" action="@Url.Action("ImportCSVNew", "PMS06002")" enctype="multipart/form-data" id="frmImportCSV">
+                <input type="hidden" name="user_id" value="@Model.Condition.UserId" />
+                <input type="hidden" name="target_year" value="@Model.Condition.SelectedYear" />
+                <input type="hidden" name="target_month" value="@Model.Condition.SelectedMonth" />
+                <input type="hidden" name="employee_no" value="@Model.EmployeeNo" />
+                <input type="file" id="fileCSV" name="fileCSV" style="display:none" accept=".csv" />
+            </form>
+            <form id="formProjectDetail" action="/PMS06001/Detail/" method="POST">
+                <input id="project-id" type="hidden" name="id">
+                <input id="selected_year" type="hidden" name="selected_year" value='@Model.Condition.SelectedYear'>
+                <input id="selected_month" type="hidden" name="selected_month" value='@Model.Condition.SelectedMonth'>
+            </form>
+        </div>
+        <form id="formDetail" action='@Url.Action("Detail","PMS06002")' method="POST">
+            <div align="right">
+                <input type="hidden" id="Condition_UserId" name="user_id" value="@Model.Condition.UserId" />
+                <input type="hidden" id="Condition_SelectedYear" name="selected_year" value="@Model.Condition.SelectedYear" />
+                <input type="hidden" id="Condition_SelectedMonth" name="selected_month" value="@Model.Condition.SelectedMonth" />
+                <input type="hidden" id="time_unit" name="time_unit" value="@Constant.TimeUnit.DAY" />
+            </div>
+        </form>
+    </div>
+</div>
+
+@if ((currentUser.PlanFunctionList.Contains(Constant.FunctionID.ProjectPlanRegist) && currentUser.FunctionList.Contains(Constant.FunctionID.ProjectPlanRegist))
+                            || (currentUser.PlanFunctionList.Contains(Constant.FunctionID.ProjectPlanReadOnly) && currentUser.FunctionList.Contains(Constant.FunctionID.ProjectPlanReadOnly)))
+{
+    <input type="hidden" id="rolePlanDetail" value="true" />
+    <form id="frmProjectPlan" method="POST" action='@Url.Action("Plan", "PMS06001")'>
+        <input id="plan_projectId" name="plan_projectId" type="hidden" value="">
+        <input id="read_only" name="read_only" type="hidden" value="1">
+    </form>
+}
+
+<script>
+
+    $(document).ready(function () {
+        getTotalWorkTime();
+
+        var popoverTemplate = ['<div class="timePickerWrapper popover">',
+                                    '<div class="popover-content">',
+                                    '</div>',
+                                '</div>'].join('');
+        $(".show_data").popover({
+            trigger: 'hover',
+            placement: 'top',
+            template: popoverTemplate,
+            html: true});
+    });
+
+    function getTotalWorkTime() {
+        var totalHourAllDay = 0;
+        var totalMinuteAllDay = 0;
+        var hiddenTotalHourAllDay = 0;
+
+        $("table.tbl-container-content-new  tr.row-work-project").each(function (index) {
+            var totalHourAllProject = 0;
+            var totalMinuteAllProject = 0;
+            var totalHourByDay = 0;
+
+            $(this).find('.hdnWorkTimeByProject').each(function () {
+                totalHourAllProject += parseInt($(this).data('hour'));
+                totalMinuteAllProject += parseInt($(this).data('minute'));
+                totalHourByDay += parseFloat(this.value);
+            });
+
+            if (totalMinuteAllProject >= 60) {
+                var tempHour = totalMinuteAllProject / 60;
+                var plusHour = parseInt(tempHour.toString().split('.')[0]);
+
+                totalHourAllProject += plusHour;
+                totalMinuteAllProject -= plusHour * 60;
+            }
+
+            totalHourAllDay += totalHourAllProject;
+            totalMinuteAllDay += totalMinuteAllProject;
+            hiddenTotalHourAllDay += totalHourByDay;
+
+            var totalHour = formatNumber_Workingtime(totalHourAllProject);
+            var totalMin = formatNumber_Workingtime(totalMinuteAllProject);
+            var $totalActualWorkTimeContent = $('table.tbl-left-content-new  td.workingTime:eq('+ index +')');
+            if(totalHour != "" && totalMin != ""){
+                $totalActualWorkTimeContent.html(totalHour + '<span> : </span>' + totalMin);
+            }
+            if(totalHour!="" && totalMin == ""){
+                $totalActualWorkTimeContent.html(totalHour + '<span> : </span>' + "00");
+            }
+            if(totalHour =="" && totalMin != ""){
+                $totalActualWorkTimeContent.html("00" + '<span> : </span>' + totalMin);
+            }
+           
+            
+            $totalActualWorkTimeContent.append("<input type='hidden' class='totalTimeDay' value='" + totalHourByDay + "' />");
+        });
+
+        if (totalMinuteAllDay >= 60) {
+            var tempHour = totalMinuteAllDay / 60;
+            var plusHour = parseInt(tempHour.toString().split('.')[0]);
+
+            totalHourAllDay += plusHour;
+            totalMinuteAllDay -= plusHour * 60;
+        }
+
+        var disTotalHour = formatNumber(totalHourAllDay);
+        var disTotalMin = formatNumber(totalMinuteAllDay);
+
+        $('.workingTimeTotal').html(disTotalHour + '<span> : </span>' + disTotalMin);
+        $('.workingTimeTotal').append("<input type='hidden' class='workingTotal' value='" + hiddenTotalHourAllDay + "' />");
+    }
+
+    function formatNumber(x) {
+        if (x == "" || x == 0)
+            return "00";
+        else if(x < 0 && x > -10){
+            return '-0' + x * (-1);
+        }
+        else if (x < 10 && x > 0)
+            return '0' + x;
+        else
+            return '' + x;
+    }
+    function formatNumber_Workingtime(x) {
+        if (x == "" || x == 0)
+            return "";
+        else if (x < 10)
+            return '0' + x;
+        else
+            return '' + x;
+    }
+
+    function formatNumberTime(x) {
+        if (x == "" || x == 0)
+            return "00";
+        else if (x >= 10 || x <= -10)
+        {
+            return x;
+        } else if (x < 10 && x > 0)
+        {
+            return '0' + x;
+        } else if (x < 0 && x > -10)
+        {
+            return '-0' + x * (-1);
+        }
+    }
+
+    function getPopoverContent(id)
+    {
+        var content = ['<div class="timePickerCanvas">asfaf asfsadf</div>',
+                       '<div class="timePickerClock timePickerHours">asdf asdfasf</div>',
+                       '<div class="timePickerClock timePickerMinutes"> asfa </div>',].join('');
+        return content;
+    }
+
+    $('.user').each(function() {
+        var $this = $(this);
+        $this.popover({
+            trigger: 'hover',
+            placement: 'right',
+            html: true,
+            content: $this.find('.userInfo').html()
+        });
+    });
+
+    $('.div-container-content-new').scroll(function () {
+        $('.div-left-content-new').scrollTop($(this).scrollTop());
+    });
+    $('#containerSummary').scroll(function () {
+        $('.div-container-header').scrollLeft($(this).scrollLeft());
+        $('.div-container-content-new').scrollLeft($(this).scrollLeft());
+        $('#containerTotal').scrollLeft($(this).scrollLeft());
+        $('.div-container-header-new').scrollLeft($(this).scrollLeft());
+    });
+
+    $('.div-container-content-new').scroll(function () {
+        $('.div-container-header').scrollLeft($(this).scrollLeft());
+        $('#containerSummary').scrollLeft($(this).scrollLeft());
+        $('#containerTotal').scrollLeft($(this).scrollLeft());
+        $('.div-container-header-new').scrollLeft($(this).scrollLeft());
+    });
+
+    $('#containerTotal').scroll(function () {
+        $('.div-container-header').scrollLeft($(this).scrollLeft());
+        $('#containerSummary').scrollLeft($(this).scrollLeft());
+        $('.div-container-content-new').scrollLeft($(this).scrollLeft());
+        $('.div-container-header-new').scrollLeft($(this).scrollLeft());
+    });
+
+    function InitBtnImportCsv(){
+        if($('#CbRegistType').val() == "True" || $('#CbRegistType').val() == "true")
+        {
+            $('.regist_type').text('@Constant.RegistType.TEMP_REGIST');
+            $('#btnImportCSV').removeAttr('disabled');
+            $('#btnImportCSV').removeClass('disabled');
+        }
+        else // Real Regist
+        {
+            $('.regist_type').text('@Constant.RegistType.ACTUAL_REGIST');
+            $('#btnImportCSV').attr('disabled', 'disabled');
+        }
+    }
+    InitBtnImportCsv();
+    $('div.detail-new').removeAttr('style');
+
+    $(document).off('.project-plan-link');
+    $(document).on('click', '.project-plan-link', function () {
+        if ('@(currentUser.PlanFunctionList.Contains(Constant.FunctionID.ProjectPlanRegist)
+                && currentUser.FunctionList.Contains(Constant.FunctionID.ProjectPlanRegist))' == 'True') {
+            $('#read_only').val('');
+        } else {
+            $('#read_only').val('1');
+        }
+
+        var $form = $("#frmProjectPlan");
+
+        $form.find('#plan_projectId').val($(this).data("project-sys-id"));
+        $form.submit();
+    });
+</script>

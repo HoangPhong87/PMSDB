@@ -1,0 +1,239 @@
+﻿
+.search-condition .search_customer {
+    width: 320px;
+}
+
+.search-condition .include-delete {
+    margin-left: 20px;
+}
+
+.search-condition select[id="Condition_CONTRACT_TYPE_ID"] {
+    vertical-align: top;
+    width: 240px;
+    height: 90px;
+}
+
+.search-condition input[id="Condition_USER_NAME"] {
+    width: 240px;
+}
+
+.search-condition .group-1,
+.search-condition .group-2 {
+    float: left;
+    margin-right: 4px;
+}
+
+@media (max-width: 1200px) {
+    .search-condition .group-1 {
+        float: left;
+        width: 100%;
+        margin-bottom: 20px;
+    }
+
+    .search-condition .group-2 {
+        margin-left: 19px;
+    }
+
+    .search-condition input[id="Condition_USER_NAME"] {
+        width: 185px;
+    }
+
+    .sidebar-collapse .search-condition .group-1 {
+        width: auto;
+        margin-bottom: 0;
+    }
+
+    .sidebar-collapse .search-condition .group-2 {
+        margin-left: 0px;
+    }
+
+    .sidebar-collapse .search-condition input[id="Condition_USER_NAME"] {
+        width: 240px;
+    }
+}
+
+@media (max-width: 1024px) {
+    .sidebar-collapse .search-condition .group-1 {
+        float: left;
+        width: 100%;
+        margin-bottom: 20px;
+    }
+
+    .sidebar-collapse .search-condition .group-2 {
+        margin-left: 19px;
+    }
+}
+
+.sale-payment-list .div-left {
+    float: left;
+    width: 40%;
+    margin-right: -1px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+    .sale-payment-list .div-left .sales_company {
+        max-width: 150px;
+    }
+
+    .sale-payment-list .div-left .project_name {
+        max-width: 200px;
+    }
+
+    .sale-payment-list .div-left td.dataTables_empty {
+        border-right: none;
+    }
+
+
+.sale-payment-list .div-right {
+    float: left;
+    min-width: 60%;
+    max-width: 60%;
+    overflow-x: auto;
+    overflow-y: auto;
+}
+
+    .sale-payment-list .div-right .group_name {
+        max-width: 120px;
+    }
+
+    .sale-payment-list .div-right .payment_company,
+    .sale-payment-list .div-right .user-name {
+        max-width: 150px;
+    }
+
+    .sale-payment-list .div-right .sale-amount {
+        min-width: 120px;
+    }
+
+    .sale-payment-list .div-right .money {
+        min-width: 155px;
+    }
+
+    .sale-payment-list .div-right .actual_man_days,
+    .sale-payment-list .div-right .plan_man_days {
+        min-width: 115px;
+    }
+
+    .sale-payment-list .div-right .actual_work_time,
+    .sale-payment-list .div-right .plan_man_times {
+        min-width: 115px;
+    }
+
+    .sale-payment-list .div-right td.dataTables_empty {
+        border-left: none;
+    }
+
+    .sale-payment-list .div-right .dataTable thead th {
+        min-width: 120px;
+    }
+
+    .sale-payment-list .div-right .short-text:not(button):not(a) {
+        cursor: all-scroll;
+    }
+
+div.summary-sales-payment {
+    padding: 0 0 60px;
+}
+
+    div.summary-sales-payment div {
+        padding: 0 20px;
+    }
+
+    div.summary-sales-payment .col-md-1,
+    div.summary-sales-payment .col-md-2,
+    div.summary-sales-payment .col-md-3 {
+        border-left: 1px solid #EAEAEA;
+    }
+
+    div.summary-sales-payment .col-md-1 {
+        border-right: 1px solid #EAEAEA;
+    }
+
+    div.summary-sales-payment label {
+        width: 100%;
+    }
+
+        div.summary-sales-payment label.money {
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        div.summary-sales-payment label.title {
+            color: #1A3ACD;
+        }
+
+.notification {
+    color: red;
+    margin-left: 30px;
+    margin-top: -25px;
+    margin-bottom: 55px;
+}
+
+.search-date {
+    text-align: left;
+}
+
+.tblCheckbox{
+    float:left;
+    padding:0;
+    display: table;
+    margin-left:5px;
+}
+
+.tblCheckbox .tblRow{
+    display:table-row;
+}
+
+.tblCheckbox tr, .tblCheckbox tr td{
+    padding: 0px;
+}
+
+.float-to-left {
+    float: left;
+    margin-top:4px;
+    margin-right:5px;
+}
+
+.sale-payment-list .dataTables_info {
+    position: absolute;
+    left: 200px;
+    margin-top: -55px;
+}
+.sidebar-collapse .sale-payment-list .dataTables_info {
+    left: 70px;
+}
+.sale-payment-list .dataTables_info {
+    position: absolute;
+    left: 200px;
+    margin-top: -55px;
+}
+
+.sale-payment-list .dataTables_length {
+    position: absolute;
+    right: 30px;
+    margin-top: -40px !important;
+}
+
+.sale-payment-list .dataTables_paginate {
+    position: absolute;
+    margin-top: 59px !important;
+    margin-left: 0;
+}
+@media (max-width: 1280px) {
+    div .summary-sales-payment .col-md-2 {
+        width: 20%;
+    }
+}
+
+@media (min-width: 992px) {
+    .col-md-3 {
+        width: 19%;
+    }
+}
+
+@media (max-width: 1520px) and (min-width: 1500px) {
+    select {
+        padding: 0 2px;
+    }
+}

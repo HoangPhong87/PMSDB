@@ -1,0 +1,270 @@
+﻿@using ProjectManagementSystem.Resources;
+@using ProjectManagementSystem.Common;
+@model ProjectManagementSystem.ViewModels.PMS11001.PMS11001EditViewModel
+@{
+    ViewBag.Title = "拠点登録";
+}
+
+<section class="content-header">
+    <h1>
+        @ViewBag.Title
+    </h1>
+</section>
+<section class="content group-regist clearfix">
+    @using (Html.BeginForm("EditBranch", "PMS11001", FormMethod.Post, new { @class = "form-horizontal", id = "frmBranchEdit" }))
+    {
+        <div id="title"></div>
+        @Html.ValidationSummary(false)
+
+        <div class="form-group">
+            <label class="col-sm-2 control-label bold" for="branch_name">拠点名<span class="RequiredField">*</span></label>
+            <div class="col-sm-4">
+                @Html.TextBoxFor(m => m.BranchInfo.location_name, new { @class = "form-control", maxlength = 100, size = 99 })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-2 control-label bold" for="branch_display_name">拠点(表示名)<span class="RequiredField">*</span></label>
+            <div class="col-sm-4">
+                @Html.TextBoxFor(m => m.BranchInfo.display_name, new { @class = "form-control", maxlength = 100, size = 99 })
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label bold">表示順</label>
+            <div class="col-sm-1">
+                @Html.TextBoxFor(m => m.BranchInfo.display_order, new { @class = "form-control right numeric display-order", maxlength = 2 })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(m => m.BranchInfo.remarks, new { @class = "col-sm-2 control-label bold" })
+            <div class="col-sm-4">
+                @Html.TextAreaFor(m => m.BranchInfo.remarks, new { @class = "form-control candy-textArea", maxlength = 200, rows = 5 })
+                <input type="hidden" class="set-max-width" />
+            </div>
+        </div>
+        <div id="updateTime">
+            <div class="form-group">
+                @Html.LabelFor(m => m.BranchInfo.ins_date, new { @class = "col-sm-2 control-label bold" })
+                <label class="control-label col-sm-4 insDate">@(Model.BranchInfo.ins_date != null ? Model.BranchInfo.ins_date.Value.ToString("yyyy-MM-dd HH:mm") : "")</label>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(m => m.BranchInfo.ins_user, new { @class = "col-sm-2 control-label bold" })
+                <label class="control-label col-sm-9 insUser">@(Model.BranchInfo.ins_user)</label>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(m => m.BranchInfo.upd_date, new { @class = "col-sm-2 control-label bold" })
+                <label class="control-label col-sm-4 updDate">@(Model.BranchInfo.upd_date != null ? Model.BranchInfo.upd_date.Value.ToString("yyyy-MM-dd HH:mm") : "")</label>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(m => m.BranchInfo.upd_user, new { @class = "col-sm-2 control-label bold" })
+                <label class="control-label col-sm-9 updUser">@(Model.BranchInfo.upd_user)</label>
+            </div>
+        </div>
+        <div class="form-group btn-group-edit col-sm-12">
+            @Html.HiddenFor(m => m.BranchInfo.location_id)
+            <input type="hidden" name="OLD_DEL_FLAG" value="@Model.DeleteFlag.ToString()" />
+            @Html.AntiForgeryToken()
+
+            <button type="button" id="btnBack" name="Back" class="btn light btnNoStyleDisable"><i class="btn-icon btn-back"></i>戻る</button>
+            <button type="button" id="btnSubmit" class="btn green"><i class="btn-icon btn-regist"></i> 登録</button>
+            <label class="bold" id="deleteFlag">
+                @Html.CheckBoxFor(m => m.DeleteFlag)
+                削除
+            </label>
+        </div>
+    }
+</section>
+
+<script type="text/javascript">
+    var maxWidth =$(".set-max-width").css("max-width").slice(0, $(".set-max-width").css("max-width").length - 2); // set max-width of textarea
+    $(document).ready(function () {
+        $(".content-wrapper").addClass("content-edit-wrapper");
+
+        PMS.utility.imeControl($("#BranchInfo_location_name, #BranchInfo_display_name, #BranchInfo_remarks"), 'active');
+        PMS.utility.focusTextbox();
+
+        if ($('#BranchInfo_location_id').val() === '0') {
+            $('#updateTime, #deleteFlag').hide();
+        }
+        // get max-width of textarea when resize manu bar left
+        window.addEventListener('resize', function (event) {
+            maxWidth = $(".set-max-width").css("max-width").slice(0, $(".set-max-width").css("max-width").length - 2);
+            //handle change textare when resize menu bar left
+            if ($('body').hasClass('sidebar-collapse') === true) {
+                // case close when page first load
+                $(".candy-textArea").css("max-width",(parseInt(maxWidth,10) + 115)+ "px");
+            }
+            else{
+                $(".candy-textArea").css("max-width",parseInt(maxWidth,10)+ "px");
+            }
+        });
+        //end get max-width of textarea when resize manu bar left
+    });
+    //handle change textare when resize menu bar left
+    if ($('body').hasClass('sidebar-collapse') === true) {
+        // case close when page first load
+        $(".candy-textArea").css("max-width",(parseInt(maxWidth,10) + 115)+ "px");
+    }
+    $(document).off('a.sidebar-toggle i');
+    $(document).on('click', 'a.sidebar-toggle i', function () {
+        if ($('body').hasClass('sidebar-collapse') === true) {
+            // close
+            $(".candy-textArea").css("max-width",(parseInt(maxWidth,10) + 115)+ "px");
+        } else {
+            // open
+            $(".candy-textArea").css("max-width",(parseInt($(".candy-textArea").css("max-width").slice(0, $(".candy-textArea").css("max-width").length - 2),10) - 115)+ "px");
+        }
+    });
+    //end handle change textare when resize menu bar left
+    function validateData() {
+        var Constant = {
+            BRANCH_NAME: '拠点名',
+            BRANCH_DISPLAY_NAME: '拠点(表示名)',
+            REMARK: '備考',
+            ERR_REQUIRED: 'は必須項目です。',
+            ERR_STRING_LENGTH: '{0}は{1}文字以内で入力してください。',
+            MAX_NAME_LENGTH: '100',
+            MAX_REMARK_LENGTH: '200'
+        };
+        var invalidMess = [];
+        var branchName = $("#BranchInfo_location_name").val();
+        var invalidBranchName = false;
+
+        branchName = $.trim(branchName);
+        $("#BranchInfo_location_name").val(branchName);
+
+        if (branchName.length === 0) { // required branch name
+            invalidMess.push(Constant.BRANCH_NAME + Constant.ERR_REQUIRED);
+            invalidBranchName = true;
+        }
+
+        if (branchName.length > 100) { // valid string length
+            invalidMess.push(Constant.ERR_STRING_LENGTH.replace('{0}', Constant.BRANCH_NAME).replace('{1}', Constant.MAX_NAME_LENGTH));
+            invalidBranchName = true;
+        }
+
+        if (invalidBranchName){
+            $("label[for='branch_name']").addClass("label-validation-error");
+        }
+
+        var branchDisplayName = $("#BranchInfo_display_name").val();
+        var invalidBranchDisplayName = false;
+
+        branchDisplayName = $.trim(branchDisplayName);
+        $("#BranchInfo_display_name").val(branchDisplayName);
+
+        if (branchDisplayName.length === 0) { // required display name
+            invalidMess.push(Constant.BRANCH_DISPLAY_NAME + Constant.ERR_REQUIRED);
+            invalidBranchDisplayName = true;
+        }
+
+        if (branchDisplayName.length > 100) { // valid string length
+            invalidMess.push(Constant.ERR_STRING_LENGTH.replace('{0}', Constant.BRANCH_DISPLAY_NAME).replace('{1}', Constant.MAX_NAME_LENGTH));
+            invalidBranchDisplayName = true;
+        }
+
+        if (invalidBranchDisplayName){
+            $("label[for='branch_display_name']").addClass("label-validation-error");
+        }
+
+        if ($("#BranchInfo_remarks").val().length > 200) {
+            invalidMess.push(Constant.ERR_STRING_LENGTH.replace('{0}', Constant.REMARK).replace('{1}', Constant.MAX_REMARK_LENGTH));
+            $("label[for='BranchInfo_remarks']").addClass("label-validation-error");
+        }
+
+        return invalidMess;
+    }
+
+    // Submit register form
+    $('button#btnSubmit').click(function () {
+        PMS.utility.removeValidationError();
+
+        var invalidMess = validateData();
+
+        if (invalidMess.length > 0) {
+            PMS.utility.showClientError(invalidMess);
+            return false;
+        }
+
+        PMS.utility.IsAuthenticateTimeout('@string.Format(Messages.I006)', '#frmBranchEdit');
+    });
+
+    $("#frmBranchEdit").submit(function (e) {
+        var formData = new FormData(this);
+
+        $.ajax({
+            url: $(this).attr("action"),
+            type: 'POST',
+            data: formData,
+            mimeType: "multipart/form-data",
+            contentType: false,
+            cache: false,
+            processData: false,
+            success: function (response) {
+                var data = JSON.parse(response);
+
+                BootstrapDialog.closeAll();
+
+                if (data.statusCode == 201) { // update success
+                    $("#frmBranchEdit").css('visibility', 'hidden');
+
+                    PMS.utility.showMessageDialog(PMS.utility.htmlDecode('@Constant.DialogType.INFORMATION'), data.message, null, null, function () {
+                        $('#BranchInfo_location_id').val(data.branchID);
+
+                        if (data.branchID > 0) {
+                            $('.insDate').text(data.insDate);
+                            $('.insUser').text(PMS.utility.nvl(data.insUser, ''));
+                        }
+                        if ($('.display-order').val().length == 0) {
+                            $('.display-order').val('0');
+                        }
+
+                        $('.updDate').text(data.updDate);
+                        $('.updUser').text(data.updUser);
+
+                        $("#DeleteFlag").prop('checked', data.deleted);
+                        $('input[name="OLD_DEL_FLAG"]').val(data.deleted);
+
+                        $('#updateTime, #deleteFlag').show();
+                        $("#frmBranchEdit").css('visibility', '');
+                    });
+                }
+
+                if (data.statusCode == 500) { // Exception
+                    $("#frmBranchEdit").css('visibility', 'hidden');
+                    PMS.utility.showMessageDialog(PMS.utility.htmlDecode('@Constant.DialogType.WARNING'), data.message, '/PMS11001');
+                }
+
+                if (typeof (data.ErrorMessages) !== 'undefined') // invalid data
+                    PMS.utility.showClientError(data.ErrorMessages);
+            },
+            error: function (error) {
+                if (error.status == 419) { //419: Authentication Timeout
+                    $("#frmBranchEdit").css('visibility', 'hidden');
+                    window.location.href = '/PMS01001/Login/timeout';
+                }
+            }
+        });
+
+        e.preventDefault(); // prevent Default action
+    });
+
+    $(document).off('#btnBack');
+    $(document).on('click', '#btnBack', function () {
+        $.ajax({
+            type: "POST",
+            url: '/Common/SetButtonBackSession',
+            dataType: 'json',
+            data: null,
+            success: function () {
+                window.location.href = "/PMS11001";
+            },
+            error: function (error) {
+            }
+        });
+    });
+</script>

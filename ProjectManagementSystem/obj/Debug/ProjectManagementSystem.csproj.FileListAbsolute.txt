@@ -1,0 +1,42 @@
+C:\project\branches\Version 0.7.0\ProjectManagementSystem\obj\Debug\ProjectManagementSystem.csprojResolveAssemblyReference.cache
+C:\project\branches\Version 0.7.0\ProjectManagementSystem\obj\Debug\ProjectManagementSystem.Resources.Messages.resources
+C:\project\branches\Version 0.7.0\ProjectManagementSystem\obj\Debug\ProjectManagementSystem.csproj.GenerateResource.Cache
+C:\project\branches\Version 0.7.0\ProjectManagementSystem\bin\ProjectManagementSystem.dll.config
+C:\project\branches\Version 0.7.0\ProjectManagementSystem\bin\ProjectManagementSystem.dll
+C:\project\branches\Version 0.7.0\ProjectManagementSystem\bin\ProjectManagementSystem.pdb
+C:\project\branches\Version 0.7.0\ProjectManagementSystem\obj\Debug\ProjectManagementSystem.dll
+C:\project\branches\Version 0.7.0\ProjectManagementSystem\obj\Debug\ProjectManagementSystem.pdb
+C:\project\PMS\branches\Version 0.7.0\ProjectManagementSystem\bin\ProjectManagementSystem.dll.config
+C:\project\PMS\branches\Version 0.7.0\ProjectManagementSystem\bin\ProjectManagementSystem.dll
+C:\project\PMS\branches\Version 0.7.0\ProjectManagementSystem\bin\ProjectManagementSystem.pdb
+C:\project\PMS\branches\Version 0.7.0\ProjectManagementSystem\obj\Debug\ProjectManagementSystem.Resources.Messages.resources
+C:\project\PMS\branches\Version 0.7.0\ProjectManagementSystem\obj\Debug\ProjectManagementSystem.csproj.GenerateResource.Cache
+C:\project\PMS\branches\Version 0.7.0\ProjectManagementSystem\obj\Debug\ProjectManagementSystem.dll
+C:\project\PMS\branches\Version 0.7.0\ProjectManagementSystem\obj\Debug\ProjectManagementSystem.pdb
+C:\project\PMS\branches\Version 0.7.0\ProjectManagementSystem\obj\Debug\ProjectManagementSystem.csprojResolveAssemblyReference.cache
+C:\ProjectManagementSystem\branches\Version 2.9.x\ProjectManagementSystem\bin\ProjectManagementSystem.dll.config
+C:\ProjectManagementSystem\branches\Version 2.9.x\ProjectManagementSystem\bin\ProjectManagementSystem.dll
+C:\ProjectManagementSystem\branches\Version 2.9.x\ProjectManagementSystem\bin\ProjectManagementSystem.pdb
+C:\ProjectManagementSystem\branches\Version 2.9.x\ProjectManagementSystem\obj\Debug\ProjectManagementSystem.Resources.Messages.resources
+C:\ProjectManagementSystem\branches\Version 2.9.x\ProjectManagementSystem\obj\Debug\ProjectManagementSystem.csproj.GenerateResource.cache
+C:\ProjectManagementSystem\branches\Version 2.9.x\ProjectManagementSystem\obj\Debug\ProjectManagementSystem.csproj.CoreCompileInputs.cache
+C:\ProjectManagementSystem\branches\Version 2.9.x\ProjectManagementSystem\obj\Debug\ProjectManagementSystem.csproj.CopyComplete
+C:\ProjectManagementSystem\branches\Version 2.9.x\ProjectManagementSystem\obj\Debug\ProjectManagementSystem.dll
+C:\ProjectManagementSystem\branches\Version 2.9.x\ProjectManagementSystem\obj\Debug\ProjectManagementSystem.pdb
+C:\ProjectManagementSystem\branches\Version 2.9.x\ProjectManagementSystem\obj\Debug\ProjectManagementSystem.csprojAssemblyReference.cache
+D:\Data\Project\iPro\Version 2.15.1\ProjectManagementSystem\bin\ProjectManagementSystem.dll.config
+D:\Data\Project\iPro\Version 2.15.1\ProjectManagementSystem\bin\ProjectManagementSystem.dll
+D:\Data\Project\iPro\Version 2.15.1\ProjectManagementSystem\bin\ProjectManagementSystem.pdb
+D:\Data\Project\iPro\Version 2.15.1\ProjectManagementSystem\obj\Debug\ProjectManagementSystem.Resources.Messages.resources
+D:\Data\Project\iPro\Version 2.15.1\ProjectManagementSystem\obj\Debug\ProjectManagementSystem.csproj.GenerateResource.Cache
+D:\Data\Project\iPro\Version 2.15.1\ProjectManagementSystem\obj\Debug\ProjectManagementSystem.dll
+D:\Data\Project\iPro\Version 2.15.1\ProjectManagementSystem\obj\Debug\ProjectManagementSystem.pdb
+D:\Data\Project\iProGit\ProjectManagementSystem\bin\ProjectManagementSystem.dll.config
+D:\Data\Project\iProGit\ProjectManagementSystem\bin\ProjectManagementSystem.dll
+D:\Data\Project\iProGit\ProjectManagementSystem\bin\ProjectManagementSystem.pdb
+D:\Data\Project\iProGit\ProjectManagementSystem\obj\Debug\ProjectManagementSystem.csprojAssemblyReference.cache
+D:\Data\Project\iProGit\ProjectManagementSystem\obj\Debug\ProjectManagementSystem.Resources.Messages.resources
+D:\Data\Project\iProGit\ProjectManagementSystem\obj\Debug\ProjectManagementSystem.csproj.GenerateResource.cache
+D:\Data\Project\iProGit\ProjectManagementSystem\obj\Debug\ProjectManagementSystem.csproj.CopyComplete
+D:\Data\Project\iProGit\ProjectManagementSystem\obj\Debug\ProjectManagementSystem.dll
+D:\Data\Project\iProGit\ProjectManagementSystem\obj\Debug\ProjectManagementSystem.pdb

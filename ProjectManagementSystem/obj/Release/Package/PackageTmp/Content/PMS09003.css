@@ -1,0 +1,413 @@
+﻿/*取引先別売上一覧*/
+.search-condition .search_customer {
+    width: 220px;
+}
+
+.search-condition select[id="Condition_TAG_ID"] {
+    width: 160px;
+}
+
+.search-condition .include-delete {
+    margin-left: 40px;
+}
+
+.search-condition select[id="Condition_CONTRACT_TYPE_ID"] {
+    vertical-align: top;
+    width: 240px;
+    height: 90px;
+}
+
+.search-condition .group-1, .search-condition .group-2,
+.search-condition .group-3, .search-condition .group-4 {
+    float: left;
+}
+
+.search-condition .group-3, .search-condition .group-4 {
+    margin-top: 15px;
+}
+
+.search-condition .group-2 {
+    width: 50%;
+}
+
+.group-row {
+    margin-bottom: 0px !important;
+}
+ 
+
+.width-location-name{
+    width: auto !important;
+    max-width: 85%;
+}
+
+
+@media (max-width: 1135px) {
+    .search-condition .group-1 {
+        float: left;
+        width: 100%;
+        margin-bottom: 15px;
+    }
+
+    .search-condition .group-2, .search-condition .group-3, .search-condition .group-3 {
+        float: left;
+        margin-top: 0px;
+    }
+
+    .search-condition .group-2 {
+        margin-left: 20px;
+        width: auto;
+    }
+
+    .search-condition .group-4 {
+        margin-left: 0px;
+        width: 100%;
+    }
+
+    .search-condition .group-3 {
+        margin-left: 26px;
+    }
+
+    .sidebar-collapse .search-condition .group-1 {
+        width: auto;
+        margin-bottom: 0;
+    }
+
+    .sidebar-collapse .search-condition .group-2 {
+        width: 50%;
+        margin-left: 0px;
+    }
+
+    .sidebar-collapse .search-condition .group-3 {
+        width: 32.9%;
+        margin-top: 15px;
+        margin-left: 0px;
+    }
+
+    .sidebar-collapse .search-condition .group-4 {
+        width: auto;
+    }
+}
+
+@media (max-width: 1024px) {
+
+    .sidebar-collapse .search-condition .group-1 {
+        float: left;
+        width: 100%;
+        margin-bottom: 15px;
+    }
+
+    .sidebar-collapse .search-condition .group-1,
+    .sidebar-collapse .search-condition .group-2,
+    .sidebar-collapse .search-condition .group-3 {
+        margin-top: 0px;
+    }
+
+    .sidebar-collapse .search-condition .group-2 {
+        width: auto;
+        margin-left: 20px;
+    }
+
+    .sidebar-collapse .search-condition .group-4 {
+        width: 100%;
+        margin-left: 0px;
+    }
+}
+
+/*取引先別売上一覧－(タグ別) */
+
+.sale-customer-list {
+    margin-top: 15px;
+}
+
+.search-condition .search-tag {
+    margin-left: 21px;
+}
+
+.search-condition .form-group .title-width {
+    width: 120px;
+}
+
+.sale-customer-list .search-date {
+    margin-top: 10px;
+    text-align: left;
+    background: rgb(242, 242, 242);
+    padding: 7px 10px;
+}
+
+    .sale-customer-list .search-date button[name="btnBack"] {
+        margin-right: 5px;
+    }
+
+.sales-tag-by-customer-list .dataTables_info {
+    display: none;
+}
+
+.sales-project-by-customer-list .dataTables_info {
+    display: none;
+}
+
+.search-condition .customer-name,
+.search-condition .period-title,
+.search-condition .lblTotalSalesAmount,
+.search-condition .lblTotalAmountGrossMargin {
+    padding-left: 4px;
+    width: 200px;
+    margin-bottom: -6px;
+}
+
+.search-condition .tag-name {
+    padding-left: 8px;
+    width: 200px;
+    margin-bottom: -6px;
+}
+
+input.checkbox {
+    margin-left: 1px;
+}
+
+label.bold {
+    font-weight: bold;
+}
+
+.mail_address {
+    text-decoration: underline;
+    color: #4D99E0;
+}
+
+.required_1 {
+    color: red;
+    width: 61px;
+}
+
+.required_2 {
+    color: red;
+    width: 42px;
+}
+
+.layout_remark {
+    margin-top: 0px;
+}
+
+.upload_image {
+    margin-bottom: 20px;
+}
+
+.title_lockpass {
+    margin-top: -3px;
+}
+
+input[name='Password_Lock'] {
+    margin-bottom: 10px;
+    margin-right: 5px;
+}
+
+.remark {
+    margin-top: 10px;
+}
+
+input[name='Delete'] {
+    margin-left: 26px;
+    margin-top: 7px;
+}
+
+.label_delete {
+    margin-left: -15px;
+}
+
+.update_sucess {
+    float: left;
+    margin: -32px 7px 0 -12px;
+    position: fixed;
+}
+
+.ui-dialog .ui-dialog-title {
+    margin-left: 4px;
+}
+
+.ui-dialog .ui-dialog-buttonpane {
+    border-width: 0 0 0 0;
+}
+
+.btnBack {
+    margin-left: 3px;
+    margin-top: 12px;
+    width: 98px;
+    height: 23px;
+}
+
+.tbl-user-list td .short-text {
+    position: absolute;
+    max-width: 200px;
+}
+
+.tbl-user-list td .update_user {
+    max-width: 130px;
+}
+
+.tbl-user-list td .group {
+    max-width: 105px;
+}
+
+.tbl-user-list td .position {
+    max-width: 70px;
+}
+
+a.btn_csv {
+    margin-left: 14px;
+    margin-top: 8px;
+}
+
+
+table.ui-datepicker-calendar {
+    display: none;
+}
+
+.no {
+    width: 58px;
+    text-align: center;
+}
+
+#InfoTable td .money {
+    width: 123px;
+}
+
+.col_wrap {
+    text-align: right;
+    width: 100px;
+}
+
+.no-padding-left {
+    padding-left: 0px !important;
+}
+
+.data-label {
+    margin-left: 20px;
+}
+
+
+div.summary-sales-customer {
+    padding: 0 0 15px;
+}
+
+    div.summary-sales-customer div {
+        padding: 0 20px;
+    }
+
+    div.summary-sales-customer .col-md-1,
+    div.summary-sales-customer .col-md-2,
+    div.summary-sales-customer .col-md-3 {
+        border-left: 1px solid #EAEAEA;
+    }
+
+    div.summary-sales-customer .col-md-1 {
+        border-right: 1px solid #EAEAEA;
+    }
+
+    div.summary-sales-customer label {
+        width: 100%;
+    }
+
+        div.summary-sales-customer label.money {
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        div.summary-sales-customer label.title {
+            color: #1A3ACD;
+        }
+
+.search-date {
+    text-align: left;
+}
+
+@media (max-width: 1280px) {
+    div.summary-sales-customer .col-md-2 {
+        width: 20%;
+    }
+}
+
+/*取引先別売上一覧（プロジェクト別）*/
+/*.sales-project-by-customer-list #InfoTable td .project-name {
+    max-width: 300px;
+}*/
+
+.sales-project-by-customer-list #InfoTable td .contract_type {
+    max-width: 200px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.cell_left{
+    max-width:400px;
+}
+
+
+
+.longtext{
+    max-width: 100%;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    margin-left: 0px;
+    vertical-align: middle;
+    margin-bottom: 0px;
+    cursor:pointer;
+}
+
+.customer-name.by_customer{
+    width:auto !important;
+    max-width:20%;
+}
+
+
+.left_block.by_tag{
+    width:22% !important;
+}
+.location_name.by_tag{
+    width:auto !important;
+    max-width:25%;
+}
+
+
+@media (max-width: 1520px) and (min-width: 1510px) { /*90% resolution 1366x768*/
+    .location_name.by_tag{
+        width:auto !important;
+        max-width:30%;
+    }
+}
+
+@media (min-width: 1700px){ /*80%  resolution 1366x768*/
+    .location_name.by_tag{
+        width:auto !important;
+        max-width:35%;
+    }
+}
+
+@media (max-width: 1540px) and (min-width: 1530px) {/*Large Screen 125%*/
+    .location_name.by_tag{
+        width:auto !important;
+        max-width:33%;
+    }
+}
+
+@media (max-width: 1750px) and (min-width: 1740px) {/*Large Screen 110%*/
+    .location_name.by_tag{
+        width:auto !important;
+        max-width:40%;
+    }
+}
+
+@media (max-width: 2140px) and (min-width: 2130px) { /*Large Screen 90%*/
+    .location_name.by_tag{
+        width:auto !important;
+        max-width:45%;
+    }
+}
+
+@media (max-width: 2560px) and (min-width: 2390px){/*Large Screen 80% and 75%*/
+    .location_name.by_tag{
+        width:auto !important;
+        max-width:45%;
+    }
+}

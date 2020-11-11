@@ -1,0 +1,109 @@
+﻿.search-condition input[type="text"] {
+    width: 225px;
+}
+
+.tbl-overheadcost-list .overhead-cost-type {
+    cursor: pointer;
+}
+
+.overheadcost-regist .search_customer {
+    width: 83%;
+    margin-left: 0px;
+}
+
+.title-width {
+    width: 100px;
+}
+
+.longtext {
+    max-width: 100%;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    margin-left: 0;
+    vertical-align: middle;
+    margin-bottom: 0;
+}
+
+.tag_name {
+    max-width: 300px;
+}
+
+.display_name {
+    max-width: 300px;
+}
+
+.user_update {
+    max-width: 140px;
+}
+
+.search-date {
+    text-align: left;
+}
+
+.overhead-cost-type-upate {
+    max-width: 350px;
+    padding-top: 7px;
+}
+
+.overhead-cost-remark-upate {
+    width: 350px;
+    word-break: break-all;
+    padding-top: 8px;
+}
+
+.tbl-overheadcost-list .delete-link {
+    cursor: pointer;
+    text-decoration: underline;
+}
+/*zoom in common textarea*/
+ @media (max-width: 1300px) {
+    .candy-textArea{
+        max-width: 950px;
+    }
+    .set-max-width{
+        max-width :950px;
+    }
+}
+
+@media (max-width: 1100px) {
+    .candy-textArea{
+        max-width: 950px;
+    }
+    .set-max-width{
+        max-width :950px;
+    }
+}
+@media (min-width: 1300px) {
+    .candy-textArea{
+        max-width: 950px;
+    }
+    .set-max-width{
+        max-width :950px;
+    }
+}
+@media (min-width: 1500px) {
+    .candy-textArea{
+        max-width: 1075px;
+    }
+    .set-max-width{
+        max-width :1075px;
+    }
+}
+@media (min-width: 1700px) {
+    .candy-textArea{
+        max-width:1230px;
+    }
+    .set-max-width{
+        max-width :1230px;
+    }
+}
+@media (min-width: 1800px) {
+    .candy-textArea{
+        max-width:1320px;
+    }
+    .set-max-width{
+        max-width :1320px;
+    }
+}
+/*end zoom in textarea*/

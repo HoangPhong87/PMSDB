@@ -1,0 +1,629 @@
+﻿@model ProjectManagementSystem.ViewModels.PMS09001.PMS09001ListViewModel
+@using ProjectManagementSystem.Resources;
+@using ProjectManagementSystem.Common;
+
+@Scripts.Render("~/bundles/dragOn")
+
+@{
+    ViewBag.Title = "所属別売上一覧";
+    var currentUser = HttpContext.Current.Session[Constant.SESSION_LOGIN_USER] as LoginUser;
+}
+<div id="onloadDivSales">
+</div>
+<section class="content-header">
+    <h1 id="title">
+        @ViewBag.Title
+    </h1>
+    <div class="search-form">
+        <div class="search-condition">
+            <div class="row">
+                <div class="group-1">
+                    <label style="width:80px" class="width-120">所属</label>
+                    @Html.DropDownListFor(m => m.Condition.GROUP_ID, Model.GROUP_LIST, new { @class = "grouplist", @multiple = "multiple" })
+                </div>
+                <div class="group-2">
+                    <div class="col-1">
+                        <label style="width:80px" class="width-100">期間</label>
+                        <span class="date datepicker-months from-date">
+                            @Html.TextBox(m => m.Condition.FROM_DATE, "{0:yyyy/MM}", new { @class = "ime-mode", maxlength = 7, @placeholder = "YYYY/MM" })
+                            <button class="btn light"><i class="btn-icon btn-calendar"></i></button>
+                        </span>
+                        <span class="date-range-space">～</span>
+                        <span class="date datepicker-months to-date">
+                            @Html.TextBox(m => m.Condition.TO_DATE, "{0:yyyy/MM}", new { @class = "ime-mode", maxlength = 7, @placeholder = "YYYY/MM" })
+                            <button class="btn light"><i class="btn-icon btn-calendar"></i></button>
+                        </span>
+                    </div>
+                    <div class="col-2">
+                        <label style="width:80px" class="width-120 lbl-contract">契約種別</label>
+                        @Html.DropDownListFor(m => m.Condition.CONTRACT_TYPE_ID, Model.CONTRACT_TYPE_LIST, new { @class = "grouplist", @multiple = "multiple", @style = "vertical-align: top !important;" })
+                        @if (currentUser != null &&
+                            (currentUser.PlanFunctionList.Contains(Constant.FunctionID.BranchList_Admin) && currentUser.FunctionList.Contains(Constant.FunctionID.BranchList_Admin)
+                             || currentUser.PlanFunctionList.Contains(Constant.FunctionID.BranchList) && currentUser.FunctionList.Contains(Constant.FunctionID.BranchList)
+                             || currentUser.PlanFunctionList.Contains(Constant.FunctionID.BranchRegist) && currentUser.FunctionList.Contains(Constant.FunctionID.BranchRegist)))
+                        {
+                            <label style="width:80px" class="width-120 lbl-contract">拠点</label>
+                            @Html.DropDownListFor(m => m.Condition.LOCATION_ID, Model.BRANCH_LIST, new { @class = "", @multiple = "multiple", @style = "vertical-align: top !important;" })
+                        }
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="right search-action">
+            <button type="button" id="btnSearch" name="btnSearch" class="btn dark"><i class="btn-icon btn-search"></i>検索</button>
+            <button type="button" id="btnClear" name="btnClear" class="btn light"><i class="btn-icon btn-clear"></i>クリア</button>
+        </div>
+        <div id="savedCondition" class="frmExport">
+            @Html.Hidden("hdnGroupId", Model.Condition.GROUP_ID)
+            @Html.Hidden("hdnFromDate", Model.Condition.FROM_DATE)
+            @Html.Hidden("hdnToDate", Model.Condition.TO_DATE)
+            @Html.Hidden("hdnContractTypeId", Model.Condition.CONTRACT_TYPE_ID)
+            @if (currentUser != null &&
+                            (currentUser.PlanFunctionList.Contains(Constant.FunctionID.BranchList_Admin) && currentUser.FunctionList.Contains(Constant.FunctionID.BranchList_Admin)
+                             || currentUser.PlanFunctionList.Contains(Constant.FunctionID.BranchList) && currentUser.FunctionList.Contains(Constant.FunctionID.BranchList)
+                             || currentUser.PlanFunctionList.Contains(Constant.FunctionID.BranchRegist) && currentUser.FunctionList.Contains(Constant.FunctionID.BranchRegist)))
+            {
+                @Html.Hidden("hdnLocationId", Model.Condition.LOCATION_ID)
+            }
+            </div>
+        @Html.Hidden("hdnSelectSortType", Model.Condition.SELECT_SORT_TYPE)
+    </div>
+</section>
+
+@RenderPage("~/Views/Shared/ShowHideHeaderContent.cshtml")
+
+<br />
+<div class="data-list group-sale-list content special-list clearfix" style="visibility:hidden">
+    <div class="sort-type" style="float: right;margin-right: 115px;margin-top: -42px;">
+        <label class="width-120"><b>並び替え</b></label>
+        @Html.DropDownListFor(m => m.Condition.SELECT_SORT_TYPE, new SelectListItem[] { new SelectListItem() { Text = "", Value = "" }, new SelectListItem() { Text = "売上順", Value = "0" }, new SelectListItem() { Text = "利益順", Value = "1" }, new SelectListItem() { Text = "利益率順", Value = "2" }})
+    </div>
+    <div class="col-left">
+        <table class="dataTable" id="tableLeft" width="100%">
+            <thead>
+                <tr>
+                    <th>No.</th>
+                    <th>group_id</th>
+                    <th>所属</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+    <div class="col-center">
+        <table class="dataTable" id="tableCenter" width="100%">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>合計</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+    <div class="col-right">
+        <table class="dataTable" id="tableRight" width="100%">
+            <thead>
+                <tr></tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+</div>
+
+<div class="search-date group-sale-list-footer">
+    @Html.Hidden("hdnFromMonth")
+    @Html.Hidden("hdnFromYear")
+    @Html.Hidden("hdnToMonth")
+    @Html.Hidden("hdnToYear")
+    <button type="button" id="btnPreMonth" name="btnPreMonth" class="btn light btnNoStyleDisable">前月</button>
+    <span id="dateRange">2015年5月 ～ 2015年10月</span>
+    <button type="button" id="btnNextMonth" name="btnNextMonth" class="btn light btnNoStyleDisable">翌月</button>
+</div>
+
+<form method="POST" action="/PMS09001/SalesGroupDetail" class="frm-detail">
+    <input type="hidden" name="contractTypeName" value="">
+    <input type="hidden" name="locationName" value="">
+    <input type="hidden" name="contractTypeID" value="">
+    <input type="hidden" name="group_id" value="">
+    <input type="hidden" name="locationID" value="">
+    <input type="hidden" name="selected_year" value="">
+    <input type="hidden" name="selected_month" value="">
+</form>
+
+<script type="text/javascript" charset="utf-8">
+    $(function () {
+        $('.col-right').dragOn();
+
+        var columsArr = [];
+        var currentDate = new Date();
+
+        // Load first
+        var startArr = $('#Condition_FROM_DATE').val().split('/');
+        var endArr = $('#Condition_TO_DATE').val().split('/');
+
+        $('#hdnFromMonth, #hdnFromYear').val('');
+        $('#hdnFromYear').val(startArr[0]);
+        $('#hdnFromMonth').val(startArr[1]);
+        $('#hdnToYear').val(endArr[0]);
+        $('#hdnToMonth').val(endArr[1]);
+
+        bindTimeDuration(endArr[1], endArr[0], startArr[1], startArr[0]);
+
+        var hdnContractType = $('#hdnContractTypeId').val();
+
+        if (hdnContractType.length > 0) {
+            var contractTypeArr = hdnContractType.split(',');
+            $('#Condition_CONTRACT_TYPE_ID').val(contractTypeArr);
+        }
+
+        var hdnGroup = $('#hdnGroupId').val();
+
+        if (hdnGroup.length > 0) {
+            var groupArr = hdnGroup.split(',');
+            $('#Condition_GROUP_ID').val(groupArr);
+        }
+
+        var hdnLocation = $('#hdnLocationId').val();
+        if (hdnLocation != undefined && hdnLocation.length > 0) {
+            var locationArr = hdnLocation.split(',');
+            $('#Condition_LOCATION_ID').val(locationArr);
+        }
+        
+
+        var oSorting = {
+            "bSort": true
+        };
+        var oPaginate = {
+            "bPaginate": true,
+            "iDisplayLength": parseInt(@App[ConfigurationKeys.LIST_ITEMS_PER_PAGE]),
+            "bStateSave": false
+        };
+        var oServerSide = {
+            "bServerSide": true,
+            "sAjaxSource": '@Url.Action("Search", "PMS09001")',
+            "fnBeforeSend": beforeSend,
+            "fnServerParams": serverParams,
+            "fnDrawCallback": displayComplete,
+            "fnInitComplete": bindData
+        };
+        var aoColumnDefs = [
+            { "bSortable": false, "aTargets": [0], "sWidth": "10%", "sClass": "cell_center" },
+            { "sName": "group_id", "bVisible": false, "aTargets": [1], "sWidth": "0%", "sClass": "cell_left" },
+            { "sName": "group_name", "aTargets": [2], "sWidth": "45%", "sClass": "group_name cell_left" }
+        ];
+
+        var dataTable = CreateDataTable('#tableLeft', oSorting, oPaginate, oServerSide, aoColumnDefs);
+
+        function beforeSend() {
+        }
+
+        function serverParams(aoData) {
+            aoData.push(
+                { "name": "FROM_DATE", "value": $("#hdnFromYear").val() + '/' + $("#hdnFromMonth").val() },
+                { "name": "TO_DATE", "value": $("#hdnToYear").val() + '/' + $("#hdnToMonth").val() },
+                { "name": "GROUP_ID", "value": $("#hdnGroupId").val() },
+                { "name": "LOCATION_ID", "value": $("#hdnLocationId").val() },
+                { "name": "CONTRACT_TYPE_ID", "value": $("#hdnContractTypeId").val() },
+                { "name": "SELECT_SORT_TYPE", "value": $("#hdnSelectSortType").val() }
+            );
+        }
+
+        //variable save status of condition
+        var currentConditionState = { locID: "", ctID: "", grID: "", fromDate: "", toDate: "" };
+
+        function displayComplete() {
+            $('#tableLeft thead tr th:first').removeClass().addClass('sorting_disabled');
+
+            if ($('#tableLeft tbody tr:first td.dataTables_empty').length === 0) {
+                var htmlLeft = '<tr class="bg-color-total-1 tr-last">'
+                    + ' <td class=""></td>'
+                    + ' <td class="cell_left bg-color-total-1">合計</td></tr>';
+
+                $('#tableLeft tbody tr:last').after(htmlLeft);
+
+                $('#tableLeft tbody tr').each(function () {
+                    var htmlUp = '<tr class="' + $(this).attr('class') + ' td-up"><td>&nbsp;</td> <td>&nbsp;</td></tr>';
+                    var htmlDown = '<tr class="' + $(this).attr('class') + ' td-down"><td>&nbsp;</td> <td>&nbsp;</td></tr>';
+
+                    $(this).before(htmlUp).after(htmlDown);
+                });
+            }
+            
+            $('div.group-sale-list').removeAttr('style');
+            
+            //binding data to push on details page
+            var $form = $(".frm-detail");
+            var selectedValues = [];
+            $("#Condition_CONTRACT_TYPE_ID :selected").each(function () {
+                selectedValues.push($(this).text());
+            });
+
+            var selectedLocationValues = [];
+            $("#Condition_LOCATION_ID :selected").each(function () {
+                selectedLocationValues.push($(this).text());
+            });
+
+            $form.children('input[name="contractTypeName"]').val(selectedValues);
+            $form.children('input[name="locationName"]').val(selectedLocationValues);
+            $form.children('input[name="contractTypeID"]').val($('#Condition_CONTRACT_TYPE_ID').val());
+            $form.children('input[name="locationID"]').val($('#Condition_LOCATION_ID').val());
+
+            //save state search condition 
+            currentConditionState.ctID = $('#Condition_CONTRACT_TYPE_ID').val();
+            currentConditionState.grID = $('#Condition_GROUP_ID').val();
+            currentConditionState.locID = $('#Condition_LOCATION_ID').val();
+            currentConditionState.fromDate = $('#Condition_FROM_DATE').val();
+            currentConditionState.toDate = $('#Condition_TO_DATE').val();
+
+            $("#onloadDivSales").hide();
+            $('.pace.pace-active').addClass('pace-inactive').removeClass('pace-active');
+            $('#btnSearch').removeAttr('disabled');
+            $('#btnPreMonth').removeAttr('disabled');
+            $('#btnNextMonth').removeAttr('disabled');
+            //check if this is Safari on windows, fix size of table row
+            if (!!navigator.userAgent.match('Safari/534.57.2')) {
+                $('#tableLeft tbody tr').css('height', 37);
+            }
+        }
+
+        function bindData(data) {
+            var htmlCenter = '';
+            var htmlRight = '';
+
+            if (data.aaData.length > 0) {
+                var sumTotalSales = 0;
+                var sumTotalProfit = 0;
+                var sumSalesAmountArr = [];
+                var sumProfitAmountArr = [];
+
+                for (var i = 0; i < columsArr.length; i++) {
+                    sumSalesAmountArr.push(0);
+                    sumProfitAmountArr.push(0);
+                }
+
+                for (var i = 0; i < data.aaData.length; i++) {
+                    var bgRow = i % 2 == 0 ? 'odd' : 'even';
+                    var htmlIndividualSales = '';
+                    var htmlProfit = '';
+                    var htmlProfitRate = '';
+                    var totalSales = 0;
+                    var totalProfit = 0;
+                    for (var j = 0; j < columsArr.length; j++) {
+                        var groupId = data.aaData[i][1] == null ? '0' : data.aaData[i][1];
+                        var dataSales = data.aaData[i][3 + j].split('/');
+                        var individualSales = parseInt(dataSales[0]);
+                        var actualSales = parseFloat(dataSales[1]);
+                        var profit = buildDataProfit(individualSales, actualSales);
+                        var profitRate = buildDataProfitRate(individualSales, profit);
+                        totalSales += individualSales;
+                        sumSalesAmountArr[j] += individualSales;
+                        totalProfit += profit;
+                        sumProfitAmountArr[j] += profit;
+                        htmlIndividualSales += '<td class="right"> '
+                            + ' <a href="#" class="detail-link money" aria-valuetext="' + groupId + '" aria-label="' + columsArr[j] + '"> '
+                            + individualSales + '円'
+                            + '</a>'
+                            + '</td>';
+                        htmlProfit += ' <td class="money right profit-amount" aria-label="' + columsArr[j] + '">' + profit + '円' + '</td>';
+                        htmlProfitRate += ' <td class="right">' + profitRate + '%' + '</td>';
+                    }
+
+                    htmlCenter += '<tr class="' + bgRow + '"> <td class="bold">売上</td><td class="money right bg-color-total-1 total">' + totalSales + '円' + '</td></tr>'
+                        + ' <tr class="' + bgRow + '"> <td class="bold">利益</td><td class="money right bg-color-total-1 total">' + totalProfit + '円' + '</td></tr>'
+                        + ' <tr class="' + bgRow + '"> <td class="bold">利益率</td><td class="right bg-color-total-1 total">' + buildDataProfitRate(totalSales, totalProfit) + '%' + '</td></tr>';
+                    htmlRight += '<tr class="' + bgRow + '">' + htmlIndividualSales + '</tr>'
+                       + ' <tr class="' + bgRow + '"> ' + htmlProfit + '</tr>'
+                       + ' <tr class="' + bgRow + '"> ' + htmlProfitRate + '</tr>';
+
+                    sumTotalSales += totalSales;
+                    sumTotalProfit += totalProfit;
+                }
+
+                htmlCenter += '<tr> <td class="bold bg-color-total-1">売上</td> <td class="money right bg-color-total-1 total">' + sumTotalSales + '円' + '</td></tr>'
+                    + ' <tr> <td class="bold bg-color-total-1">利益</td> <td class="money right bg-color-total-1 total">' + sumTotalProfit + '円' + '</td></tr>'
+                    + ' <tr> <td class="bold bg-color-total-1">利益率</td> <td class="right bg-color-total-1 total">' + buildDataProfitRate(sumTotalSales, sumTotalProfit) + '%' + '</td></tr>';
+
+                var htmlTotalSalesAmount = '';
+                var htmlTotalProfitAmount = '';
+                var htmlProfitRateAmount = '';
+
+                for (var i = 0; i < columsArr.length; i++) {
+                    htmlTotalSalesAmount += ' <td class="money right bg-color-total-1">' + sumSalesAmountArr[i] + '円' + '</td>';
+                    htmlTotalProfitAmount += ' <td class="money right bg-color-total-1">' + sumProfitAmountArr[i] + '円' + '</td>';
+                    htmlProfitRateAmount += ' <td class="right bg-color-total-1">' + buildDataProfitRate(sumSalesAmountArr[i], sumProfitAmountArr[i]) + '%' + '</td>';
+                }
+
+                htmlRight += '<tr>' + htmlTotalSalesAmount + '</tr>'
+                       + ' <tr> ' + htmlTotalProfitAmount + '</tr>'
+                       + ' <tr> ' + htmlProfitRateAmount + '</tr>';
+            } else {
+                htmlCenter += '<tr role="row" class="odd">'
+                   + '<td colspan="2" class="empty-data">&nbsp;</td>'
+                   + '<tr>';
+                htmlRight += '<tr role="row" class="odd">'
+                    + '<td class="empty-data" colspan="' + columsArr.length + '">&nbsp;</td>'
+                    + '<tr>';
+            }
+
+            $('#tableCenter tbody').empty().append(htmlCenter);
+            $('#tableRight tbody').empty().append(htmlRight);
+            replaceToMoney();
+        }
+
+        // Bind data by condition
+        function bindTimeDuration(toMonth, toYear, fromMonth, fromYear, isClear) {
+            
+            var toMonth = parseInt(typeof (toMonth) !== 'undefined' ? toMonth : $('#hdnToMonth').val(),10);
+            var toYear = parseInt(typeof (toYear) !== 'undefined' ? toYear : $('#hdnToYear').val(),10);
+
+            fromMonth = parseInt(typeof (fromMonth) !== 'undefined' ? fromMonth : ($('#hdnFromMonth').val().length > 0 ? $('#hdnFromMonth').val() : 1),10);
+            fromYear = parseInt(typeof (fromYear) !== 'undefined' ? fromYear : ($('#hdnFromYear').val().length > 0 ? $('#hdnFromYear').val() : toYear),10);
+
+            if (fromMonth == 0) {
+                fromMonth = 12;
+                fromYear -= 1;
+            }
+
+            if (fromMonth == 13) {
+                fromMonth = 1;
+                fromYear += 1;
+            }
+
+            if (toMonth == 0) {
+                toMonth = 12;
+                toYear -= 1;
+            }
+
+            if (toMonth == 13) {
+                toMonth = 1;
+                toYear += 1;
+            }
+
+            // For the first load
+            if (toMonth < 12 && ($('#hdnFromMonth').val().length === 0 || typeof (isClear) !== 'undefined')) {
+                fromMonth = toMonth + 1;
+                fromYear = toYear - 1;
+            }
+
+            var from = fromYear + '/' + (fromMonth.toString().length === 1 ? '0' + fromMonth : fromMonth);
+            var to = toYear + '/' + (toMonth.toString().length === 1 ? '0' + toMonth : toMonth);
+
+            $('#Condition_FROM_DATE').val(from);
+            $('#Condition_TO_DATE').val(to);
+
+            $('.date.datepicker-months.from-date').datepicker("update", from);
+            $('.date.datepicker-months.to-date').datepicker("update", to);
+
+            if (typeof (isClear) === 'undefined') {
+                $('#hdnFromMonth').val(fromMonth);
+                $('#hdnFromYear').val(fromYear);
+                $('#hdnToMonth').val(toMonth);
+                $('#hdnToYear').val(toYear);
+
+                var startMonth = fromMonth;
+                if (startMonth < 10) {
+                    startMonth = '0' + startMonth;
+                }
+
+                var endMonth = toMonth;
+                if (endMonth < 10) {
+                    endMonth = '0' + endMonth;
+                }
+                $('#dateRange').text(fromYear + '年' + startMonth + '月 ～ ' + toYear + '年' + endMonth + '月');
+
+                columsArr = PMS.utility.getMonthCols(from, to);
+                bindMonthColums(columsArr);
+            }
+        }
+
+        // Bind colums by time duration on data table
+        function bindMonthColums(colums) {
+            var html = '';
+            for (var i = 0; i < colums.length; i++) {
+                html += '<th class="th-month">' + colums[i] + '</th>';
+            }
+
+            $('#tableRight thead tr').empty().append(html);
+        }
+
+        function buildDataProfit(individualSales, actualSales) {
+            individualSales = individualSales !== null ? individualSales : 0;
+            actualSales = actualSales !== null ? actualSales : 0;
+
+            var profit = individualSales - actualSales;
+            return profit;
+        }
+
+        function buildDataProfitRate(sales, profit) {
+            var profitRate = 0;
+
+            if (parseInt(sales) != 0)
+                profitRate = profit / sales * 100;
+            return profitRate.toFixed(2);
+        }
+
+        function replaceToMoney() {
+            $('.money').each(function () {
+                $(this).text(PMS.utility.convertIntToMoney($(this).text()));
+            });
+        }
+
+
+        function searchByCondition() {
+            $('.validation-summary-errors').remove();
+            // check valid date
+            var fromDate = $('#Condition_FROM_DATE').val();
+            var toDate = $('#Condition_TO_DATE').val();
+            var errFromDate = PMS.utility.validDate(fromDate, 'yyyy/mm', '期間（開始）');
+            var errToDate = PMS.utility.validDate(toDate, 'yyyy/mm', '期間（終了）');
+            var invalidMess = [];
+
+            if (errFromDate != null) {
+                invalidMess.push(errFromDate);
+            }
+
+            if (errToDate != null) {
+                invalidMess.push(errToDate);
+            }
+
+            if (errFromDate == null && errToDate == null && fromDate.length > 0 && toDate.length > 0) {
+                // compare date
+                if (!PMS.utility.compareDate(fromDate, toDate, 'yyyy/mm')) {
+                    invalidMess.push('@string.Format(Messages.E027)');
+                }
+
+                // valid max duration time
+                if (!PMS.utility.compareDateRange(fromDate, toDate, 11)) {
+                    invalidMess.push('@Messages.E030');
+                }
+            }
+
+            if (invalidMess.length > 0) {
+                PMS.utility.showClientError(invalidMess);
+                return false;
+            }
+
+            var $group = $("#Condition_GROUP_ID");
+
+            if ($group.val() != null && $group.find('option').length == $group.val().length) {
+                $group.val('');
+            }
+
+            var $location = $("#Condition_LOCATION_ID");
+
+            if ($location.val() != null && $location.find('option').length == $location.val().length) {
+                $location.val('');
+            }
+
+            var $contractType = $("#Condition_CONTRACT_TYPE_ID");
+
+            if ($contractType.val() != null && $contractType.find('option').length == $contractType.val().length) {
+                $contractType.val('');
+            }
+
+            $('#hdnGroupId').val($('#Condition_GROUP_ID').val());
+            $('#hdnLocationId').val($('#Condition_LOCATION_ID').val());
+            $('#hdnContractTypeId').val($('#Condition_CONTRACT_TYPE_ID').val());
+            $('#hdnSelectSortType').val($('#Condition_SELECT_SORT_TYPE').val());
+
+            if (toDate.length > 0) {
+                $('#hdnToYear').val(parseInt(toDate.split('/')[0],10));
+                $('#hdnToMonth').val(parseInt(toDate.split('/')[1],10));
+            }
+
+            if (fromDate.length > 0) {
+                var fromMonth = parseInt(fromDate.split('/')[1],10);
+                var fromYear = parseInt(fromDate.split('/')[0],10);
+
+                $('#hdnFromYear').val(fromYear);
+                $('#hdnFromMonth').val(fromMonth);
+
+                if (toDate.length == 0) {
+                    var toMonth = 12;
+                    var toYear = fromYear;
+
+                    if (fromMonth !== 1) {
+                        toMonth = fromMonth - 1;
+                        toYear = fromYear + 1;
+                    }
+
+                    $('#hdnToYear').val(toYear);
+                    $('#hdnToMonth').val(toMonth);
+                }
+            } else {
+                if (toDate.length > 0) {
+                    $('#hdnFromYear').val('');
+                    $('#hdnFromMonth').val('');
+                }
+            }
+
+            if (fromDate.length == 0 && toDate.length == 0) {
+                $('#hdnToYear').val(currentDate.getFullYear());
+                $('#hdnToMonth').val(currentDate.getMonth() + 1);
+            }
+
+            bindTimeDuration();
+
+            $('.pace.pace-inactive').addClass('pace-active').removeClass('pace-inactive');
+            $("#onloadDivSales").show(function () {
+                dataTable.fnPageChange('first');
+            });
+            $('#btnSearch').attr('disabled', 'disabled');
+        }
+
+        $('#Condition_SELECT_SORT_TYPE').off();
+        $('#Condition_SELECT_SORT_TYPE').on("change", function () {
+            searchByCondition();
+        });
+
+
+        $('button#btnPreMonth').click(function () {
+            $('#onloadDivSales').show();
+            $('#btnPreMonth').attr('disabled', 'disabled');
+            var FromMonth = parseInt($('#hdnFromMonth').val(),10) - 1;
+            var toMonth = parseInt($('#hdnToMonth').val(),10) - 1;
+            $('#hdnFromMonth').val(FromMonth);
+            $('#hdnToMonth').val(toMonth);
+
+            bindTimeDuration(toMonth, parseInt($('#hdnToYear').val(),10), FromMonth, parseInt($('#hdnFromYear').val(),10));
+            dataTable.fnPageChange('first');
+        });
+
+        $('button#btnNextMonth').click(function () {
+            $('#onloadDivSales').show();
+            $('#btnNextMonth').attr('disabled', 'disabled');
+            var FromMonth = parseInt($('#hdnFromMonth').val(),10) + 1;
+            var toMonth = parseInt($('#hdnToMonth').val(),10) + 1;
+
+            $('#hdnFromMonth').val(FromMonth);
+            $('#hdnToMonth').val(toMonth);
+
+            bindTimeDuration(toMonth, parseInt($('#hdnToYear').val(),10), FromMonth, parseInt($('#hdnFromYear').val(),10));
+            dataTable.fnPageChange('first');
+        });
+
+        $(document).bind('keypress', function (e) {
+            var code = e.keyCode || e.which;
+            if (code == 13) { //Enter keycode
+                searchByCondition();
+            }
+        });
+
+        $('button#btnSearch').click(function () {
+            searchByCondition();
+        });
+
+        $('button#btnClear').click(function () {
+            $("#Condition_GROUP_ID").val("");
+            $("#Condition_LOCATION_ID").val("");
+            $("#Condition_CONTRACT_TYPE_ID").val("");
+            $("#Condition_FROM_DATE").val("");
+            $("#Condition_TO_DATE").val("");
+            var toDate = new Date();
+            toDate.setMonth(currentDate.getMonth() + 11);
+            bindTimeDuration(toDate.getMonth() + 1, toDate.getFullYear(), currentDate.getMonth() + 1, currentDate.getFullYear(), true);
+            PMS.utility.ClearRestoreData("PMS09001")
+        });
+
+        $(document).off('a.detail-link');
+        $(document).on('click', 'a.detail-link', function () {
+            var $form = $(".frm-detail");
+            var selectedTimeArr = $(this).attr("aria-label").split('/');
+            $form.children('input[name="selected_year"]').val(selectedTimeArr[0]);
+            $form.children('input[name="selected_month"]').val(selectedTimeArr[1]);
+            $form.children('input[name="group_id"]').val($(this).attr("aria-valuetext"));
+
+            //correct state condition
+            $('#Condition_CONTRACT_TYPE_ID').val(currentConditionState.ctID);
+            $('#Condition_GROUP_ID').val(currentConditionState.grID);
+            $('#Condition_LOCATION_ID').val(currentConditionState.locID);
+            $('#Condition_FROM_DATE').val(currentConditionState.fromDate);
+            $('#Condition_TO_DATE').val(currentConditionState.toDate);
+            $form.submit();
+        });
+        PMS.utility.LoadSearchCondition();
+        $('#hdnSelectSortType').val($('#Condition_SELECT_SORT_TYPE').val());
+    });
+</script>

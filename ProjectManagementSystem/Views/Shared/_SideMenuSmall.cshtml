@@ -1,0 +1,273 @@
+﻿@using ProjectManagementSystem.Common;
+
+<section class="sidebar">
+    <ul class="sidebar-small-menu">
+        <li>
+            <a href="#" role="button" class="sidebar-toggle">
+                <i class="btn-icon btn-menu-open" data-toggle="offcanvas"></i>
+            </a>
+        </li>
+        @{
+        var currentUser = HttpContext.Current.Session[Constant.SESSION_LOGIN_USER] as LoginUser;
+        var functionList = currentUser.FunctionList as List<int>;
+        var planFunctionList = currentUser.PlanFunctionList as List<int>;
+        Dictionary<string, string> dictionary = new Dictionary<string, string>();
+
+        if ((planFunctionList.Contains(Constant.FunctionID.ProjectList_Admin) || planFunctionList.Contains(Constant.FunctionID.ProjectList) || planFunctionList.Contains(Constant.FunctionID.ProjectRegist))
+        && (functionList.Contains(Constant.FunctionID.ProjectList_Admin) || functionList.Contains(Constant.FunctionID.ProjectList) || functionList.Contains(Constant.FunctionID.ProjectRegist)))
+        {
+        <li class="parent-node">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-delay="500" aria-expanded="false">
+                <i class="btn-icon btn-pj"></i>
+            </a>
+            <ul class="dropdown-menu">
+                <b class="caret"></b>
+                @if (planFunctionList.Contains(Constant.FunctionID.ProjectRegist) && functionList.Contains(Constant.FunctionID.ProjectRegist))
+                {
+                <li><a href="/PMS06001/New"><i class="fa fa-angle-right pull-left"></i>プロジェクト新規登録</a></li>
+                }
+                @if ((planFunctionList.Contains(Constant.FunctionID.ProjectList_Admin) || planFunctionList.Contains(Constant.FunctionID.ProjectList))
+                && (functionList.Contains(Constant.FunctionID.ProjectList_Admin) || functionList.Contains(Constant.FunctionID.ProjectList)))
+                {
+                <li><a href="/PMS06001/ClearSaveCondition" class="project-list"><i class="fa fa-angle-right pull-left"></i>プロジェクト一覧</a></li>
+                }
+            </ul>
+        </li>
+        }
+
+        if ((planFunctionList.Contains(Constant.FunctionID.ActualWorkList) || planFunctionList.Contains(Constant.FunctionID.ActualWorkDetail))
+        && (functionList.Contains(Constant.FunctionID.ActualWorkList) || functionList.Contains(Constant.FunctionID.ActualWorkDetail)))
+        {
+        <li class="dropdown parent-node">
+            <a href="#" title="稼働実績管理" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-delay="500" aria-expanded="false">
+                <i class="btn-icon btn-actual"></i>
+            </a>
+            <ul class="dropdown-menu">
+                <b class="caret"></b>
+                @if (planFunctionList.Contains(Constant.FunctionID.ActualWorkList) && functionList.Contains(Constant.FunctionID.ActualWorkList))
+                {
+                <li><a href="/PMS06002/Index"><i class="fa fa-angle-right pull-left"></i>稼働実績一覧</a></li>
+                }
+                @if (planFunctionList.Contains(Constant.FunctionID.ActualWorkDetail) && functionList.Contains(Constant.FunctionID.ActualWorkDetail))
+                {
+                <li><a href="/PMS06002/Detail"><i class="fa fa-angle-right pull-left"></i>個人稼働実績</a></li>
+                }
+            </ul>
+        </li>
+        }
+
+        if ((planFunctionList.Contains(Constant.FunctionID.AssignmentByProject) || planFunctionList.Contains(Constant.FunctionID.AssignmentByUser) || planFunctionList.Contains(Constant.FunctionID.UnitPriceInfo_List))
+                && (functionList.Contains(Constant.FunctionID.AssignmentByProject) || functionList.Contains(Constant.FunctionID.AssignmentByUser) || functionList.Contains(Constant.FunctionID.UnitPriceInfo_List)))
+        {
+        <li class="dropdown parent-node">
+            <a href="#" title="アサイン管理" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-delay="500" aria-expanded="false">
+                <i class="btn-icon btn-assign"></i>
+            </a>
+            <ul class="dropdown-menu">
+                <b class="caret"></b>
+                @if (planFunctionList.Contains(Constant.FunctionID.AssignmentByProject) && functionList.Contains(Constant.FunctionID.AssignmentByProject))
+                {
+                <li><a href="/PMS06003/AssignmentByProject"><i class="fa fa-angle-right pull-left"></i>プロジェクト別</a></li>
+                }
+                @if (planFunctionList.Contains(Constant.FunctionID.AssignmentByUser) && functionList.Contains(Constant.FunctionID.AssignmentByUser))
+                {
+                <li><a href="/PMS06003/AssignmentByUser"><i class="fa fa-angle-right pull-left"></i>ユーザー別</a></li>
+                }
+                @if (planFunctionList.Contains(Constant.FunctionID.UnitPriceInfo_List) && functionList.Contains(Constant.FunctionID.UnitPriceInfo_List))
+                {
+                    <li><a href="/PMS06003/UnitPriceInfor"><i class="fa fa-angle-right pull-left"></i>売上アサイン一覧</a></li>
+                }
+            </ul>
+        </li>
+        }
+
+        if ((planFunctionList.Contains(Constant.FunctionID.SalesCustomer)
+        || planFunctionList.Contains(Constant.FunctionID.SalesCustomer_Admin)
+        || planFunctionList.Contains(Constant.FunctionID.SalesGroup)
+        || planFunctionList.Contains(Constant.FunctionID.SalesGroup_Admin)
+        || planFunctionList.Contains(Constant.FunctionID.SalesPersonal)
+        || planFunctionList.Contains(Constant.FunctionID.SalesPersonal_Admin)
+        || planFunctionList.Contains(Constant.FunctionID.SalesNormalPersonal)
+        || planFunctionList.Contains(Constant.FunctionID.SalesPayment)
+        || planFunctionList.Contains(Constant.FunctionID.SalesPayment_Admin))
+        && (functionList.Contains(Constant.FunctionID.SalesCustomer)
+        || functionList.Contains(Constant.FunctionID.SalesCustomer_Admin)
+        || functionList.Contains(Constant.FunctionID.SalesGroup)
+        || functionList.Contains(Constant.FunctionID.SalesGroup_Admin)
+        || functionList.Contains(Constant.FunctionID.SalesPersonal)
+        || functionList.Contains(Constant.FunctionID.SalesPersonal_Admin)
+        || functionList.Contains(Constant.FunctionID.SalesNormalPersonal)
+        || functionList.Contains(Constant.FunctionID.SalesPayment)
+        || functionList.Contains(Constant.FunctionID.SalesPayment_Admin)))
+        {
+        <li class="dropdown parent-node">
+            <a href="#" title="売上管理" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-delay="500" aria-expanded="false">
+                <i class="btn-icon btn-sale"></i>
+            </a>
+            <ul class="dropdown-menu">
+                <b class="caret"></b>
+                @if ((planFunctionList.Contains(Constant.FunctionID.SalesCustomer_Admin) || planFunctionList.Contains(Constant.FunctionID.SalesCustomer))
+                && (functionList.Contains(Constant.FunctionID.SalesCustomer_Admin) || functionList.Contains(Constant.FunctionID.SalesCustomer)))
+                {
+                <li><a href="/PMS09003/ClearSaveCondition"><i class="fa fa-angle-right pull-left"></i>取引先別</a></li>
+                }
+                @if ((planFunctionList.Contains(Constant.FunctionID.SalesGroup_Admin) || planFunctionList.Contains(Constant.FunctionID.SalesGroup))
+                && (functionList.Contains(Constant.FunctionID.SalesGroup_Admin) || functionList.Contains(Constant.FunctionID.SalesGroup)))
+                {
+                <li><a href="/PMS09001/ClearSaveCondition"><i class="fa fa-angle-right pull-left"></i>所属別</a></li>
+                }
+                @if ((planFunctionList.Contains(Constant.FunctionID.SalesPersonal_Admin) || planFunctionList.Contains(Constant.FunctionID.SalesPersonal))
+                && (functionList.Contains(Constant.FunctionID.SalesPersonal_Admin) || functionList.Contains(Constant.FunctionID.SalesPersonal)))
+                {
+                <li><a href="/PMS09002/ClearSaveCondition"><i class="fa fa-angle-right pull-left"></i>個人別</a></li>
+                }
+                @if ((planFunctionList.Contains(Constant.FunctionID.SalesPayment_Admin) || planFunctionList.Contains(Constant.FunctionID.SalesPayment))
+                && (functionList.Contains(Constant.FunctionID.SalesPayment_Admin) || functionList.Contains(Constant.FunctionID.SalesPayment)))
+                {
+                <li><a href="/PMS09004/ClearSaveCondition"><i class="fa fa-angle-right pull-left"></i>年月別</a></li>
+                }
+                @if (!functionList.Contains(Constant.FunctionID.SalesPersonal_Admin) && !functionList.Contains(Constant.FunctionID.SalesPersonal)
+                && planFunctionList.Contains(Constant.FunctionID.SalesNormalPersonal) && functionList.Contains(Constant.FunctionID.SalesNormalPersonal))
+                {
+                <li><a href="/PMS09005/ClearSaveCondition"><i class="fa fa-angle-right pull-left"></i>個人売上</a></li>
+                }
+            </ul>
+        </li>
+        }
+
+        if ((planFunctionList.Contains(Constant.FunctionID.Budget_Setting) || planFunctionList.Contains(Constant.FunctionID.BudgetActual_List))
+        && (functionList.Contains(Constant.FunctionID.Budget_Setting) || functionList.Contains(Constant.FunctionID.BudgetActual_List)))
+        {
+        <li class="dropdown parent-node">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-delay="500" aria-expanded="false">
+                <i class="btn-icon btn-budget"></i>
+            </a>
+            <ul class="dropdown-menu">
+                <b class="caret"></b>
+                @if (planFunctionList.Contains(Constant.FunctionID.BudgetActual_List) && functionList.Contains(Constant.FunctionID.BudgetActual_List))
+                {
+                <li><a href="/PMS11003/Index"><i class="fa fa-angle-right pull-left"></i>所属別予実一覧</a></li>
+                }
+                @if (planFunctionList.Contains(Constant.FunctionID.Budget_Setting) && functionList.Contains(Constant.FunctionID.Budget_Setting))
+                {
+                <li><a href="/PMS11002/Index"><i class="fa fa-angle-right pull-left"></i>予算設定</a></li>
+                }
+            </ul>
+        </li>
+        }
+
+
+        if ((planFunctionList.Contains(Constant.FunctionID.UserList_Admin) || planFunctionList.Contains(Constant.FunctionID.UserList))
+        && (functionList.Contains(Constant.FunctionID.UserList_Admin) || functionList.Contains(Constant.FunctionID.UserList)))
+        {
+        dictionary.Add("/PMS01002", "ユーザー管理");
+        }
+        if ((planFunctionList.Contains(Constant.FunctionID.ContractTypeList_Admin) || planFunctionList.Contains(Constant.FunctionID.ContractTypeList))
+        && (functionList.Contains(Constant.FunctionID.ContractTypeList_Admin) || functionList.Contains(Constant.FunctionID.ContractTypeList)))
+        {
+        dictionary.Add("/PMS03001", "契約種別管理");
+        }
+        if ((planFunctionList.Contains(Constant.FunctionID.GroupList_Admin) || planFunctionList.Contains(Constant.FunctionID.GroupList))
+        && (functionList.Contains(Constant.FunctionID.GroupList_Admin) || functionList.Contains(Constant.FunctionID.GroupList)))
+        {
+        dictionary.Add("/PMS05001", "所属管理");
+        }
+        if ((planFunctionList.Contains(Constant.FunctionID.BranchList_Admin) || planFunctionList.Contains(Constant.FunctionID.BranchList))
+        && (functionList.Contains(Constant.FunctionID.BranchList_Admin) || functionList.Contains(Constant.FunctionID.BranchList)))
+        {
+        dictionary.Add("/PMS11001", "拠点管理");
+        }
+        if ((planFunctionList.Contains(Constant.FunctionID.PhaseList_Admin) || planFunctionList.Contains(Constant.FunctionID.PhaseList))
+        && (functionList.Contains(Constant.FunctionID.PhaseList_Admin) || functionList.Contains(Constant.FunctionID.PhaseList)))
+        {
+        dictionary.Add("/PMS04001", "フェーズ管理");
+        }
+        if ((planFunctionList.Contains(Constant.FunctionID.CategoryList_Admin) || planFunctionList.Contains(Constant.FunctionID.CategoryList))
+        && (functionList.Contains(Constant.FunctionID.CategoryList_Admin) || functionList.Contains(Constant.FunctionID.CategoryList)))
+        {
+        dictionary.Add("/PMS10004", "カテゴリ管理");
+        }
+        if ((planFunctionList.Contains(Constant.FunctionID.CustomerList_Admin) || planFunctionList.Contains(Constant.FunctionID.CustomerList))
+        && (functionList.Contains(Constant.FunctionID.CustomerList_Admin) || functionList.Contains(Constant.FunctionID.CustomerList)))
+        {
+        dictionary.Add("/PMS02001", "取引先管理");
+        }
+        if ((planFunctionList.Contains(Constant.FunctionID.TagList_Admin) || planFunctionList.Contains(Constant.FunctionID.TagList))
+        && (functionList.Contains(Constant.FunctionID.TagList_Admin) || functionList.Contains(Constant.FunctionID.TagList)))
+        {
+        dictionary.Add("/PMS10001", "タグ管理");
+        }
+        if ((planFunctionList.Contains(Constant.FunctionID.ConsumptionTaxList_Admin) || planFunctionList.Contains(Constant.FunctionID.ConsumptionTaxList))
+        && (functionList.Contains(Constant.FunctionID.ConsumptionTaxList_Admin) || functionList.Contains(Constant.FunctionID.ConsumptionTaxList)))
+        {
+        dictionary.Add("/PMS07001", "消費税率管理");
+        }
+        if ((planFunctionList.Contains(Constant.FunctionID.InfoList_Admin) || planFunctionList.Contains(Constant.FunctionID.InfoList))
+        && (functionList.Contains(Constant.FunctionID.InfoList_Admin) || functionList.Contains(Constant.FunctionID.InfoList)))
+        {
+        dictionary.Add("/PMS10002", "掲載情報管理");
+        }
+        if (planFunctionList.Contains(Constant.FunctionID.CompanySetting) && functionList.Contains(Constant.FunctionID.CompanySetting))
+        {
+        dictionary.Add("/PMS10003/CompanyInfo", "企業情報管理");
+        }
+        if ((planFunctionList.Contains(Constant.FunctionID.OverHeadCostList_Admin) || planFunctionList.Contains(Constant.FunctionID.OverHeadCostList))
+        && (functionList.Contains(Constant.FunctionID.OverHeadCostList_Admin) || functionList.Contains(Constant.FunctionID.OverHeadCostList)))
+        {
+        dictionary.Add("/PMS10005", "諸経費管理");
+        }
+
+        if (dictionary.Count > 0)
+        {
+        <li class="dropdown parent-node">
+            <a href="#" title="管理者設定" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-delay="500" aria-expanded="false">
+                <i class="btn-icon btn-mastermaintenance"></i>
+            </a>
+            @if (dictionary.Count < Constant.MAX_ITEM_SUB_MENU)
+            {
+            <ul class="dropdown-menu">
+                <b class="caret"></b>
+                @foreach (KeyValuePair<string, string> pair in dictionary)
+                {
+                <li><a href="@pair.Key"><i class="fa fa-angle-right pull-left"></i>@pair.Value</a></li>
+                }
+            </ul>
+            }
+            else
+            {
+            <ul class="dropdown-menu dropdown-menu-wid">
+                <b class="caret"></b>
+
+                @for (int i = 0; i < dictionary.Count; i = i + 2)
+                {
+                KeyValuePair<string, string> item1 = dictionary.ElementAt(i);
+                KeyValuePair<string, string> item2 = new KeyValuePair<string, string>();
+                if (i + 1 < dictionary.Count)
+                {
+                item2 = dictionary.ElementAt(i + 1);
+                }
+                <li>
+
+                    <div class="sub-menu-wid">
+                        <a href="@item1.Key"><i class="fa fa-angle-right pull-left"></i>@item1.Value</a>
+                    </div>
+                    @if (item2.Key != null)
+                    {
+                    <div class="sub-menu-wid">
+                        <a href="@item2.Key"><i class="fa fa-angle-right pull-left"></i>@item2.Value</a>
+                    </div>
+                    }
+                </li>
+                }
+            </ul>
+            }
+        </li>
+        }
+        }
+    </ul>
+</section>
+<script>
+    $('a.project-list').click(function () {
+        sessionStorage.removeItem('groupIds');
+    })
+</script>

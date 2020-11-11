@@ -1,0 +1,199 @@
+﻿@model ProjectManagementSystem.ViewModels.PMS09003.PMS09003SalesProjectByCustomerViewModel
+@using ProjectManagementSystem.Common
+@using ProjectManagementSystem.Resources;
+
+@{
+    ViewBag.Title = "取引先別売上一覧（プロジェクト別）";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.FieldTitle = "売上詳細合計";
+    var currentUser = HttpContext.Current.Session[Constant.SESSION_LOGIN_USER] as LoginUser;
+}
+<section class="content-header">
+    <h1 id="title">
+        @ViewBag.Title
+    </h1>
+    <div class="search-form">
+        <div class="search-condition row none-button-search">
+            <div class="form-group">
+                @Html.Label("", "取引先名", new { @class = "bold right title-customer title-width" })
+                @Html.LabelFor(m => m.Customer_Name, @Model.Customer_Name, new { @class = "customer-name text-overflow", title = @Model.Customer_Name })
+
+                @Html.Label("", "期間", new { @class = "bold right title-customer title-width" })
+                <label class="period-title text-overflow" title = "@Model.Condition.START_DATE.ToString("yyyy/MM") ~ @Model.Condition.END_DATE.ToString("yyyy/MM")">@Model.Condition.START_DATE.ToString("yyyy/MM") ~ @Model.Condition.END_DATE.ToString("yyyy/MM")</label>
+
+                @Html.Label("", "タグ名", new { @class = "bold right title-customer title-width" })
+                @Html.LabelFor(m => m.Tag_Name, @Model.Tag_Name, new { @class = "tag-name text-overflow", title = @Model.Tag_Name })
+
+            </div>
+            <div class="form-group">
+
+                @if (currentUser != null &&
+                      (currentUser.PlanFunctionList.Contains(Constant.FunctionID.BranchList_Admin) && currentUser.FunctionList.Contains(Constant.FunctionID.BranchList_Admin)
+                       || currentUser.PlanFunctionList.Contains(Constant.FunctionID.BranchList) && currentUser.FunctionList.Contains(Constant.FunctionID.BranchList)
+                       || currentUser.PlanFunctionList.Contains(Constant.FunctionID.BranchRegist) && currentUser.FunctionList.Contains(Constant.FunctionID.BranchRegist)))
+                {
+                    @Html.Label("", "拠点", new { @class = "bold right title-customer title-width" })
+                    <label class="tag-name text-overflow location-name by_tag" title = "@Model.Location_Name">@Model.Location_Name</label>
+
+                    @*@Html.LabelFor(m => m.Location_Name, @Model.Location_Name, new { @class = "tag-name text-overflow location-name width-location-name" })*@
+                }
+                @Html.Label("", "所属", new { @class = "bold right title-width" })
+                <label class="customer-name text-overflow group_name by_tag" title = "@Model.Group_Name">@Model.Group_Name</label>
+
+                @Html.Label("", "契約種別", new { @class = "bold right title-width" })
+                <label class="customer-name text-overflow contract_type_name by_tag" title = "@Model.Contract_Type_Name">@Model.Contract_Type_Name</label>
+
+            </div>
+            <div class="form-group group-row">
+                @Html.Label("", "売上金額合計", new { @class = "bold right title-width" })
+                @Html.Label(string.Empty, "0", new { @class = "lblTotalSalesAmount money" })
+
+                @Html.Label("", "粗利金額合計", new { @class = "bold right title-width" })
+                @Html.Label(string.Empty, "0", new { @class = "lblTotalAmountGrossMargin money" })
+
+            </div>
+        </div>
+
+
+    </div>
+</section>
+
+@RenderPage("~/Views/Shared/ShowHideHeaderContent.cshtml")
+
+<div class="clearfix data-list sales-project-by-customer-list content" style=" display:none">
+    <table id="InfoTable" class="dataTable" width="100%">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th class="no">No.</th>
+                <th>プロジェクト名</th>
+                <th>契約種別</th>
+                <th>売上金額</th>
+                <th>構成比</th>
+                <th>粗利金額</th>
+                <th>粗利率</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+</div>
+
+<div class="search-date">
+    <button id="btnBack" name="btnBack" type="button" class="btn light btnNoStyleDisable"><i class="btn-icon btn-back"></i>戻る</button>
+    <button id="btnExport" name="btnExport" type="button" class="btn dark"><i class="btn-icon btn-output-csv"></i>CSV出力</button>
+</div>
+
+<input type="hidden" id="location_id" name="location_id" value="@Model.Condition.LOCATION_ID" />
+<input type="hidden" id="group_id" name="group_id" value="@Model.Condition.GROUP_ID" />
+
+<form id="formDetailSalesProjectByCustomer" method="POST" action="/PMS09003/ExportCsvSaleListProjectByCustomer" class="frmExport">
+    <input type="hidden" id="Condition_customerId" name="condition_customerId" value="@Model.Condition.CUSTOMER_ID" />
+    <input type="hidden" id="Condition_tagId" name="condition_tagId" value="@Model.Condition.TAG_ID" />
+    <input type="hidden" id="Condition_startDate" name="condition_startDate" value="@Model.Condition.START_DATE.ToString("yyyy/MM")" />
+    <input type="hidden" id="Condition_endDate" name="condition_endDate" value="@Model.Condition.END_DATE.ToString("yyyy/MM")" />
+    <input type="hidden" name="sortCol" value="0" />
+    <input type="hidden" name="sortDir" value="asc" />
+    <input id="tabId" name="TAB_ID" type="hidden" />
+</form>
+
+<script type="text/javascript" charset="utf-8">
+    $(function () {
+        var uniqueId = "@Guid.NewGuid().ToString()";
+        $("#tabId").val(uniqueId);
+        SetEventBeforeUnload();
+        $('#btnBack').attr('disabled', 'disabled');
+        var oSorting = {
+            "bSort": true
+        };
+        var oPaginate = {
+            "bPaginate": false,
+            "iDisplayLength": parseInt(@App[ConfigurationKeys.LIST_ITEMS_PER_PAGE]),
+            "bStateSave": false
+        };
+        var oServerSide = {
+            "bServerSide": true,
+            "sAjaxSource": '@Url.Action("SaleProjectListByCustomer", "PMS09003")',
+            "fnServerParams": serverParams,
+            "fnDrawCallback": displayComplete,
+            "fnInitComplete": bindData
+        };
+        var aoColumnDefs = [
+            { "sName": "project_sys_id", "bSortable": false, "bVisible": false, "aTargets": [0], "sWidth": "0px", "sClass": "cell_left" },
+            { "sName": "project_sys_id", "bSortable": false, "aTargets": [1], "sWidth": "15px", "sClass": "cell_center no" },
+            { "sName": "display_name", "aTargets": [2], "sWidth": "300px", "sClass": "cell_left", "mRender": function (data, type, full) { return PMS.utility.buildColumShortText(data, 'project-name'); } },
+            { "sName": "contract_type", "aTargets": [3], "sWidth": "150px", "sClass": "cell_center", "mRender": function (data, type, full) { return PMS.utility.buildColumShortText(data, 'contract_type'); } },
+            { "sName": "total_sales", "aTargets": [4], "sWidth": "150px", "sClass": "cell_right" },
+            { "sName": "total_sales", "aTargets": [5], "sWidth": "100px", "sClass": "cell_right" },
+            { "sName": "gross_profit", "aTargets": [6], "sWidth": "150px", "sClass": "cell_right" },
+            { "sName": "gross_profit", "aTargets": [7], "sWidth": "100px", "sClass": "cell_right" }
+        ];
+
+        var dataTable = CreateDataTable('#InfoTable', oSorting, oPaginate, oServerSide, aoColumnDefs);
+
+        function serverParams(aoData) {
+            aoData.push(
+                { "name": "CUSTOMER_ID", "value": $("#Condition_customerId").val() },
+                { "name": "START_DATE", "value": $("#Condition_startDate").val() },
+                { "name": "END_DATE", "value": $("#Condition_endDate").val() },
+                { "name": "TAG_ID", "value": $("#Condition_tagId").val() },
+                { "name": "LOCATION_ID", "value": $("#location_id").val() },
+                { "name": "GROUP_ID", "value": $("#group_id").val() },
+                { "name": "CONTRACT_TYPE_ID", "value": $("#contract_type_id").val() },
+                { "name": "sortCol", "value": $("#sortCol").val() },
+                { "name": "sortDir", "value": $("#sortDir").val() },
+                { "name": "TAB_ID", "value": $("#tabId").val() }
+            );
+        }
+
+        function buildShortText(data) {
+            var s = '<label title="' + data + '"class="contract_type">' + data + '</label>';
+            return s;
+        }
+
+        function displayComplete() {
+            $('div.sales-project-by-customer-list').removeAttr('style');
+            $("#onloadDiv").hide();
+            $('#btnBack').removeAttr('disabled');
+        }
+
+        function bindData(data) {
+            $('.lblTotalSalesAmount').text(data.totalSales);
+            $('.lblTotalAmountGrossMargin').text(data.totalProfit);
+
+            var lcationName = PMS.utility.htmlDecode('@Model.Location_Name');
+            if (lcationName.length > 0) {
+                var res = lcationName.replace(/\,/gi, "、");
+                $('.location-name').text(res);
+                $('.location-name').attr('title', res);
+            }
+
+        }
+
+        $(document).off('#InfoTable thead th');
+        $(document).on('click', '#InfoTable thead th:not(.sorting_disabled)', function () {
+            var sortCol = $(this).index() + 1;
+            var sortDir = 'asc';
+
+            if ($(this).hasClass('sorting_desc'))
+                sortDir = 'desc';
+
+            var $form = $('#formDetailSalesProjectByCustomer');
+            $form.children('[name="sortCol"]').val(sortCol);
+            $form.children('[name="sortDir"]').val(sortDir);
+        });
+    });
+
+    $("button#btnExport").click(function () {
+        $("#formDetailSalesProjectByCustomer").submit();
+    });
+
+    $("button#btnBack").click(function () {
+        if ($(this).data('clicked') === true) {
+            return;
+        }
+        $(this).data('clicked', true);
+        var prevPage = '@HttpContext.Current.Session[Constant.SESSION_TRANSITION_DESTINATION]';
+        window.location.href = prevPage;
+    });
+
+</script>

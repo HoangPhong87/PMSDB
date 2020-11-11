@@ -1,0 +1,23 @@
+﻿@model System.Web.Mvc.HandleErrorInfo
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="error-content">
+    <h2>
+        システムエラーが発生しました。
+    </h2>
+    <label>
+        ログイン画面から、再度操作しなおしてください。
+    </label>
+    <br /><br />
+    <button type="button" id="btnBack" name="btnBack" class="btn light"><i class="btn-icon btn-back"></i>ログインページへ戻る</button>
+</div>
+<script>
+    $('#btnBack').click(function () {
+        top.tb_remove();
+        top.window.location.href = '/PMS01001/Login';
+        return false;
+    });
+</script>

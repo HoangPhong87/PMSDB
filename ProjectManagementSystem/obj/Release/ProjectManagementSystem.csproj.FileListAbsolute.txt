@@ -1,0 +1,9 @@
+D:\Data\Project\iProGit\ProjectManagementSystem\bin\ProjectManagementSystem.dll.config
+D:\Data\Project\iProGit\ProjectManagementSystem\bin\ProjectManagementSystem.dll
+D:\Data\Project\iProGit\ProjectManagementSystem\bin\ProjectManagementSystem.pdb
+D:\Data\Project\iProGit\ProjectManagementSystem\obj\Release\ProjectManagementSystem.csprojAssemblyReference.cache
+D:\Data\Project\iProGit\ProjectManagementSystem\obj\Release\ProjectManagementSystem.Resources.Messages.resources
+D:\Data\Project\iProGit\ProjectManagementSystem\obj\Release\ProjectManagementSystem.csproj.GenerateResource.cache
+D:\Data\Project\iProGit\ProjectManagementSystem\obj\Release\ProjectManagementSystem.csproj.CopyComplete
+D:\Data\Project\iProGit\ProjectManagementSystem\obj\Release\ProjectManagementSystem.dll
+D:\Data\Project\iProGit\ProjectManagementSystem\obj\Release\ProjectManagementSystem.pdb

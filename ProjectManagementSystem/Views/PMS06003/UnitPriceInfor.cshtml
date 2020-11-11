@@ -1,0 +1,648 @@
+﻿@using ProjectManagementSystem.Resources;
+@using ProjectManagementSystem.Common;
+@model ProjectManagementSystem.ViewModels.PMS06003.AssignmentByUserViewModel
+@{
+    ViewBag.Title = "売上アサイン一覧";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var currentUser = HttpContext.Current.Session[Constant.SESSION_LOGIN_USER] as LoginUser;
+}
+
+@Scripts.Render("~/bundles/dragOn")
+
+<div id="onloadDivSales">
+    *
+</div>
+<section class="content-header assign-by-user-header">
+    <h1 id="title">
+        @ViewBag.Title
+    </h1>
+    <div class="search-form">
+        <div class="search-condition clearfix">
+            <div class="row row-margin-bottom">
+                <div class="group-1">
+                    <div>
+                        <label class="width-120">所属</label>
+                        @Html.DropDownListFor(m => m.Condition.GROUP_ID, Model.GROUP_LIST, "指定なし", new { @class = "col_2" })
+                        <label class="width-100">ユーザー名</label>
+                        @Html.TextBoxFor(m => m.Condition.USER_NAME, new { style = "ime-mode: auto;", maxlength = 50 })
+                        <label class="width-100">ステータス</label>
+                        @Html.DropDownListFor(m => m.Condition.STATUS_ID, Model.STATUS_LIST, new { style = "vertical-align: top !important;", @multiple = "multiple" })
+                        @if (currentUser != null &&
+(currentUser.PlanFunctionList.Contains(Constant.FunctionID.BranchList_Admin) && currentUser.FunctionList.Contains(Constant.FunctionID.BranchList_Admin)
+ || currentUser.PlanFunctionList.Contains(Constant.FunctionID.BranchList) && currentUser.FunctionList.Contains(Constant.FunctionID.BranchList)
+ || currentUser.PlanFunctionList.Contains(Constant.FunctionID.BranchRegist) && currentUser.FunctionList.Contains(Constant.FunctionID.BranchRegist)))
+                        {
+                            <label class="width-100">拠点</label>
+                            @Html.DropDownListFor(m => m.Condition.LOCATION_ID, Model.BRANCH_LIST, new { @class = "", @multiple = "multiple", @style = "vertical-align: top !important;" })
+                        }
+
+                    </div>
+                </div>
+
+            </div>
+            <div class="row">
+                <div class="group-1 row-2">
+                    <label class="width-120 lbl-duration">期間</label>
+                    <span class="date datepicker-months from-date">
+                        @Html.TextBox(m => m.Condition.START_DATE, "{0:yyyy/MM}", new { @class = "ime-mode date-time", maxlength = 7, @placeholder = "YYYY/MM" })
+                        <button class="btn light"><i class="btn-icon btn-calendar"></i></button>
+                    </span>
+                    <span class="date-range-space">～</span>
+                    <span class="date datepicker-months to-date">
+                        @Html.TextBox(m => m.Condition.END_DATE, "{0:yyyy/MM}", new { @class = "ime-mode date-time", maxlength = 7, @placeholder = "YYYY/MM" })
+                        <button class="btn light"><i class="btn-icon btn-calendar"></i></button>
+                    </span>
+                    <label class="width-120">
+                        @Html.CheckBoxFor(m => m.Condition.RETIRED_INCLUDE, new { @class = "" })
+                        退職済を含む
+                    </label>
+
+                </div>
+
+            </div>
+        </div>
+        <div class="right search-action">
+            <button type="button" id="btnSearch" name="btnSearch" class="btn dark"><i class="btn-icon btn-search"></i>検索</button>
+            <button type="button" id="btnClear" name="btnClear" class="btn light"><i class="btn-icon btn-clear"></i>クリア</button>
+        </div>
+    </div>
+</section>
+
+@RenderPage("~/Views/Shared/ShowHideHeaderContent.cshtml")
+
+<div class="data-list assign-by-user unit-cost-infor content special-list clearfix" style="visibility:hidden">
+    <div class="div-left">
+        <table id="InfoTable" class="display tbl-assign-by-user" width="100%">
+            <thead>
+                <tr>
+                    <th name="text">プロジェクトID</th>
+                    <th name="text">企業コード</th>
+                    <th name="text">No.</th>
+                    <th name="text">所属</th>
+                    <th name="text">ユーザー名</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+    <div class="div-right ">
+        <table class="tbl-right dataTable" width="100%">
+            <thead>
+                <tr></tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+
+    <div class="notification">
+        <p>※一覧の月毎の内容は「個別売上／基準単価」を表示しております。</p>
+    </div>
+</div>
+
+<div class="search-date">
+    <form action='/PMS06003/ExportCsvByUnitPriceInfor' method='POST' class="frmExport">
+        <input id="startDate" name="start_date" type="hidden">
+        <input id="endDate" name="end_date" type="hidden">
+        <input id="user_name" name="user_name" type="hidden">
+        <input id="group_id" name="group_id" type="hidden">
+        <input id="sort_colum" name="sort_colum" type="hidden" value="0">
+        <input id="sort_type" name="sort_type" type="hidden" value="asc">
+        <input id="retired_flag" name="retired_flag" type="hidden" value="asc">
+        <input id="status" name="status" type="hidden" value="@Model.Condition.STATUS_ID">
+        <input id="location" name="location" type="hidden" value="@Model.Condition.LOCATION_ID" />
+        <input id="tabId" name="TAB_ID" type="hidden" />
+        <button id="btnExport" name="btnExport" type='submit' class="btn dark"><i class="btn-icon btn-output-csv"></i>CSV出力</button>
+    </form>
+    <button type="button" id="btnPreMonth" name="btnPreMonth" class="btn light btnNoStyleDisable">前月</button>
+    <span id="dateRange">YYYY年MM月 ～ YYYY年MM月</span>
+    <button type="button" id="btnNextMonth" name="btnNextMonth" class="btn light btnNoStyleDisable">翌月</button>
+</div>
+
+<form id='formActualDetail' action="/PMS06002/Detail/" method="POST">
+    <input type="hidden" name="user_id" id="user_id">
+    <input type="hidden" name="selected_year" id="selected_year">
+    <input type="hidden" name="selected_month" id="selected_month">
+</form>
+
+<script type="text/javascript" charset="utf-8">
+    var sort_colum = 0;
+    var sort_type = 'asc';
+    $(function () {
+        var uniqueId = "@Guid.NewGuid().ToString()";
+        $("#tabId").val(uniqueId);
+        SetEventBeforeUnload();
+        LoadOldValueOfControls();
+        $('.div-right').dragOn({ easing: false, exclusion: { th: '', id: '.dataTables_length, .dataTables_info, .dataTables_paginate' } });
+        var oSorting = {
+            "bSort": true
+        };
+        var oPaginate = {
+            "sScrollX": "100%",
+            "bPaginate": true,
+            "iDisplayLength":  @ViewBag.iDisplayLength,
+            "bStateSave": false
+        };
+        var oServerSide = {
+            "bServerSide": true,
+            "sAjaxSource": '@Url.Action("SearchUnitPriceInfor", "PMS06003")',
+            "fnBeforeSend": beforeSend,
+            "fnDrawCallback": displayComplete,
+            "fnServerParams": serverParams,
+            "fnInitComplete": bindData
+        };
+        var aoColumnDefs_temp = [
+            { "sName": "user_sys_id", "bVisible": false, "aTargets": [0], "sTitle": 'プロジェクトID' },
+            { "sName": "company_code", "bVisible": false, "aTargets": [1], "sTitle": '企業コード' },
+            { "bSortable": false, "sName": "user_sys_id", "aTargets": [2], "sTitle": 'No.', "sWidth": "30px", "sClass": "cell_left" },
+            { "sName": "group_name", "aTargets": [3], "sTitle": '所属', "sWidth": "270px", "sClass": "cell_left", "mRender": function (data, type, full) { return PMS.utility.buildColumShortText(data); } },
+            { "sName": "user_name", "aTargets": [4], "sTitle": 'ユーザー名', "sWidth": "270px", "sClass": "cell_left", "mRender": function (data, type, full) { return PMS.utility.buildColumShortText(data); } }
+        ];
+
+        var aoColumnDefs = [
+            { "sName": "user_sys_id", "bVisible": false, "aTargets": [0], "sTitle": 'プロジェクトID' },
+            { "sName": "company_code", "bVisible": false, "aTargets": [1], "sTitle": '企業コード' },
+            { "bSortable": false, "sName": "user_sys_id", "aTargets": [2], "sTitle": 'No.', "sWidth": "30px", "sClass": "cell_left" },
+            { "sName": "group_name", "aTargets": [3], "sTitle": '所属', "sWidth": "270px", "sClass": "cell_left" },
+            { "sName": "user_name", "aTargets": [4], "sTitle": 'ユーザー名', "sWidth": "270px", "sClass": "cell_left" }
+        ];
+        $(document).off('table.dataTable tr th');
+        $(document).on('focus', 'table.dataTable tr th', function () {
+            sort_colum = $(this).index() + 2;
+            sort_type = 'asc';
+
+            if ($(this).hasClass('sorting_asc'))
+                sort_type = 'desc';
+            $('#sort_colum').val(sort_colum);
+            $('#sort_type').val(sort_type);
+        });
+
+        //variable save status of condition
+        var currentConditionState = { usrName: "", locID: "", statusID: "", grID: "", toDate: "", fromDate: "", chkRetired: ""};
+        function displayComplete() {
+            $('input[name="del_flg"]').parents('td').css('background-color', '#CCC');
+            if (sort_colum == 0) {
+                $('#InfoTable tr th:not(.sorting_disabled)').removeClass('sorting_asc sorting_desc').addClass('sorting').removeAttr('aria-sort');
+            }
+            $('div.assign-by-user').removeAttr('style');
+
+
+            //save state search condition
+            if ($("#Condition_RETIRED_INCLUDE").is(':checked')) {
+                currentConditionState.chkRetired = "checked";
+            }
+            else {
+                currentConditionState.chkRetired = "unchecked";
+            }
+            currentConditionState.usrName = $('#Condition_USER_NAME').val();
+            currentConditionState.locID = $('#Condition_LOCATION_ID').val();
+            currentConditionState.statusID = $('#Condition_STATUS_ID').val();
+            currentConditionState.grID = $('#Condition_GROUP_ID').val();
+            currentConditionState.fromDate = $('#Condition_START_DATE').val();
+            currentConditionState.toDate = $('#Condition_END_DATE').val();
+
+            $("#onloadDivSales").hide();
+            $('.pace.pace-active').addClass('pace-inactive').removeClass('pace-active');
+            $('#btnSearch').removeAttr('disabled');
+            $('#btnPreMonth').removeAttr('disabled');
+            $('#btnNextMonth').removeAttr('disabled');
+        }
+
+        var dataTable;
+
+        var columnNames = new Array();
+
+        function buildColumnNames() {
+            var timePeriod = getTimePeriod();
+            timePeriod.sM++;
+            timePeriod.eM++;
+
+            columnNames = new Array();
+            y = timePeriod.sY;
+            m = timePeriod.sM;
+            while(y < timePeriod.eY || (y == timePeriod.eY && m <= timePeriod.eM))
+            {
+                columnNames.push("" + y + "/" + m);
+                m++;
+                if(m == 13) {
+                    m = 1;
+                    y++;
+                }
+            }
+        }
+
+        buildColumnNames();
+
+        function setColumns() {
+            var timePeriod = getTimePeriod();
+            timePeriod.sM++;
+            timePeriod.eM++;
+
+            // Delete month columns
+            $('#InfoTable tr.alt th:not([name="text"])').remove();
+            var html;
+            var YM;
+            for (var Y = timePeriod.eY, M = timePeriod.eM; Y > timePeriod.sY || (Y == timePeriod.sY && M >= timePeriod.sM) ; M--) {
+                if (M == 0) {
+                    M = 12;
+                    Y--;
+                }
+
+                if (M < 10) {
+                    YM = Y.toString() + '/0' + M.toString();
+                }
+                else {
+                    YM = Y.toString() + '/' + M.toString();
+                }
+                html = '<th class="cell_center sorting_disabled" role="columnheader" rowspan="1" colspan="1" aria-label="' + YM + '" style="width: 50px;">' + YM + '</th>';
+                // bind columns
+                $('#InfoTable tr.alt th[name="text"]').last().after(html);
+            }
+        }
+
+        function createColumnDefs() {
+            aoColumnDefs = [].concat(aoColumnDefs_temp);
+
+            var timePeriod = getTimePeriod();
+            timePeriod.sM++;
+            timePeriod.eM++;
+
+            for (var Y = timePeriod.sY, M = timePeriod.sM, i = 0; Y < timePeriod.eY || (Y == timePeriod.eY && M <= timePeriod.eM) ; i++, M++)
+            {
+                if (M == 13) {
+                    M = 1;
+                    Y++;
+                }
+
+                if (M < 10) {
+                    YM = Y.toString() + '/0' + M.toString();
+                }
+                else {
+                    YM = Y.toString() + '/' + M.toString();
+                }
+            }
+
+            var displayLength = parseInt($('select[name="InfoTable_length"]').val());
+            if(!isNaN(displayLength))
+            {
+                oPaginate.iDisplayLength = displayLength;
+                $('#InfoTable').dataTable()._iDisplayLength = displayLength;
+            }
+
+            if ($("#InfoTable").dataTable())
+            {
+                $("#InfoTable").dataTable().fnDestroy();
+            }
+            // empty the table content ( this remove the rows)
+            $('#InfoTable').empty()
+            dataTable = CreateDataTable('#InfoTable', oSorting, oPaginate, oServerSide, aoColumnDefs, { "bDestroy": true });
+        }
+
+        function beforeSend() {
+        }
+
+        function serverParams(aoData) {
+            aoData.push(
+                { "name": "USER_NAME", "value": $("#user_name").val() },
+                { "name": "GROUP_ID", "value": $("#group_id").val() },
+                { "name": "START_DATE", "value": $("#startDate").val() },
+                { "name": "END_DATE", "value": $("#endDate").val() },
+                { "name": "RETIRED_INCLUDE", "value": $("#retired_flag").val() },
+                { "name": "STATUS_ID", "value": $( "#status" ).val()},
+                { "name": "LOCATION_ID", "value": $( "#location" ).val()},
+                { "name": "SORT_COLUMN", "value": $("#sort_colum").val() },
+                { "name": "SORT_TYPE", "value": $("#sort_type").val() },
+                { "name": "TAB_ID", "value": $("#tabId").val() }
+            );
+        }
+
+        function bindData(data) {
+
+            // process status disabled  buttton exportCSV when search data
+            if (data.aaData.length == 0) {
+                $('#btnExport').addClass('disabled').attr('disabled', 'disabled');
+            }
+            else {
+                $('#btnExport').removeClass('disabled').removeAttr('disabled');
+            }
+
+            var html = '';
+
+            var columsArr = PMS.utility.getMonthCols($('#startDate').val(), $('#endDate').val());
+
+            if (data.aaData.length > 0) {
+                for (var i = 0; i < data.aaData.length; i++) {
+                    var bgRow = i % 2 == 0 ? 'odd' : 'even';
+
+                    html += '<tr class="' + bgRow + '">';
+                    for (var j = 0; j < columsArr.length; j++) {
+                        var value = data.aaData[i][j + 5] === null ? '-' : data.aaData[i][j + 5];
+                        html += '<td class="cell_center">' + value + '</td>';
+                    }
+
+                    html += '</tr>';
+                }
+            } else {
+                html += '<tr role="row" class="odd">'
+                   + '<td colspan="'+columsArr.length+'" class="dataTables_empty">&nbsp;</td>'
+                   + '<tr>';
+            }
+
+            $('.tbl-right tbody').empty().append(html);
+        }
+
+        function setTimeDuration(from, to) {
+            if (from == '' || typeof(from) ==  "undefined") {
+                var fromDate = new Date();
+                var toDate = new Date();
+                from = fromDate.getFullYear() + '/' + (fromDate.getMonth() + 1);
+
+                toDate.setMonth(fromDate.getMonth() + 5);
+
+                to = toDate.getFullYear() + '/' + (toDate.getMonth() + 1);
+            }
+
+            $('#Condition_START_DATE').val(from);
+            $('#Condition_END_DATE').val(to);
+
+            $('.date.datepicker-months.from-date').datepicker("update", from);
+            $('.date.datepicker-months.to-date').datepicker("update", to);
+        }
+
+        function setTimeCondition() {
+            setTimeDuration( $('#startDate').val(),$('#endDate').val());
+            saveDateCondition();
+            ChangeLabelTimePeriod();
+        }
+
+        function saveConditonForExport() {
+            $("#user_name").val($("#Condition_USER_NAME").val());
+            $("#group_id").val($("#Condition_GROUP_ID").val());
+            $("#retired_flag").val($("#Condition_RETIRED_INCLUDE").prop('checked'));
+            $("#status").val($( "#Condition_STATUS_ID" ).val() || []);
+            $("#location").val($( "#Condition_LOCATION_ID" ).val() || []);
+        }
+
+        function saveDateCondition()
+        {
+            $('#startDate').val($('#Condition_START_DATE').val());
+            $('#endDate').val($('#Condition_END_DATE').val());
+        }
+
+        function getTimePeriod()
+        {
+            var startDate = $("#startDate").val();
+            var endDate = $("#endDate").val();
+
+            return {
+                sY : parseInt(startDate.substring(0, 4)),
+                sM : parseInt(startDate.substring(5, 7)) - 1,
+                eY : parseInt(endDate.substring(0, 4)) ,
+                eM : parseInt(endDate.substring(5, 7)) - 1
+            }
+        }
+
+        function isValidDate(s) {
+            var bits = s.split('/');
+            var d = new Date(bits[0], bits[1] - 1, bits[2]);
+            return d && (d.getMonth() + 1) == bits[1] && d.getDate() == Number(bits[2]);
+        }
+
+        function CheckDateFormat() {
+            $('.validation-summary-errors').remove();
+
+            // check valid date
+            var errStartDate = PMS.utility.validDate($('#Condition_START_DATE').val(), 'yyyy/mm', '期間（開始）');
+            var errEndDate = PMS.utility.validDate($('#Condition_END_DATE').val(), 'yyyy/mm', '期間（終了）');
+            var invalidMess = [];
+
+            if ($('#Condition_START_DATE').val() == "") {
+                errStartDate = "期間（開始）を設定してください。";
+            }
+
+            if ($('#Condition_END_DATE').val() == "") {
+                errEndDate = "期間（終了）を設定してください。";
+            }
+
+            if (errStartDate != null) {
+                invalidMess.push(errStartDate);
+            }
+
+            if (errEndDate != null) {
+                invalidMess.push(errEndDate);
+            }
+            if (errStartDate == null && errEndDate == null) {
+                // compare date
+                if (!PMS.utility.compareDate($('#Condition_START_DATE').val(), $('#Condition_END_DATE').val(), 'yyyy/mm')) {
+                    invalidMess.push(['@string.Format(Messages.E027)']);
+                }
+                if (!PMS.utility.compareDateRange($('#Condition_START_DATE').val(), $('#Condition_END_DATE').val(), 11)) {
+                    invalidMess.push(['@Messages.E030']);
+                }
+            }
+            if (invalidMess.length > 0) {
+                PMS.utility.showClientError(invalidMess);
+                return 1;
+            }
+            saveDateCondition();
+            return 0;
+        }
+        $(document).bind('keypress', function ( e ) {
+            var code = e.keyCode || e.which;
+            if (code == 13) { //Enter keycode
+                SearchByUser();
+            }
+        });
+
+        $(document).off('.detail-link');
+        $(document).on('click', '.detail-link', function(){
+            $('#user_id').val($(this).attr("user_id"));
+            $('#selected_year').val($(this).attr("selected_year"));
+            $('#selected_month').val($(this).attr("selected_month"));
+
+            if (currentConditionState.chkRetired === "checked") {
+                $('#Condition_RETIRED_INCLUDE').prop('checked', true);
+            }
+            else {
+                $('#Condition_RETIRED_INCLUDE').prop('checked', false);
+            }
+            $('#Condition_USER_NAME').val(currentConditionState.usrName);
+            $('#Condition_GROUP_ID').val(currentConditionState.grID);
+            $('#Condition_STATUS_ID').val(currentConditionState.statusID);
+            $('#Condition_LOCATION_ID').val(currentConditionState.locID);
+            $('#Condition_START_DATE').val(currentConditionState.fromDate);
+            $('#Condition_END_DATE').val(currentConditionState.toDate);
+            $('.value-selected.search_customer').val(currentConditionState.cusName);
+
+            $("#formActualDetail").submit();
+        });
+        function SearchByUser() {
+            if (CheckDateFormat() == 1)
+            {
+                return;
+            }
+
+            sort_colum = 0;
+            sort_type = 'asc';
+            $('#sort_colum').val(sort_colum);
+            $('#sort_type').val(sort_type);
+
+            var $status = $("#Condition_STATUS_ID");
+
+            if ($status.val() != null && $status.find('option').length == $status.val().length) {
+                $status.val('');
+            }
+
+
+            var $locatioin = $("#Condition_LOCATION_ID");
+
+            if ($locatioin.val() != null && $locatioin.find('option').length == $locatioin.val().length) {
+                $locatioin.val('');
+            }
+
+            saveDateCondition();
+            ChangeLabelTimePeriod();
+            setColumns();
+            saveConditonForExport();
+
+            $('.pace.pace-inactive').removeClass('pace-inactive').addClass('pace-active');
+            $("#onloadDivSales").show(function () {
+                createColumnDefs();
+            });
+            $('#btnSearch').attr('disabled', 'disabled');
+        }
+
+        $("button#btnSearch").click(function () {
+            saveDateCondition();
+            SearchByUser();
+        });
+
+        $("button#btnClear").click(function () {
+            $("#Condition_USER_NAME").val("");
+            $("#Condition_GROUP_ID").val("");
+            $("#Condition_START_DATE").val("");
+            $("#Condition_END_DATE").val("");
+            $("#Condition_STATUS_ID").val("");
+            $("#Condition_LOCATION_ID").val("");
+            $("#Condition_RETIRED_INCLUDE").prop('checked', false);
+
+            setTimeDuration();
+        });
+
+        function ChangeLabelTimePeriod() {
+            var timePeriod = getTimePeriod();
+            var startMonth = ++timePeriod.sM;
+            if(startMonth < 10){
+                startMonth = '0' + startMonth;
+            }
+
+            var endMonth = ++timePeriod.eM;
+            if(endMonth < 10){
+                endMonth = '0' + endMonth;
+            }
+            var titleTimePeriod = timePeriod.sY.toString() + '年' + startMonth.toString() + '月 ～ ' + timePeriod.eY.toString() + '年' + endMonth.toString() + '月';
+            document.getElementById("dateRange").innerHTML = titleTimePeriod;
+
+            bindMonthColums(PMS.utility.getMonthCols($('#startDate').val(), $('#endDate').val()));
+        }
+
+        // Bind colums by time duration on data table
+        function bindMonthColums(colums) {
+            var html = '';
+            for (var i = 0; i < colums.length; i++) {
+                html += '<th class="cell_right sorting_disabled">' + colums[i] + '</th>';
+            }
+
+            $('.tbl-right thead tr').empty().append(html);
+        }
+
+        $('button#btnPreMonth').click(function () {
+            $('#onloadDivSales').show();
+            $('#btnPreMonth').attr('disabled', 'disabled');
+            var timePeriod = getTimePeriod();
+
+            if (timePeriod.sM-- == 0) {
+                timePeriod.sM = 11;
+                timePeriod.sY--;
+            }
+
+            if (timePeriod.eM-- == 0) {
+                timePeriod.eM = 11;
+                timePeriod.eY--;
+            }
+
+            var from = $.datepicker.formatDate('yy/mm', new Date(timePeriod.sY, timePeriod.sM, 1));
+            var to = $.datepicker.formatDate('yy/mm', new Date(timePeriod.eY, timePeriod.eM, 1));
+
+            setTimeDuration(from, to);
+            saveDateCondition();
+            ChangeLabelTimePeriod();
+            setColumns();
+            createColumnDefs();
+        });
+
+        $('button#btnNextMonth').click(function () {
+            $('#onloadDivSales').show();
+            $('#btnNextMonth').attr('disabled', 'disabled');
+            var timePeriod = getTimePeriod();
+
+            if (timePeriod.sM++ == 11) {
+                timePeriod.sM = 0;
+                timePeriod.sY++;
+            }
+
+            if (timePeriod.eM++ == 11) {
+                timePeriod.eM = 0;
+                timePeriod.eY++;
+            }
+
+            var from = $.datepicker.formatDate('yy/mm', new Date(timePeriod.sY, timePeriod.sM, 1));
+            var to = $.datepicker.formatDate('yy/mm', new Date(timePeriod.eY, timePeriod.eM, 1));
+
+            setTimeDuration(from, to);
+            saveDateCondition();
+
+            ChangeLabelTimePeriod();
+            setColumns();
+            createColumnDefs();
+        });
+
+        setTimeCondition();
+
+        setColumns();
+
+        createColumnDefs();
+        saveConditonForExport();
+        PMS.utility.imeControl($("#Condition_PROJECT_NAME"), 'active');
+    });
+
+    function LoadOldValueOfControls() {
+        var hdnStatus = $('#status').val();
+
+        if (hdnStatus.length > 0) {
+            var statusArr = hdnStatus.split(',');
+            $('#Condition_STATUS_ID').val(statusArr);
+        }
+
+        var hdnLocation = $('#location').val();
+
+        if (hdnLocation.length > 0) {
+            var locationArr = hdnLocation.split(',');
+            $('#Condition_LOCATION_ID').val(locationArr);
+        }
+
+        var userName = $('#user_name').val();
+        $('#Condition_USER_NAME').val(userName);
+
+        var startDate = $('#startDate').val();
+
+        if (startDate.length > 0) {
+            $('#Condition_START_DATE').val(startDate);
+        }
+
+        var endDate = $('#endDate').val();
+
+        if (endDate.length > 0) {
+            $('#Condition_END_DATE').val(endDate);
+        }
+    }
+</script>

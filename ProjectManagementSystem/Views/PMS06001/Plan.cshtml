@@ -1,0 +1,773 @@
+﻿@model ProjectManagementSystem.ViewModels.PMS06001.PMS06001EditPlanViewModel
+@using ProjectManagementSystem.Common;
+@using ProjectManagementSystem.Resources;
+
+@{
+    ViewBag.Title = "プロジェクト計画書登録";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<section class="content-header">
+    <h1>
+        @ViewBag.Title
+    </h1>
+</section>
+<section class="content project-plan-regist clearfix">
+    @using (Html.BeginForm("EditPlan", "PMS06001", FormMethod.Post, new { id = "frmProjectPlanEdit", @class = "form-horizontal" }))
+    {
+        <div id="title"></div>
+        @Html.ValidationSummary(false)
+
+        <div class="form-group">
+            <label class="col-sm-2 control-label bold">依頼元</label>
+            <div class="col-sm-10">
+                <label class="control-label">@Model.PROJECT_PLAN_INFO.customer_name</label>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-2 control-label bold">プロジェクト名</label>
+            <div class="col-sm-10">
+                <label class="control-label">@Model.PROJECT_PLAN_INFO.project_name</label>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-2 control-label bold">プロジェクト責任者</label>
+            <div class="col-sm-10">
+                <label class="control-label">@Model.PROJECT_PLAN_INFO.person_in_charge</label>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-2 control-label bold">営業窓口</label>
+            <div class="col-sm-10">
+                <label class="control-label">@Model.PROJECT_PLAN_INFO.sales_person_in_charge</label>
+            </div>
+        </div>
+        <hr class="form-group" />
+
+        <div class="form-group">
+            <label class="col-sm-2 control-label bold title-lable">プロジェクト目的と目標（期待される効果）</label>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-2 control-label bold label-issues">現状の課題</label>
+            <div class="col-sm-10">
+                @if (Model.PROJECT_PLAN_INFO.read_only != "1")
+                {
+                    @Html.TextAreaFor(m => m.PROJECT_PLAN_INFO.issues, new { @class = "col_2 col_2_textarea remark-content", maxlength = 500 })
+                }
+                else
+                {
+                    @Html.Label("", @Model.PROJECT_PLAN_INFO.issues, new { @class = "label-remark-content font-normal" })
+                }
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-2 control-label bold label-purpose">目的</label>
+            <div class="col-sm-10">
+                @if (Model.PROJECT_PLAN_INFO.read_only != "1")
+                {
+                    @Html.TextAreaFor(m => m.PROJECT_PLAN_INFO.purpose, new { @class = "col_2 col_2_textarea remark-content", maxlength = 500 })
+                }
+                else
+                {
+                    @Html.Label("", @Model.PROJECT_PLAN_INFO.purpose, new { @class = "label-remark-content font-normal" })
+                }
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-2 control-label bold title-lable label-target">目標（目標を達成するためのアウトプット）</label>
+            @if (Model.PROJECT_PLAN_INFO.read_only != "1")
+            {
+                <button type="button" class="btn dark btnAddTarget pull-left"><i class="btn-icon btn-add"></i>追加</button>
+            }
+            
+            <div class="pull-left">
+                @if (Model.PROJECT_PLAN_INFO.ins_id == 0)
+                {
+                    <p class="target-content">
+                        <input class="col_2_textbox target column valid" id="PROJECT_PLAN_INFO_targetList_0_" maxlength="40" name="PROJECT_PLAN_INFO.targetList[0]" type="text">
+                        @if (Model.PROJECT_PLAN_INFO.read_only != "1")
+                        {
+                            <a class="btnDeleteTarget lbl-action">削除</a>
+                        }
+                    </p>
+                }
+                else
+                {
+                    var flagTargetList = 0;
+                    for (int i = 1; i < 11; i++)
+                    {
+                        if (Model.PROJECT_PLAN_INFO.targetList[i - 1] != null)
+                        {
+                            flagTargetList = 1;
+                            <p class="target-content">
+                                @if (Model.PROJECT_PLAN_INFO.read_only != "1")
+                                {
+                                    @Html.TextBoxFor(m => m.PROJECT_PLAN_INFO.targetList[i - 1], new { @class = "col_2_textbox target", maxlength = 40 })
+                                    <a class="btnDeleteTarget lbl-action">削除</a>
+                                }
+                                else
+                                {
+                                    @Html.Label("", @Model.PROJECT_PLAN_INFO.targetList[i - 1], new { @class = "col_2_textbox font-normal" })
+                                }
+                            </p>
+                        }
+                    }
+                    if (flagTargetList == 0)
+                    {
+                        <p class="target-content">
+                            @if (Model.PROJECT_PLAN_INFO.read_only != "1")
+                            {
+                                <input class="col_2_textbox target column valid" id="PROJECT_PLAN_INFO_targetList_0_" maxlength="40" name="PROJECT_PLAN_INFO.targetList[0]" type="text">
+                                <a class="btnDeleteTarget lbl-action">削除</a>
+                            }
+                            else
+                            {
+                                <input class="col_2_textbox target column valid" id="PROJECT_PLAN_INFO_targetList_0_" maxlength="40" name="PROJECT_PLAN_INFO.targetList[0]" type="text" readonly disabled>
+                            }
+                        </p>
+                    }
+                }
+            </div>
+        </div>
+
+        <hr class="form-group" />
+
+        <div class="form-group">
+            <label class="col-sm-2 control-label bold title-lable">プロジェクトの前提条件／制約事項</label>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-4 control-label bold require-project">※主に金額、人、物、期日に関する内容を記載</label>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-3 control-label bold label-restriction-01">納期の制約</label>
+            <div class="col-sm-9">
+                @if (Model.PROJECT_PLAN_INFO.read_only != "1")
+                {
+                    @Html.TextBoxFor(m => m.PROJECT_PLAN_INFO.restriction_01, new { @class = "col_3_textbox", maxlength = 150 })
+                }
+                else
+                {
+                    if (string.IsNullOrEmpty(Model.PROJECT_PLAN_INFO.restriction_01))
+                    {
+                        @Html.TextBoxFor(m => m.PROJECT_PLAN_INFO.restriction_01, new { @class = "col_3_textbox", maxlength = 150, @readonly = "readonly", @disabled = "disabled" })
+                    }
+                    else
+                    {
+                        @Html.Label("", @Model.PROJECT_PLAN_INFO.restriction_01, new { @class = "col_3_textbox font-normal" })
+                    }
+                }
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-3 control-label bold label-restriction-02">費用の制約</label>
+            <div class="col-sm-9">
+                @if (Model.PROJECT_PLAN_INFO.read_only != "1")
+                {
+                    @Html.TextBoxFor(m => m.PROJECT_PLAN_INFO.restriction_02, new { @class = "col_3_textbox", maxlength = 150 })
+                }
+                else
+                {
+                    if (string.IsNullOrEmpty(Model.PROJECT_PLAN_INFO.restriction_02))
+                    {
+                        @Html.TextBoxFor(m => m.PROJECT_PLAN_INFO.restriction_02, new { @class = "col_3_textbox", maxlength = 150, @readonly = "readonly", @disabled = "disabled" })
+                    }
+                    else
+                    {
+                        @Html.Label("", @Model.PROJECT_PLAN_INFO.restriction_02, new { @class = "col_3_textbox font-normal" })
+                    }
+                }
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-3 control-label bold label-restriction-03">機能・性能の前提／制約</label>
+            <div class="col-sm-9">
+                @if (Model.PROJECT_PLAN_INFO.read_only != "1")
+                {
+                    @Html.TextBoxFor(m => m.PROJECT_PLAN_INFO.restriction_03, new { @class = "col_3_textbox", maxlength = 150 })
+                }
+                else
+                {
+                    if (string.IsNullOrEmpty(Model.PROJECT_PLAN_INFO.restriction_03))
+                    {
+                        @Html.TextBoxFor(m => m.PROJECT_PLAN_INFO.restriction_03, new { @class = "col_3_textbox", maxlength = 150, @readonly = "readonly", @disabled = "disabled" })
+                    }
+                    else
+                    {
+                        @Html.Label("", @Model.PROJECT_PLAN_INFO.restriction_03, new { @class = "col_3_textbox font-normal" })
+                    }
+                }
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label bold label-restriction-04">システム化の方式・手順の制約</label>
+            <div class="col-sm-9">
+                @if (Model.PROJECT_PLAN_INFO.read_only != "1")
+                {
+                    @Html.TextBoxFor(m => m.PROJECT_PLAN_INFO.restriction_04, new { @class = "col_3_textbox", maxlength = 150 })
+                }
+                else
+                {
+                    if (string.IsNullOrEmpty(Model.PROJECT_PLAN_INFO.restriction_04))
+                    {
+                        @Html.TextBoxFor(m => m.PROJECT_PLAN_INFO.restriction_04, new { @class = "col_3_textbox", maxlength = 150, @readonly = "readonly", @disabled = "disabled" })
+                    }
+                    else
+                    {
+                        @Html.Label("", @Model.PROJECT_PLAN_INFO.restriction_04, new { @class = "col_3_textbox font-normal" })
+                    }
+                }
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-3 control-label bold label-restriction-05">開発体制の制約</label>
+            <div class="col-sm-9">
+                @if (Model.PROJECT_PLAN_INFO.read_only != "1")
+                {
+                    @Html.TextBoxFor(m => m.PROJECT_PLAN_INFO.restriction_05, new { @class = "col_3_textbox", maxlength = 150 })
+                }
+                else
+                {
+                    if (string.IsNullOrEmpty(Model.PROJECT_PLAN_INFO.restriction_05))
+                    {
+                        @Html.TextBoxFor(m => m.PROJECT_PLAN_INFO.restriction_05, new { @class = "col_3_textbox", maxlength = 150, @readonly = "readonly", @disabled = "disabled" })
+                    }
+                    else
+                    {
+                        @Html.Label("", @Model.PROJECT_PLAN_INFO.restriction_05, new { @class = "col_3_textbox font-normal" })
+                    }
+                }
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-3 control-label bold label-restriction-06">外注パートナー利用有無</label>
+            <div class="col-sm-9">
+                @if (Model.PROJECT_PLAN_INFO.read_only != "1")
+                {
+                    @Html.TextBoxFor(m => m.PROJECT_PLAN_INFO.restriction_06, new { @class = "col_3_textbox", maxlength = 150 })
+                }
+                else
+                {
+                    if (string.IsNullOrEmpty(Model.PROJECT_PLAN_INFO.restriction_06))
+                    {
+                        @Html.TextBoxFor(m => m.PROJECT_PLAN_INFO.restriction_06, new { @class = "col_3_textbox", maxlength = 150, @readonly = "readonly", @disabled = "disabled" })
+                    }
+                    else
+                    {
+                        @Html.Label("", @Model.PROJECT_PLAN_INFO.restriction_06, new { @class = "col_3_textbox font-normal" })
+                    }
+                }
+            </div>
+        </div>
+        <hr class="form-group" />
+
+         <div class="form-group title-risk">
+            <label class="col-sm-2 control-label">&nbsp;</label>
+            <div class="pull-left">
+                <button type="button" class="btn dark bt-space pull-left"><i class="btn-icon btn-add"></i>追加</button>
+
+                <div class="pull-left">
+                    <div class="top-title">懸念事項</div>
+                    <div class="top-title title-risk-next">対策</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-1 control-label bold label-risk">リスク</label>
+            @if (Model.PROJECT_PLAN_INFO.read_only != "1")
+            {
+                <button type="button" class="btn dark btnAddRisk pull-left"><i class="btn-icon btn-add"></i>追加</button>
+            }
+            <div class="pull-left">
+                @if (Model.PROJECT_PLAN_INFO.ins_id == 0)
+                {
+                    <div class="risk-content">
+                        <input class="col_3_textbox target concern column valid" id="PROJECT_PLAN_INFO_riskList_0__Concern" maxlength="50" name="PROJECT_PLAN_INFO.riskList[0].Concern" type="text">
+                        <input class="col_3_textbox target measure column" id="PROJECT_PLAN_INFO_riskList_0__Measure" maxlength="50" name="PROJECT_PLAN_INFO.riskList[0].Measure" type="text">
+                        @if (Model.PROJECT_PLAN_INFO.read_only != "1")
+                        {
+                            <a class="btnDeleteRisk lbl-action">削除</a>
+                        }
+                    </div>
+                }
+                else
+                {
+                    var flagRiskList = 0;
+                    for (int i = 1; i < 6; i++)
+                    {
+                        if (Model.PROJECT_PLAN_INFO.riskList[i - 1].Concern != null || Model.PROJECT_PLAN_INFO.riskList[i - 1].Measure != null)
+                        {
+                            flagRiskList = 1;
+                            <div class="risk-content">
+                                @if (Model.PROJECT_PLAN_INFO.read_only != "1")
+                                {
+                                    @Html.TextBoxFor(m => m.PROJECT_PLAN_INFO.riskList[i - 1].Concern, new { @class = "col_3_textbox target concern", maxlength = 50 })
+                                }
+                                else
+                                {
+                                    if (string.IsNullOrEmpty(Model.PROJECT_PLAN_INFO.riskList[i - 1].Concern))
+                                    {
+                                        @Html.TextBoxFor(m => m.PROJECT_PLAN_INFO.riskList[i - 1].Concern, new { @class = "col_3_textbox target concern", maxlength = 50, @readonly = "readonly", @disabled = "disabled" })
+                                    }
+                                    else
+                                    {
+                                        @Html.Label("", @Model.PROJECT_PLAN_INFO.riskList[i - 1].Concern, new { @class = "col_3_textbox font-normal" })
+                                    }
+                                }
+                                @if (Model.PROJECT_PLAN_INFO.read_only != "1")
+                                {
+                                    @Html.TextBoxFor(m => m.PROJECT_PLAN_INFO.riskList[i - 1].Measure, new { @class = "col_3_textbox target measure", maxlength = 50 })
+                                    <a class="btnDeleteRisk lbl-action">削除</a>
+                                }
+                                else
+                                {
+                                    if (string.IsNullOrEmpty(Model.PROJECT_PLAN_INFO.riskList[i - 1].Measure))
+                                    {
+                                        @Html.TextBoxFor(m => m.PROJECT_PLAN_INFO.riskList[i - 1].Measure, new { @class = "col_3_textbox target concern", maxlength = 50, @readonly = "readonly", @disabled = "disabled" })
+                                    }
+                                    else
+                                    {
+                                        @Html.Label("", @Model.PROJECT_PLAN_INFO.riskList[i - 1].Measure, new { @class = "col_3_textbox font-normal" })
+                                    }
+                                }
+                            </div>
+                        }
+                    }
+                    if (flagRiskList == 0)
+                    {
+                        <div class="risk-content">
+                            @if (Model.PROJECT_PLAN_INFO.read_only != "1")
+                            {
+                                <input class="col_3_textbox target concern column valid" id="PROJECT_PLAN_INFO_riskList_0__Concern" maxlength="50" name="PROJECT_PLAN_INFO.riskList[0].Concern" type="text">
+                                <input class="col_3_textbox target measure column" id="PROJECT_PLAN_INFO_riskList_0__Measure" maxlength="50" name="PROJECT_PLAN_INFO.riskList[0].Measure" type="text">
+                                <a class="btnDeleteRisk lbl-action">削除</a>
+                            }
+                            else
+                            {
+                                <input class="col_3_textbox target concern column valid" id="PROJECT_PLAN_INFO_riskList_0__Concern" maxlength="50" name="PROJECT_PLAN_INFO.riskList[0].Concern" type="text" readonly disabled>
+                                <input class="col_3_textbox target measure column" id="PROJECT_PLAN_INFO_riskList_0__Measure" maxlength="50" name="PROJECT_PLAN_INFO.riskList[0].Measure" type="text" readonly disabled>
+                            }
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+
+        <hr class="form-group" />
+
+        <div class="form-group">
+            <label class="col-sm-2 control-label bold">品質管理の支援有無</label>
+            <div class="col-sm-10">
+                @Html.CheckBoxFor(m => m.SUPPORT_TEST_PLAN_FLG, new { @class = "condition_chkbox" })<span class="title_chkbox">テスト計画の作成支援</span>
+                @Html.CheckBoxFor(m => m.SUPPORT_USER_TEST_FLG, new { @class = "condition_chkbox" })<span class="title_chkbox">ユーザーテストの支援</span>
+                @Html.CheckBoxFor(m => m.SUPPORT_STRESS_TEST_FLG, new { @class = "condition_chkbox" })<span class="title_chkbox">負荷テストの支援</span>
+                @Html.CheckBoxFor(m => m.SUPPORT_SECURITY_TEST_FLG, new { @class = "condition_chkbox" })<span class="title_chkbox">セキュリティテストの支援</span>
+            </div>
+        </div>
+        <hr class="form-group" />
+
+        <div class="form-group">
+            <label class="col-sm-2 control-label bold label-remarks">その他（除外事項など）</label>
+            <div class="col-sm-10">
+                @if (Model.PROJECT_PLAN_INFO.read_only != "1")
+                {
+                    @Html.TextAreaFor(m => m.PROJECT_PLAN_INFO.remarks, new { @class = "col_2_textarea remark-content remark_plan font-normal", maxlength = 700 })
+                }
+                else
+                {
+                    @Html.Label("", @Model.PROJECT_PLAN_INFO.remarks, new { @class = "col_2_textarea label-remark-content remark_plan font-normal" })
+                }
+            </div>
+        </div>
+
+    <div id="updateTime">
+        <div class="form-group">
+            <label class="col-sm-2 control-label bold">登録日時</label>
+            @Html.Label("", !string.IsNullOrEmpty(@Model.PROJECT_PLAN_INFO.ins_date.ToString()) ? @Model.PROJECT_PLAN_INFO.ins_date.ToString("yyyy/MM/dd HH:mm") : "", new { @class = "col-sm-9 control-label font-normal", id = "insDate" })
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label bold">登録者</label>
+            <label class="col-sm-9 control-label" id="insUser">@Model.PROJECT_PLAN_INFO.user_regist</label>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label bold">更新日時</label>
+            @Html.Label("", !string.IsNullOrEmpty(@Model.PROJECT_PLAN_INFO.upd_date.ToString()) ? @Model.PROJECT_PLAN_INFO.upd_date.ToString("yyyy/MM/dd HH:mm") : "", new { @class = "col-sm-9 control-label font-normal", id = "updDate" })
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label bold">更新者</label>
+            <label class="col-sm-9 control-label" id="updUser">@Model.PROJECT_PLAN_INFO.user_update</label>
+        </div>
+    </div>
+    <div class="form-group btn-group-edit col-sm-12">
+        @Html.HiddenFor(m => m.PROJECT_PLAN_INFO.row_version)
+        @Html.HiddenFor(m => m.PROJECT_PLAN_INFO.project_sys_id)
+        @if (Model.isNotBack == "PlanByGet")
+        {
+            @Html.HiddenFor(m => m.isNotBack)
+        }
+
+        @Html.AntiForgeryToken()
+
+        @if (Model.isNotBack != "PlanByGet")
+        {
+            <button type="button" id="btnCancel" class="btn light"><i class="btn-icon btn-back"></i> 戻る</button>
+        }
+
+        @if (Model.PROJECT_PLAN_INFO.read_only != "1")
+        {
+            <button type="button" id="btnSubmit" class="btn green"><i class="btn-icon btn-regist"></i> 登録</button>
+            <button type="button" id="btnDownload" class="btn dark"><i class="btn-icon btn-output-csv"></i> ダウンロード</button>
+            <label class="bold" id="deleteFlag">
+                @Html.CheckBoxFor(m => m.DELETE_FLAG)
+                削除
+            </label>
+        }
+    </div>
+    }
+        @if (HttpContext.Current.Session[Constant.SESSION_LOGIN_USER] != null)
+    {
+        var currentUser = HttpContext.Current.Session[Constant.SESSION_LOGIN_USER] as LoginUser;
+        var functionList = currentUser.FunctionList as List<int>;
+        if (currentUser.FunctionList.Contains(Constant.FunctionID.OutputExcel))
+        {
+            <form id="formDownload" action='@Url.Action("DownloadProjectPlan", "PMS06001")' method="POST">
+                <input type="hidden" id="project_id" name="project_id" value="@Model.PROJECT_PLAN_INFO.project_sys_id" />
+            </form>
+        }
+    }
+    
+</section>
+
+<form id="frmProjectPlanCancel" method="POST" action="@Url.Action("Edit", "PMS06001")">
+    <input type="hidden" name="id" value="@Model.PROJECT_PLAN_INFO.project_sys_id" />
+</form>
+
+<form id="frmDetail" method="POST" action="@Url.Action("Detail", "PMS06002")">
+    <input type="hidden" name="user_id" value="@HttpContext.Current.Session["user_id"]" />
+    <input type="hidden" name="selected_year" value="@HttpContext.Current.Session["selected_year"]" />
+    <input type="hidden" name="selected_month" value="@HttpContext.Current.Session["selected_month"]" />
+</form>
+
+<form method="POST" action="@Url.Action("Plan", "PMS06001")" id="frmPostbackProjectPlan">
+    <input type="hidden" name="plan_projectId" value="@Model.PROJECT_PLAN_INFO.project_sys_id" />
+    <input type="hidden" name="isNotBack" value="">
+</form>
+
+<script type="text/javascript">
+    $(function () {
+        var btnDownload = $('#btnDownload');
+
+        $(document).ready(function () {
+            PMS.utility.imeControl($(".remark-content, .col_2_textbox"), 'active');
+            PMS.utility.focusTextbox();
+
+            $(".content-wrapper").addClass("content-edit-wrapper");
+
+            if (@Model.PROJECT_PLAN_INFO.ins_id == 0) {
+                $('#updateTime, #deleteFlag').hide();
+            }
+
+            if ($('#DELETE_FLAG').prop('checked') || @Model.PROJECT_PLAN_INFO.ins_id == 0) {
+                btnDownload.attr('disabled', 'disabled').removeClass('blue').addClass('disabled');
+            }
+        });
+
+        var read_only = '@Model.PROJECT_PLAN_INFO.read_only';
+        if (read_only === '1') {
+            $('input').addClass('value-selected');
+            $('input[type="checkbox"]').attr('disabled', 'disabled');
+            $('textarea').attr('readonly', 'readonly');
+        }
+
+        $('.content-wrapper').css('background', '#F4F4F4');
+
+        $('#btnDownload').click(function () {
+            $("#formDownload").submit();
+        });
+
+        $(document).off('textarea, input[type="text"]');
+        $(document).on('keyup change', 'textarea, input[type="text"]', function () {
+            btnDownload.attr('disabled', 'disabled');
+            btnDownload.removeClass('blue');
+            btnDownload.addClass('disabled');
+        });
+
+        $('button#btnCancel').click(function () {
+            var prevPage = '@HttpContext.Current.Session["PMS06001_Plan_From"]';
+            console.log(prevPage)
+            if(prevPage == "ProjectEdit"){
+                $("#frmProjectPlanCancel").submit();
+            }
+            else if (prevPage == "ProjectList"){
+                window.location.href = "/PMS06001";
+            }
+            else if (prevPage == "PersonalRecord"){
+                $("#frmDetail").attr("action", "/PMS06002/Detail");
+                $("#frmDetail").submit();
+            }
+            else if(prevPage == "ProjectRecord"){
+                window.location.href = "/PMS06001/Detail";
+            }
+        });
+
+        $('button#btnSubmit').click(function () {
+            PMS.utility.removeValidationError();
+            var invalidMess = validateData();
+            if (invalidMess.length > 0) {
+
+                PMS.utility.showClientError(invalidMess);
+                return false;
+            }
+            PMS.utility.IsAuthenticateTimeout('@string.Format(Messages.I006)', '#frmProjectPlanEdit');
+        });
+
+        $("#frmProjectPlanEdit").submit(function (e) {
+            var formData = new FormData(this);
+
+            $.ajax({
+                url: $(this).attr("action"),
+                type: 'POST',
+                data: formData,
+                mimeType: "multipart/form-data",
+                contentType: false,
+                cache: false,
+                processData: false,
+                success: function (response) {
+                    var data = JSON.parse(response);
+
+                    BootstrapDialog.closeAll();
+
+                    if (data.statusCode == 201) { // update success
+                        $("#frmProjectPlanEdit").css('visibility', 'hidden');
+
+                        PMS.utility.showMessageDialog(PMS.utility.htmlDecode('@Constant.DialogType.INFORMATION'), data.message, null, null, function () {
+
+                            $("#frmPostbackProjectPlan").children('[name="isNotBack"]').val(data.IsNotBack);
+                            $("#frmPostbackProjectPlan").submit();
+                        });
+                    }
+
+                    if (data.statusCode == 202) { // duplicate update
+                        $("#frmProjectPlanEdit").css('visibility', '');
+
+                        $("#frmPostbackProjectPlan").children('[name="isNotBack"]').val(data.IsNotBack);
+
+                        PMS.utility.showSubmitConfirmDialog(data.message, '#frmPostbackProjectPlan', null, function (action) {
+                            if (!action)
+                                $("#frmProjectPlanEdit").css('visibility', '');
+                        });
+                    }
+
+                    if (data.statusCode == 500) { // Exception
+                        $("#frmProjectPlanEdit").css('visibility', 'hidden');
+                        PMS.utility.showMessageDialog(PMS.utility.htmlDecode('@Constant.DialogType.WARNING'), data.message, '/PMS06001');
+                    }
+
+                    if (typeof (data.ErrorMessages) !== 'undefined') // invalid data
+                        PMS.utility.showClientError(data.ErrorMessages);
+                },
+                error: function (error) {
+                    if (error.status == 419) { //419: Authentication Timeout
+                        $("#frmProjectPlanEdit").css('visibility', 'hidden');
+                        window.location.href = '/PMS01001/Login/timeout';
+                    }
+                }
+            });
+
+            e.preventDefault(); // prevent Default action
+        });
+
+        function validateData() {
+            var invalidMess = [];
+
+            // check max length of issues
+            if ($('#PROJECT_PLAN_INFO_issues').val().length > 500) {
+                invalidMess.push("@string.Format(Messages.E020, "現状の課題", "500")");
+                $('.label-issues').addClass('label-validation-error');
+            }
+
+            // check max length of purpose
+            if ($('#PROJECT_PLAN_INFO_purpose').val().length > 500) {
+                invalidMess.push("@string.Format(Messages.E020, "目的", "500")");
+                $('.label-purpose').addClass('label-validation-error');
+            }
+
+            // check max length of target list
+            var flagTarget = 0;
+            for (var i = 0 ; i < $('.target-content').length; i++) {
+                var control = $('input[name="PROJECT_PLAN_INFO.targetList[' + i + ']"]');
+                if (control.val().length > 40) {
+                    flagTarget = 1;
+                    break;
+                }
+            }
+            if (flagTarget == 1) {
+                invalidMess.push("@string.Format(Messages.E020, "目標", "40")");
+                $('.label-target').addClass('label-validation-error');
+            }
+
+            // check max length of restriction_01
+            if ($('#PROJECT_PLAN_INFO_restriction_01').val().length > 150) {
+                invalidMess.push("@string.Format(Messages.E020, "納期の制約", "150")");
+                $('.label-restriction-01').addClass('label-validation-error');
+            }
+
+            // check max length of restriction_02
+            if ($('#PROJECT_PLAN_INFO_restriction_02').val().length > 150) {
+                invalidMess.push("@string.Format(Messages.E020, "費用の制約", "150")");
+                $('.label-restriction-02').addClass('label-validation-error');
+            }
+
+            // check max length of restriction_03
+            if ($('#PROJECT_PLAN_INFO_restriction_03').val().length > 150) {
+                invalidMess.push("@string.Format(Messages.E020, "機能・性能の前提／制約", "150")");
+                $('.label-restriction-03').addClass('label-validation-error');
+            }
+
+            // check max length of restriction_04
+            if ($('#PROJECT_PLAN_INFO_restriction_04').val().length > 150) {
+                invalidMess.push("@string.Format(Messages.E020, "システム化の方式・手順の制約", "150")");
+                $('.label-restriction-04').addClass('label-validation-error');
+            }
+
+            // check max length of restriction_05
+            if ($('#PROJECT_PLAN_INFO_restriction_05').val().length > 150) {
+                invalidMess.push("@string.Format(Messages.E020, "開発体制の制約", "150")");
+                $('.label-restriction-05').addClass('label-validation-error');
+            }
+
+            // check max length of restriction_06
+            if ($('#PROJECT_PLAN_INFO_restriction_06').val().length > 150) {
+                invalidMess.push("@string.Format(Messages.E020, "外注パートナー利用有無", "150")");
+                $('.label-restriction-06').addClass('label-validation-error');
+            }
+
+            // check max length of risk list
+            var flagRisk = 0;
+            for (var i = 0 ; i < $('.risk-content').length; i++) {
+                var concern = $('input[name="PROJECT_PLAN_INFO.riskList[' + i + '].Concern"]');
+                var measure = $('input[name="PROJECT_PLAN_INFO.riskList[' + i + '].Measure"]');
+                if (concern.val().length > 50 || measure.val().length > 50) {
+                    flagRisk = 1;
+                    break;
+                }
+            }
+            if (flagRisk == 1) {
+                invalidMess.push("@string.Format(Messages.E020, "リスク", "50")");
+                $('.label-risk').addClass('label-validation-error');
+            }
+
+            // check max length of remarks
+            if ($('#PROJECT_PLAN_INFO_remarks').val().length > 700) {
+                invalidMess.push("@string.Format(Messages.E020, "その他（除外事項など）", "700")");
+                $('.label-remarks').addClass('label-validation-error');
+            }
+
+            return invalidMess;
+        }
+
+        // Action add a target
+        $(document).off('button.btnAddTarget');
+        $(document).on('click', 'button.btnAddTarget', function () {
+            if ($('.target-content').length < 10) {
+                $('.target-content').last().after($('.target-content').first().prop('outerHTML'));
+                var $targetLast = $('.target-content').last();
+                $targetLast.find('.target').val('');
+                $targetLast.find('.target').empty();
+                resetArrTarget();
+            }
+        });
+
+        // Action delete a target category
+        $(document).off('.btnDeleteTarget');
+        $(document).on('click', '.btnDeleteTarget', function () {
+            $targetDel = $(this).parent();
+
+            if ($targetDel.find('.target').val() != '') {
+                btnDownload.attr('disabled', 'disabled');
+                btnDownload.removeClass('blue');
+                btnDownload.addClass('disabled');
+            }
+
+            if ($('.target-content').length > 1) {
+                $targetDel.remove();
+                resetArrTarget();
+            } else {
+                $targetDel.find('.target').val('');
+                $targetDel.find('.target').empty();
+            }
+        });
+
+        // Action add a risk
+        $(document).off('button.btnAddRisk');
+        $(document).on('click', 'button.btnAddRisk', function () {
+            if ($('.risk-content').length < 5) {
+                $('.risk-content').last().after($('.risk-content').first().prop('outerHTML'));
+                var $targetLast = $('.risk-content').last();
+                $targetLast.find('.concern').val('');
+                $targetLast.find('.concern').empty();
+                $targetLast.find('.measure').val('');
+                $targetLast.find('.measure').empty();
+                resetArrRisk();
+            }
+        });
+
+        // Action delete a target category
+        $(document).off('a.btnDeleteRisk');
+        $(document).on('click', 'a.btnDeleteRisk', function () {
+            $targetDel = $(this).parent();
+
+            if ($targetDel.find('.concern').val() != '' || $targetDel.find('.measure').val() != '') {
+                btnDownload.attr('disabled', 'disabled');
+                btnDownload.removeClass('blue');
+                btnDownload.addClass('disabled');
+            }
+
+            if ($('.risk-content').length > 1) {
+                $targetDel.remove();
+                resetArrRisk();
+            } else {
+                $targetDel.find('.concern').val('');
+                $targetDel.find('.concern ').empty();
+                $targetDel.find('.measure').val('');
+                $targetDel.find('.measure ').empty();
+            }
+        });
+
+        // Reset name of textbox on target  list
+        function resetArrTarget() {
+            var $arrTarget = $('.target-content');
+
+            for (var i = 0; i < $arrTarget.length; i++) {
+                var targetTarget = $arrTarget[i];
+                var txtTarget = 'PROJECT_PLAN_INFO.targetList[' + i + ']';
+                $(targetTarget).find('.target').attr('name', txtTarget);
+            }
+        }
+
+        // Reset name of textbox on risk  list
+        function resetArrRisk() {
+            var $arrRisk = $('.risk-content');
+
+            for (var i = 0; i < $arrRisk.length; i++) {
+                var targetRisk = $arrRisk[i];
+                var txtConcerns = 'PROJECT_PLAN_INFO.riskList[' + i + '].Concern';
+                var txtMeasures = 'PROJECT_PLAN_INFO.riskList[' + i + '].Measure';
+                $(targetRisk).find('.concern').attr('name', txtConcerns);
+                $(targetRisk).find('.measure').attr('name', txtMeasures);
+            }
+        }
+    });
+</script>

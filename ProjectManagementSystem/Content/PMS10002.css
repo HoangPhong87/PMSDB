@@ -1,0 +1,130 @@
+﻿
+#InfoTable td .short-text-name {
+	width: 140px;
+}
+
+
+
+#InfoTable th.content {
+	width: 400px !important;
+}
+
+#InfoTable td .url{
+	color: #4D99E0;
+}
+
+#InfoTable th {
+	min-width:55px;
+}
+
+#InfoTable td.upd-date {
+	min-width:150px;
+}
+
+#InfoTable .display_name {
+	width: 160px !important;
+}
+
+.information-regist .date input {
+    margin: 0;
+}
+
+.information-regist label.col-sm-2 {
+    width: 12%;
+}
+
+.search-condition .group-1 {
+    float: left;
+    margin-right: 10px;
+}
+
+.search-condition .lbl-include {
+    margin-left: 20px;
+}
+
+@media (max-width: 1080px) {
+    .search-condition .group-1 {
+        width: 100%;
+        margin-bottom: 15px;
+    }
+
+    .search-condition .lbl-include {
+        margin-left: 574px;
+    }
+
+    .sidebar-collapse .search-condition .group-1 {
+        width: auto;
+        margin-bottom: 0;
+    }
+
+    .sidebar-collapse .search-condition .lbl-include {
+        margin-left: 20px;
+    }
+}
+
+@media (max-width: 1024px) {
+    .sidebar-collapse .search-condition .group-1 {
+        width: 100%;
+        margin-bottom: 15px;
+    }
+
+    .sidebar-collapse .search-condition .lbl-include {
+        margin-left: 574px;
+    }
+}
+
+/*zoom in common textarea*/
+ @media (max-width: 1300px) {
+    .candy-textArea{
+        max-width: 1000px;
+    }
+    .set-max-width{
+        max-width :1000px;
+    }
+}
+
+@media (max-width: 1100px) {
+    .candy-textArea{
+        max-width: 1000px;
+    }
+    .set-max-width{
+        max-width :1000px;
+    }
+}
+@media (min-width: 1300px) {
+    .candy-textArea{
+        max-width: 1000px;
+    }
+    .set-max-width{
+        max-width :1000px;
+    }
+}
+@media (min-width: 1500px) {
+    .candy-textArea{
+        max-width: 1130px;
+    }
+    .set-max-width{
+        max-width :1130px;
+    }
+}
+@media (min-width: 1700px) {
+    .candy-textArea{
+        max-width:1300px;
+    }
+    .set-max-width{
+        max-width :1300px;
+    }
+}
+@media (min-width: 1800px) {
+    .candy-textArea{
+        max-width:1400px;
+    }
+    .set-max-width{
+        max-width :1400px;
+    }
+}
+/*end zoom in textarea*/
+
+.cell_left{
+    max-width:250px;
+}

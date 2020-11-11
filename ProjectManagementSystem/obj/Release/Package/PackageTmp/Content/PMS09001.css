@@ -1,0 +1,321 @@
+﻿
+.group-sale-list {
+    padding-top: 55px !important;
+}
+
+.lbl-contract {
+    margin-top: 5px;
+}
+
+#Condition_GROUP_ID {
+    vertical-align: top;
+}
+
+#Condition_CONTRACT_TYPE_ID {
+    vertical-align: top;
+    width: 240px;
+    height: 90px;
+}
+
+.search-condition .group-1, .search-condition .col-1 {
+    float: left;
+}
+
+@media (max-width: 1235px) {
+    .search-condition .col-1 {
+        float: none;
+        margin-bottom: 15px;
+    }
+
+    .search-condition .col-1 .width-100 {
+        width: 120px;
+    }
+
+    /*.sidebar-collapse .search-condition .group-1 {
+        width: auto;
+        margin-bottom: 0;
+    }*/
+}
+
+/*@media (max-width: 1100px) {
+    .sidebar-collapse .search-condition .group-1 {
+        width: 100%;
+        margin-bottom: 15px;
+    }
+}*/
+
+div.col-left {
+    float: left;
+    width: 20%;
+    margin-right: -1px;
+}
+
+div.col-center {
+    float: left;
+    width: 25%;
+    margin-right: -2px;
+}
+
+    div.col-center table tbody tr td {
+        border: none;
+    }
+
+    div.col-center table tbody tr td {
+        border-bottom: 1px solid #EAEAEA;
+    }
+
+div.col-right {
+    float: left;
+    min-width: 55%;
+    max-width: 55%;
+    overflow-x: auto;
+    overflow-y: hidden;
+}
+
+    div.col-center table tbody tr td, div.col-right table tbody tr td {
+        height: 36px;
+        padding: 0px 10px;
+    }
+
+    div.col-right table thead tr th {
+        min-width: 137px;
+    }
+
+#tableCenter tbody tr td.total {
+    border-left: 1px solid #EAEAEA;
+}
+
+.group-sale-list .col-left .dataTables_paginate {
+    position: absolute;
+    margin-top: 50px;
+    margin-left: 29%;
+}
+
+.group-sale-list .col-left .dataTables_info {
+    position: absolute;
+    left: 200px;
+    margin-top: -55px;
+}
+
+.group-sale-list .col-left .dataTables_length {
+    position: absolute;
+    right: 32px;
+    margin-top: -40px;
+}
+
+.sidebar-collapse .group-sale-list .dataTables_info {
+    left: 70px;
+}
+
+.group-sale-list .search-date {
+    margin-top: 90px;
+    text-align: right;
+    background: rgb(242, 242, 242);
+    padding: 7px 0;
+}
+
+.group-sale-list-footer {
+    margin-top: 50px;
+}
+
+#tableLeft td.dataTables_empty {
+    border-right: none;
+}
+
+#tableCenter td.empty-data {
+    border-left: none;
+    border-right: none;
+}
+
+#tableRight td.empty-data {
+    border-left: none;
+}
+
+button[name="btnExport"] {
+    float: left;
+}
+
+@-moz-document url-prefix() { /*Firefox*/
+    div.col-left {
+        margin-right: 0px !important;
+    }
+}
+
+#tableCenter th:first-child {
+    min-width: 10px;
+}
+
+#tableLeft td:not(.dataTables_empty) {
+    border-top: none;
+    border-bottom: none;
+}
+
+#tableLeft tr.td-up td {
+    border-top: 1px solid #EAEAEA;
+}
+
+#tableLeft tr.td-down td {
+    border-bottom: 1px solid #EAEAEA;
+}
+
+.tr-last td:first-child {
+    border-left: none  !important;
+    border-bottom: none !important;
+    background-color: white;
+}
+
+/*zoom in*/
+@media (max-width: 1300px) {
+    div.col-left {
+        margin-right: 0px;
+    }
+}
+
+@media (max-width: 1100px) {
+    div.col-left {
+        margin-right: -1px;
+    }
+}
+
+@media (min-width: 2624px) {
+    div.col-right table tbody tr td {
+        min-width: 200px;
+    }
+
+    div.col-right table thead tr th {
+        min-width: 200px;
+    }
+}
+
+@media (min-width: 1970px) {
+    div.col-right table tbody tr td {
+        min-width: 200px;
+    }
+
+    div.col-right table thead tr th {
+        min-width: 200px;
+    }
+}
+
+/* sales group detail */
+
+.sales-group-detail-header label.col-xs-4 {
+    width: 34%;
+}
+
+.sales-group-detail-header div.col-xs-8 {
+    width: 66%;
+}
+
+.sales-group-detail-header .contact-type-title {
+    width: 7.8%;
+}
+
+.sales-group-detail .dataTables_info {
+    display: none;
+}
+
+/* sales project detail */
+
+.sales-project-detail-header label.first {
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.sales-project-detail .dataTables_info {
+    display: none;
+}
+
+#dateRange {
+    font-weight: bold;
+    text-align: center;
+    display: inline-block;
+    padding: 0 7px;
+}
+
+@media (max-width: 1150px) {
+    .group-sale-list .col-left .dataTables_length {
+        right: -195px;
+    }
+}
+
+@media (max-width: 1024px) {
+    div.col-center {
+        float: left;
+        width: 30%;
+        margin-right: -2px;
+    }
+
+    div.col-right {
+        float: left;
+        min-width: 50%;
+        max-width: 50%;
+        overflow-x: auto;
+        overflow-y: hidden;
+    }
+
+
+    .group-sale-list .col-left .dataTables_length {
+        right: -305px;
+    }
+}
+
+@media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) and (max-width: 1210px) {
+    .group-sale-list .col-left .dataTables_length {
+        right: -130px;
+    }
+}
+
+@media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) and (max-width: 1150px) {
+    .group-sale-list .col-left .dataTables_length {
+        right: -195px;
+    }
+}
+
+@media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) and (max-width: 1024px) {
+    .group-sale-list .col-left .dataTables_length {
+        right: -307px;
+    }
+}
+@media (min-width: 1200px) {
+    .sort-type{
+            float: right !important;
+            margin-right: 217px !important;
+            margin-top: -40px !important;
+    }
+}
+@media (min-width: 1400px) {
+    .sort-type{
+            float: right !important;
+            margin-right: 115px !important;
+            margin-top: -40px !important;
+    }
+}
+
+@media (min-width: 1100px) {
+    .sort-type{
+            float: right !important;
+            margin-right: 255px !important;
+            margin-top: -40px !important;
+    }
+}
+
+@media (max-width: 1520px) and (min-width: 1500px) {
+    select {
+        padding: 0 2px;
+    }
+}
+@media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) { /*IE*/
+     /* IE10+ CSS styles go here */
+     div.col-left{
+         margin-right:0;
+     }
+}
+
+.group_name, .cell_left{
+    max-width:190px;
+}
+
+.location-name{
+    max-width:60%;
+}

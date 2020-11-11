@@ -1,0 +1,269 @@
+﻿@using ProjectManagementSystem.Resources;
+@using ProjectManagementSystem.Common
+
+@model ProjectManagementSystem.ViewModels.PMS07001.PMS07001EditViewModel
+
+@{
+    ViewBag.Title = "消費税率登録";
+}
+
+<section class="content-header">
+    <h1>
+        @ViewBag.Title
+    </h1>
+</section>
+<div class="content clearfix consumptionTax-regist">
+    @using (Html.BeginForm("EditConsumptionTax", "PMS07001", FormMethod.Post, new { id = "frmEdit", @class = "form-horizontal" }))
+    {
+        <div id="title"></div>
+        @Html.ValidationSummary(false)
+
+        <div class="form-group">
+            <label class="col-sm-2 control-label bold" for="apply_start_date">適用開始日<span class="RequiredField">*</span></label>
+            <div class="date datepicker-days col-sm-10">
+                @Html.TextBox(m => m.ConsumptionTaxInfo.apply_start_date, "{0:yyyy/MM/dd}", new { @class = "ime-mode", maxlength = 10, @placeholder = "YYYY/MM/DD" })
+                <button type="button" class="btn light"><i class="btn-icon btn-calendar"></i></button>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-2 control-label bold" for="tax_rate">消費税率<span class="RequiredField">*</span></label>
+            <div class="col-sm-1">
+                @Html.TextBoxFor(m => m.ConsumptionTaxInfo.tax_rate, new { @class = "form-control right numeric", maxlength = 3 })
+            </div>
+            <label class="col-sm-1 control-label percent-sign">%</label>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(m => m.ConsumptionTaxInfo.remarks, new { @class = "col-sm-2 control-label bold" })
+            <div class="col-sm-4">
+                @Html.TextAreaFor(m => m.ConsumptionTaxInfo.remarks, new { @class = "form-control candy-textArea", maxlength = 200, rows = 5 })
+                <input type="hidden" class="set-max-width" />
+            </div>
+        </div>
+
+        <div id="updateTime">
+            <div class="form-group">
+                @Html.LabelFor(m => m.ConsumptionTaxInfo.ins_date, new { @class = "col-sm-2 control-label bold" })
+                <div class="col-sm-4">
+                    <label class="control-label" id="insDate">
+                        @{
+        string ins_date = !string.IsNullOrEmpty(@Model.ConsumptionTaxInfo.ins_date.ToString()) ? Model.ConsumptionTaxInfo.ins_date.Value.ToString("yyyy/MM/dd HH:mm") : "";
+                        }
+                        @ins_date
+                    </label>
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(m => m.ConsumptionTaxInfo.ins_user, new { @class = "col-sm-2 control-label bold" })
+                <div class="col-sm-8">
+                    <label class="control-label" id="insUser">@Model.ConsumptionTaxInfo.ins_user</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group btn-group-edit col-sm-12">
+            @Html.AntiForgeryToken()
+            @Html.Hidden("ConsumptionTaxInfo.old_apply_start_date", (@Model.ConsumptionTaxInfo.apply_start_date.HasValue ? @Model.ConsumptionTaxInfo.apply_start_date.Value.ToString("yyyy/MM/dd") : ""))
+
+            <button type="button" id="btnBack" name="Back" class="btn light btnNoStyleDisable"><i class="btn-icon btn-back"></i>戻る</button>
+            <button type="button" id="btnSubmit" class="btn green"><i class="btn-icon btn-regist"></i> 登録</button>
+        </div>
+    }
+</div>
+
+
+<script type="text/javascript">
+    var maxWidth =$(".set-max-width").css("max-width").slice(0, $(".set-max-width").css("max-width").length - 2); // set max-width of textarea
+    $(document).ready(function () {
+        PMS.utility.imeControl($("#ConsumptionTaxInfo_remarks"), 'active');
+        PMS.utility.imeControl($("#ConsumptionTaxInfo_tax_rate"), 'disable');
+        PMS.utility.focusTextbox();
+
+        $(".content-wrapper").addClass("content-edit-wrapper");
+
+        if ($('#ConsumptionTaxInfo_old_apply_start_date').val() === '') {
+            $('#updateTime').hide();
+        }
+
+        // get max-width of textarea when resize manu bar left
+        window.addEventListener('resize', function (event) {
+            maxWidth = $(".set-max-width").css("max-width").slice(0, $(".set-max-width").css("max-width").length - 2);
+            //handle change textare when resize menu bar left
+            if ($('body').hasClass('sidebar-collapse') === true) {
+                // case close when page first load
+                $(".candy-textArea").css("max-width",(parseInt(maxWidth,10) + 115)+ "px");
+            }
+            else{
+                $(".candy-textArea").css("max-width",parseInt(maxWidth,10)+ "px");
+            }
+        });
+        //end get max-width of textarea when resize manu bar left
+
+    });
+
+    var Constant = {
+        APPLY_START_DATE: '適用開始日',
+        TAX_RATE: '消費税率',
+        REMARK: '備考',
+        ERR_REQUIRED: 'は必須項目です。',
+        ERR_STRING_LENGTH: '{0}は{1}文字以内で入力してください。',
+        MAX_TAX_RATE_LENGTH: 3,
+        MAX_REMARK_LENGTH: 200
+    };
+
+    //handle change textare when resize menu bar left
+    if ($('body').hasClass('sidebar-collapse') === true) {
+        // case close when page first load
+        $(".candy-textArea").css("max-width",(parseInt(maxWidth,10) + 115)+ "px");
+    }
+    $(document).off('a.sidebar-toggle i');
+    $(document).on('click', 'a.sidebar-toggle i', function () {
+        if ($('body').hasClass('sidebar-collapse') === true) {
+            // close
+            $(".candy-textArea").css("max-width",(parseInt(maxWidth,10) + 115)+ "px");
+        } else {
+            // open
+            $(".candy-textArea").css("max-width",(parseInt($(".candy-textArea").css("max-width").slice(0, $(".candy-textArea").css("max-width").length - 2),10) - 115)+ "px");
+        }
+    });
+    //end handle change textare when resize menu bar left
+
+    function validApplyStartDate(newData, oldData) {
+        if (newData == oldData)
+            return true;
+
+        var param = { applyStartDate: newData };
+        var count = PMS.utility.getDataByAjax('/PMS07001/CountConsumptionTax', param);
+
+        if (parseInt(count) > 0)
+            return false;
+
+        return true;
+    }
+
+    function validateData() {
+        var invalidMess = [];
+        var applyStartDate = $('#ConsumptionTaxInfo_apply_start_date').val();
+        var invalidApplyStartDate = false;
+
+        if (applyStartDate.length === 0) {
+            invalidMess.push(Constant.APPLY_START_DATE + Constant.ERR_REQUIRED);
+            invalidApplyStartDate = true;
+        } else {
+            var errInvalid = PMS.utility.validDate(applyStartDate, 'yyyy/mm/dd', Constant.APPLY_START_DATE);
+
+            if (errInvalid != null) {
+                invalidMess.push(errInvalid);
+                invalidApplyStartDate = true;
+            } else if (!validApplyStartDate($('#ConsumptionTaxInfo_apply_start_date').val(), $('#ConsumptionTaxInfo_old_apply_start_date').val())) {
+                invalidMess.push('@string.Format(Messages.E060)');
+                invalidApplyStartDate = true;
+            }
+        }
+
+        if (invalidApplyStartDate)
+            $("label[for='apply_start_date']").addClass("label-validation-error");
+
+        var taxRate = $("#ConsumptionTaxInfo_tax_rate").val();
+        var invalidTaxRate = false;
+
+        if (taxRate.length === 0) { // required
+            invalidMess.push(Constant.TAX_RATE + Constant.ERR_REQUIRED);
+            invalidTaxRate = true;
+        }
+
+        if (taxRate.length > Constant.MAX_TAX_RATE_LENGTH) { // valid length
+            invalidMess.push(Constant.ERR_STRING_LENGTH.replace('{0}', Constant.TAX_RATE).replace('{1}', Constant.MAX_TAX_RATE_LENGTH));
+            invalidTaxRate = true;
+        }
+
+        if (invalidTaxRate)
+            $("label[for='tax_rate']").addClass("label-validation-error");
+
+        if ($("#ConsumptionTaxInfo_remarks").val().length > 200) {
+            invalidMess.push(Constant.ERR_STRING_LENGTH.replace('{0}', Constant.REMARK).replace('{1}', Constant.MAX_REMARK_LENGTH));
+            $("label[for='ConsumptionTaxInfo_remarks']").addClass("label-validation-error");
+        }
+
+        return invalidMess;
+    }
+
+    // Submit register form
+    $('button#btnSubmit').click(function () {
+        PMS.utility.removeValidationError();
+
+        var invalidMess = validateData();
+
+        if (invalidMess.length > 0) {
+            PMS.utility.showClientError(invalidMess);
+            return false;
+        }
+
+        PMS.utility.IsAuthenticateTimeout('@string.Format(Messages.I006)', '#frmEdit');
+    });
+
+    $("#frmEdit").submit(function (e) {
+        var formData = new FormData(this);
+
+        $.ajax({
+            url: $(this).attr("action"),
+            type: 'POST',
+            data: formData,
+            mimeType: "multipart/form-data",
+            contentType: false,
+            cache: false,
+            processData: false,
+            success: function (response) {
+                var data = JSON.parse(response);
+                BootstrapDialog.closeAll();
+                if (data.statusCode == 201) { // update success
+                    $("#frmEdit").css('visibility', 'hidden');
+                    PMS.utility.showMessageDialog(PMS.utility.htmlDecode('@Constant.DialogType.INFORMATION'), data.message, null, null, function () {
+                        $('#ConsumptionTaxInfo_old_apply_start_date').val(data.apply_start_date);
+                        if (data.insDate != null && data.insDate.length > 0) {
+                            $('#insDate').text(data.insDate);
+                        }
+                        if (data.insUser != null && data.insUser.length > 0) {
+                            $('#insUser').text(data.insUser);
+                        }
+                        $('#updateTime').show();
+                        $("#frmEdit").css('visibility', 'initial');
+                    });
+                }
+
+                if (data.statusCode == 500) { // Exception
+                    $("#frmEdit").css('visibility', 'hidden');
+                    PMS.utility.showMessageDialog(PMS.utility.htmlDecode('@Constant.DialogType.WARNING'), data.message, '/PMS07001');
+                }
+
+                if (typeof (data.ErrorMessages) !== 'undefined') // invalid data
+                    PMS.utility.showClientError(data.ErrorMessages);
+            },
+            error: function (error) {
+                if (error.status == 419) //419: Authentication Timeout
+                {
+                    $("#frmEdit").css('visibility', 'hidden');
+                    window.location.href = '/PMS01001/Login/timeout';
+                }
+            }
+        });
+
+        e.preventDefault(); // prevent Default action
+    });
+
+    $(document).off('#btnBack');
+    $(document).on('click', '#btnBack', function () {
+        $.ajax({
+            type: "POST",
+            url: '/Common/SetButtonBackSession',
+            dataType: 'json',
+            data: null,
+            success: function () {
+                window.location.href = "/PMS07001";
+            },
+            error: function (error) {
+            }
+        });
+    });
+</script>

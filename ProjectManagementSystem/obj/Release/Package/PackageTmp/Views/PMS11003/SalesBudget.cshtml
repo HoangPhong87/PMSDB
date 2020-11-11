@@ -1,0 +1,1086 @@
+﻿@model ProjectManagementSystem.ViewModels.PMS11003.PMS11003ListViewModel
+@using ProjectManagementSystem.Resources;
+@using ProjectManagementSystem.Common;
+
+@{
+    ViewBag.Title = "所属別予実一覧（売上予実）";
+    var currentUser = HttpContext.Current.Session[Constant.SESSION_LOGIN_USER] as LoginUser;
+}
+
+@Scripts.Render("~/bundles/dragOn")
+@Scripts.Render("~/bundles/loadingPlugin")
+<div id="onloadDivSales">
+</div>
+<section class="content-header" id="actualWorkList">
+    <h1 id="title">
+        @ViewBag.Title
+    </h1>
+    <div class="search-form">
+        <div class="search-condition clearfix">
+            <div class="row-margin-bottom selectboxBlock">
+                <input type="hidden" id="TimeStartDefault" value="@Model.TimeStart" />
+                <input type="hidden" id="TimeEndDefault" value="@Model.TimeEnd" />
+                <div class="group-1 row-2">
+                    <label class="width-100">期間</label>
+                    <span class="date datepicker-months from-date">
+                        @Html.TextBox(m => m.TimeStart, "{0:yyyy/MM}", new { @class = "ime-mode pick-time", maxlength = 7, @placeholder = "YYYY/MM" })
+                        <button class="btn light"><i class="btn-icon btn-calendar"></i></button>
+                    </span>
+                    <span class="date-range-space">～</span>
+                    <span class="date datepicker-months to-date">
+                        @Html.TextBox(m => m.TimeEnd, "{0:yyyy/MM}", new { @class = "ime-mode pick-time", maxlength = 7, @placeholder = "YYYY/MM" })
+                        <button class="btn light"><i class="btn-icon btn-calendar"></i></button>
+                    </span>
+                </div>
+                <br />
+                <label class="width-100 lbl-auto">所属</label>
+                @Html.DropDownListFor(m => m.Condition.GroupId, Model.GroupListToSearch, new { @multiple = "multiple", @class = "selectbox" })
+                <label class="width-100 lbl-auto">契約種別</label>
+                @Html.DropDownListFor(m => m.Condition.ContractTypeId, Model.ContractTypeListToSearch, new { @multiple = "multiple", @class = "selectbox" })
+
+                <label class="bold include-delete">
+                    @Html.CheckBox("Include_SalesType", new { @class = "condition_chkbox" })
+                    見込み含む
+                </label>
+            </div>
+        </div>
+        <div class="right search-action">
+            <button type="button" id="btnSearch" name="btnSearch" class="btn dark btn-search-mg"><i class="btn-icon btn-search"></i>検索</button>
+            <button type="button" id="btnClear" name="btnClear" class="btn light"><i class="btn-icon btn-clear"></i>クリア</button>
+        </div>
+    </div>
+</section>
+
+@RenderPage("~/Views/Shared/ShowHideHeaderContent.cshtml")
+
+<input type="hidden" id="hdnMode" value="Sales" />
+<div class="budget-setting content data-list clearfix ">
+    <div class="row">
+        <div class="row-margin-bottom selectboxBlock">
+            <button type="button" id="btnSwitch" name="btnSwitch" class="btn light btnNoStyleDisable">表示切替</button>
+            <button type="button" id="btnDownload" name="btnDownload" class="btn dark btn-left"><i class="btn-icon btn-output-csv"></i>Excel出力</button>
+        </div>
+    </div>
+</div>
+
+<div class="none-data hidden_tr budget-setting">該当データはありません。</div>
+<div class="budget-setting data-list content clearfix main-table">
+        <div id="leftContainer" class="div-left">
+            <table class="tbl-left">
+                <thead>
+                    <tr>
+                        <th rowspan="2" class="diagonalHead">
+                            <div class="groupHeader">所属</div>@*Group*@
+                            <div class="ctHeader">契約種別</div>@*Contract Type*@
+                        </th> @*Group name*@
+                        <th colspan="3" id="allCompanyHeader" class="clear-border-right">全社</th> @*all company*@
+                    </tr>
+                    <tr class="row-header">
+                        <th>予算</th> @*Budget*@
+                        <th class="clear-border-right">実績</th> @*actual*@
+                        <th>達成率</th> @*target rate*@
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+        <div class="div-right">
+            <table class="tbl-right header" id="tbl-right">
+                <thead>
+
+                </thead>
+                <tbody id="loaddata"></tbody>
+            </table>
+
+        </div>
+</div>
+
+<form action='@Url.Action("DownloadXlsxFileSales", "PMS11003")' method="POST" style="display:none;" id="frmDownloadXlsx">
+    <input id="search_group" name="GroupId" type="hidden" value="@Model.Condition.GroupId">
+    <input id="search_contractType" name="ContractTypeId" type="hidden" value="@Model.Condition.ContractTypeId">
+    <input id="search_sales_type" name="checkSalesType" type="hidden" value="0">
+    <input id="timeStart" name="timeStart" type="hidden">
+    <input id="timeEnd" name="timeEnd" type="hidden">
+    <input id="tabId" name="tabId" type="hidden" />
+</form>
+
+<script type="text/javascript" charset="utf-8">
+    var currentYear = undefined;
+    var dataSaleBudget = null;
+    var timeList = null;
+    var contractTypeList = null;
+    var groupList = null;
+    $(function () {
+        var uniqueId = "@Guid.NewGuid().ToString()";
+        $("#tabId").val(uniqueId);
+        SetEventBeforeUnloadOfSalesBudgetScreen();
+        LoadOldValueOfControls();
+        $('.div-right').dragOn({ easing: false });
+        saveDataCondition();
+        BindData();
+        function BudgetSettingObjet(target_month, target_year, contract_type_id, group_id, sales, profit) {
+            this.target_month = target_month,
+            this.target_year = target_year,
+            this.group_id = group_id,
+            this.contract_type_id = contract_type_id,
+            this.sales_budget = sales,
+            this.profit_budget = profit
+        }
+        function TimeList(target_year, target_month) {
+            this.target_month = target_month;
+            this.target_year = target_year;
+        }
+        function BindData() {
+            var dataToSend = JSON.stringify({
+                GroupId: $('#search_group').val(),
+                ContractTypeId: $("#search_contractType").val(),
+                timeStart: $('#TimeStart').val(),
+                timeEnd: $('#TimeEnd').val(),
+                checkSalesType: $('#search_sales_type').val(),
+                tabID: $("#tabId").val()
+            });
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("SearchSalesBudget", "PMS11003")',
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                data: dataToSend,
+                mimeType: "multipart/form-data",
+                cache: false,
+                processData: false,
+                error: function (err) {
+                    if (err.status == 419) { //419: Authentication Timeout
+                        window.location.href = '/PMS01001/Login/timeout';
+                    } else if (err.status == 420) { // out of date license
+                        window.location.href = '/ErrorOutOfDate';
+                    }
+                    else {
+                        window.location.href = '/Error';
+                    }
+                },
+                success: function (data) {
+                    dataSaleBudget = data.DataSalesBudget;
+                    timeList = data.TimeList;
+                    contractTypeList = data.ContractTypeList;
+                    groupList = data.GroupList;
+                    if (data.DataSalesBudget.length == 0 || data.TimeList.length == 0 || data.ContractTypeList.length == 0) {
+                        $('#btnDownload').addClass('disabled').attr('disabled', 'disabled');
+                    }
+                    else {
+                        $('#btnDownload').removeClass('disabled').removeAttr('disabled');
+                    }
+                    var htmlLeft = '';
+                    var htmlLeftHeader = '';
+                    var htmlRightHeader = '';
+                    var htmlRightContent = '';
+
+                    if (data.DataSalesBudget.length > 0) {
+                        htmlLeftHeader += '<th>予算</th>';@*Budget at right Site *@
+                        htmlLeftHeader += '<th>実績</th>';@*Actual at right Site *@
+                        htmlLeftHeader += '<th class="targetRate max-width-31">達成率</th>';
+                        $('.row-header').empty();
+                        $('.row-header').append(htmlLeftHeader);
+                        $('#allCompanyHeader').attr('colspan', '3');
+                        $(".none-data").addClass('hidden_tr');
+                        $(".main-table").removeClass('hidden_tr');
+                        htmlLeft += '<tr class="tr-total-all-year number-budget">';
+                        htmlLeft += '<td class="left-title-text">合計</td>'; // Total all year
+                        htmlLeft += '<td class="number-budget budget-total-all-year max-width-120 short-text text-overflow" title="-">-</td>'; //Total all year of Budget
+                        htmlLeft += '<td class="number-budget sales-total-all-year max-width-120 short-text text-overflow" title="-">-</td>';//Total all year of Actual
+                        htmlLeft += '<td class="number-budget profit-total-all-year max-width-31 short-text text-overflow" title="-">-</td>';//Total all year of target rate
+
+                        htmlLeft += '</tr>';
+                        if (data.TimeList != null && data.TimeList.length > 0) {
+                            if (data.ContractTypeList != null && data.ContractTypeList.length > 0) {
+                                for (var i = 0; i < data.TimeList.length; i++) {
+                                    htmlLeft += ' <tr class="tr-month left-title-text" month="'+i+'"><td colspan="4" class="clear-border-right">' + data.TimeList[i].year + '年' + data.TimeList[i].month + '月' + '</td></tr>';
+                                    for (var j = 0; j < data.ContractTypeList.length; j++) {
+                                        var ct = data.ContractTypeList[j].contract_type;
+                                        htmlLeft += '<tr class="paint-tr-left trClass-'+i+'" id="'+i+'"><td class="left-title-text max-width-120 short-text text-overflow" title="' + ct + '">' + ct + '</td>'; //max-width-120 short-text and text-overflow are these class to short text
+                                        htmlLeft += '<td class="number-budget max-width-120 short-text text-overflow year-' + data.TimeList[i].year + ' month-' + data.TimeList[i].month + ' ctId-' + data.ContractTypeList[j].contract_type_id + ' budget-total-ct" CtIDAttr="' + data.ContractTypeList[j].contract_type_id + '" Year="' + data.TimeList[i].year + '" Month="' + data.TimeList[i].month + '" title="-">-</td>';//Number of Budget left site
+                                        htmlLeft += '<td class="number-budget max-width-120 short-text text-overflow clear-border-right year-' + data.TimeList[i].year + ' month-' + data.TimeList[i].month + ' ctId-' + data.ContractTypeList[j].contract_type_id + ' sales-total-ct" title="-">-</td>';//Number of Actual left site
+                                        htmlLeft += '<td class="max-width-31 clear-border-right text-align-right text-overflow year-' + data.TimeList[i].year + ' month-' + data.TimeList[i].month + ' ctId-' + data.ContractTypeList[j].contract_type_id + ' profit-total-ct" title="hide">hide</td></tr>';//Target Rate
+                                    }
+                                    htmlLeft += '<tr class="total-month number-budget"><td class="left-title-text">小計</td>';
+                                    htmlLeft += '<td class="max-width-120 short-text text-overflow number-budget year-' + data.TimeList[i].year + ' month-' + data.TimeList[i].month + ' budget-total-left"></td>'; //Total left of Budget
+                                    htmlLeft += '<td class="max-width-120 short-text text-overflow clear-border-right number-budget year-' + data.TimeList[i].year + ' month-' + data.TimeList[i].month + ' sales-total-left"></td>';//Total left of Budget Profit
+                                    htmlLeft += '<td class="max-width-31 clear-border-right text-align-right text-overflow year-' + data.TimeList[i].year + ' month-' + data.TimeList[i].month + ' profit-total-left"></td></tr>';//Target Rate
+                                } // end html Left
+                            }
+                        }
+                        // header right
+                        if (data.GroupList != null && data.GroupList.length > 0) {
+                            htmlRightHeader += '<tr>';
+                            for (var i = 0; i < data.GroupList.length; i++) {
+                                var gr = data.GroupList[i].display_name;
+                                htmlRightHeader += '<th colspan="3" class="max-width-240 short-text text-overflow" title="' + gr + '">' + gr + '</th>'; //short-text and text-overflow are these class to short text
+
+                            }
+                            htmlRightHeader += '</tr>';
+                            htmlRightHeader += '<tr>';
+                            for (var i = 0; i < data.GroupList.length; i++) {
+                                htmlRightHeader += '<th>予算</th>';@*Budget at right Site *@
+                                htmlRightHeader += '<th>実績</th>';@*Actual at right Site *@
+                                htmlRightHeader += '<th class="targetRate max-width-31">達成率</th>';@*Actual at right Site *@
+                            }
+                            htmlRightHeader += '</tr>';
+
+                            // content
+                            htmlRightContent += '<tr class="tr-total-all-year">'; //total all year
+                            for (var i = 0; i < data.GroupList.length; i++) {
+                                htmlRightContent += '<td><div class="number-budget groupID-' + data.GroupList[i].group_id + ' budget-group-total-year" title="-">-</div></td>'; //number of budget total at right Site
+                                htmlRightContent += '<td><div class="number-budget groupID-' + data.GroupList[i].group_id + ' sales-group-total-year" title="-">-</div></td>'; //number of Actual total at right Site
+                                htmlRightContent += '<td class="targetRate text-align-right"><div class="text-align-right groupID-' + data.GroupList[i].group_id + ' profit-group-total-year" title="-">-</div></td>'; //number of Target Rate at right Site
+                            }
+                            htmlRightContent += '</tr>';
+                            if (data.TimeList != null && data.TimeList.length > 0) {
+                                var conlspanCount = data.GroupList.length * 3;
+                                for (var i = 0 ; i < data.TimeList.length; i++) {
+                                    htmlRightContent += '<tr class="tr-month left-title-text"><td colspan=' + conlspanCount + ' class="clear-border-left"></td></tr>';
+                                    if (data.ContractTypeList != null && data.ContractTypeList.length > 0) {
+                                        for (var j = 0; j < data.ContractTypeList.length; j++) {
+                                            htmlRightContent += '<tr  id="' + i + '" class="paint-tr-right trClassRight-' + i + ' input-budget number-budget budget-month-wraper budget-eachGr month-' + data.TimeList[i].month + ' year-' + data.TimeList[i].year + ' ctId-' + data.ContractTypeList[j].contract_type_id + '">';
+                                            if (data.GroupList.length > 0) {
+                                                for (var k = 0; k < data.GroupList.length; k++) {
+                                                    //not data budget
+                                                    var name = data.TimeList[i].month + "," + data.TimeList[i].year + "," + data.ContractTypeList[j].contract_type_id + "," + data.GroupList[k].group_id;
+                                                    htmlRightContent += '<td month = ' + data.TimeList[i].month + ' year = ' + data.TimeList[i].year + ' contract_type_id= ' + data.ContractTypeList[j].contract_type_id + ' group_id = ' + data.GroupList[k].group_id + ' class="sales budget text-align-right">';
+                                                    htmlRightContent += '<span class="data-budget fill-budget-' + data.TimeList[i].month + '-' + data.TimeList[i].year + '-' + data.ContractTypeList[j].contract_type_id + '-' + data.GroupList[k].group_id + ' budget-value" title="-">-</span>' //Budget (indexing monthIndex-? and groupIndex-?)
+                                                    htmlRightContent += '</td>';
+
+                                                    htmlRightContent += '<td month = ' + data.TimeList[i].month + ' year = ' + data.TimeList[i].year + ' contract_type_id= ' + data.ContractTypeList[j].contract_type_id + ' group_id = ' + data.GroupList[k].group_id + ' class="profit budget text-align-right">';
+                                                    htmlRightContent += '<span class="data-budget fill-sales-' + data.TimeList[i].month + '-' + data.TimeList[i].year + '-' + data.ContractTypeList[j].contract_type_id + '-' + data.GroupList[k].group_id + ' sales-value" title="-">-</span>';//Actual (indexing monthIndex-? and groupIndex-?)
+                                                    htmlRightContent += '</td>';
+
+                                                    htmlRightContent += '<td class="targetRate text-align-right">';
+                                                    htmlRightContent += '<span class="data-budget fill-profit-' + data.TimeList[i].month + '-' + data.TimeList[i].year + '-' + data.ContractTypeList[j].contract_type_id + '-' + data.GroupList[k].group_id + ' profit-value" title="-">-</span>';//Target Rate (indexing monthIndex-? and groupIndex-?)
+                                                    htmlRightContent += '</td>';
+                                                }
+                                            }
+                                            htmlRightContent += '</tr>';
+                                        }
+                                        htmlRightContent += '<tr class="total-month number-budget">';
+                                        if (data.GroupList.length > 0) {
+                                            for (var k = 0; k < data.GroupList.length; k++) {
+                                                htmlRightContent += '<td><div class="number-budget year-' + data.TimeList[i].year + ' month-' + data.TimeList[i].month + ' grId-' + data.GroupList[k].group_id + ' budget-total-group" title="-">-</div></td>'; //Budget total each month (indexing monthIndex-? and groupIndex-?)
+                                                htmlRightContent += '<td><div class="number-budget year-' + data.TimeList[i].year + ' month-' + data.TimeList[i].month + ' grId-' + data.GroupList[k].group_id + ' sales-total-group" title="-">-</div></td>'; //Actual sales total each month (indexing monthIndex-? and groupIndex-?)
+                                                htmlRightContent += '<td class="targetRate text-align-right"><div class="year-' + data.TimeList[i].year + ' month-' + data.TimeList[i].month + ' grId-' + data.GroupList[k].group_id + ' profit-total-group" title="-">-</div></td>'; //target rate total each month (indexing monthIndex-? and groupIndex-?)
+                                            }
+                                        }
+                                        htmlRightContent += '</tr>';
+                                    }
+                                }
+                            }
+                        }
+
+                        $('.div-left .tbl-left tbody').empty().append(htmlLeft);
+                        $('.div-right .tbl-right thead').empty().append(htmlRightHeader);
+                        $('.div-right .tbl-right tbody').empty().append(htmlRightContent);
+                        $("p.data-budget").attr('id', '');
+                        BindingInputData(data);
+                        Counting(data);
+                        HideRedundantCt();
+                    }
+                    else {
+                        $(".none-data").removeClass('hidden_tr');
+                        $(".main-table").addClass('hidden_tr');
+                    }
+
+                    $("#onloadDivSales").hide();
+                    $('.pace.pace-active').addClass('pace-inactive').removeClass('pace-active');
+                    $('#btnSearch').removeAttr('disabled');
+                    $('#btnSwitch').removeAttr('disabled');
+                }
+            });
+
+        }
+
+        function saveDataCondition() {
+            $("#search_group").val($("#Condition_GroupId").val());
+            $("#search_contractType").val($("#Condition_ContractTypeId").val());
+            $("#timeStart").val($("#TimeStart").val());
+            $("#timeEnd").val($("#TimeEnd").val());
+            if ($("#Include_SalesType").is(':checked')) {
+                $("#search_sales_type").val("1");
+            }
+            else {
+                $("#search_sales_type").val("0");
+            }
+        }
+
+        function searchBudgetSetting() {
+            saveDataCondition();
+            var $contractType = $("#Condition_ContractTypeId");
+
+            if ($contractType.val() != null && $contractType.find('option').length == $contractType.val().length) {
+                $contractType.val('');
+            }
+            var $group = $("#Condition_GroupId");
+            if ($group.val() != null && $group.find('option').length == $group.val().length) {
+                $group.val('');
+            }
+            if ($("#hdnMode").val() == "Profit") {
+                BindDataProfit();
+            }
+            else if ($("#hdnMode").val() == "Sales") {
+                BindData();
+            }
+            $('#btnSearch').attr('disabled', 'disabled');
+        }
+
+        $("button#btnSearch").click(function () {
+            $('.validation-summary-errors').remove();
+            var invalidMess = [];
+            var fromDate = $('#TimeStart').val();
+            var toDate = $('#TimeEnd').val();
+            var errFromDate = PMS.utility.validDate(fromDate, 'yyyy/mm', '期間（開始）');
+            var errToDate = PMS.utility.validDate(toDate, 'yyyy/mm', '期間（終了）');
+            if (errFromDate != null)
+                invalidMess.push(errFromDate);
+
+            if (errToDate != null)
+                invalidMess.push(errToDate);
+
+            if (errFromDate == null && errToDate == null && fromDate.length > 0 && toDate.length > 0) {
+                // compare date
+                if (!PMS.utility.compareDate(fromDate, toDate, 'yyyy/mm'))
+                    invalidMess.push('@string.Format(Messages.E027)');
+
+                // valid max duration time
+                if (!PMS.utility.compareDateRange(fromDate, toDate, 11))
+                    invalidMess.push('@Messages.E030');
+            }
+
+            if (invalidMess.length > 0) {
+                PMS.utility.showClientError(invalidMess);
+                return false;
+            }
+
+            $('.pace.pace-inactive').addClass('pace-active').removeClass('pace-inactive');
+            $("#onloadDivSales").show(function () {
+                searchBudgetSetting();
+            });
+        });
+
+        $("button#btnClear").click(function () {
+            $("#Condition_GroupId").val("");
+            $("#Condition_ContractTypeId").val("");
+            $("#TimeStart").val($('#TimeStartDefault').val());
+            $("#TimeEnd").val($('#TimeEndDefault').val());
+            $("#Include_SalesType").prop('checked', false);
+        });
+
+        function convertIntToMoney(input) {
+            if (input != null) {
+                return input.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+            }
+            else return null;
+        }
+        //Binding Input data
+        function BindingInputData(data) {
+            if (data.DataSalesBudget != null && data.DataSalesBudget.length > 0) {
+                for (i = 0 ; i < data.DataSalesBudget.length; i++) {
+                    var eachData = data.DataSalesBudget[i];
+                    var eachGroup = eachData.group_id;
+                    var eachCt = eachData.contract_type_id;
+                    var eachMonth = eachData.target_month;
+                    var eachYear = eachData.target_year;
+                    var eachBudget = eachData.sales_budget;
+                    var eachSales = eachData.sales_actuals;
+                    var eachProfit = eachData.profit;
+                    $('.budget-value.fill-budget-' + eachMonth + '-' + eachYear + '-' + eachCt + '-' + eachGroup).html(convertIntToMoney(eachBudget) != null ? convertIntToMoney(eachBudget) + "円" : "");
+                    $('.budget-value.fill-budget-' + eachMonth + '-' + eachYear + '-' + eachCt + '-' + eachGroup).attr("title", convertIntToMoney(eachBudget) != null ? convertIntToMoney(eachBudget) + "円" : "");
+                    $('.sales-value.fill-sales-' + eachMonth + '-' + eachYear + '-' + eachCt + '-' + eachGroup).html(convertIntToMoney(eachSales) != null ? convertIntToMoney(eachSales) + "円" : "");
+                    $('.sales-value.fill-sales-' + eachMonth + '-' + eachYear + '-' + eachCt + '-' + eachGroup).attr("title", convertIntToMoney(eachSales) != null ? convertIntToMoney(eachSales) + "円" : "");
+                    if (parseFloat(eachProfit) >= 0) {
+                        eachProfit = (eachSales / eachBudget) * 100;
+                    }
+                    $('.profit-value.fill-profit-' + eachMonth + '-' + eachYear + '-' + eachCt + '-' + eachGroup).html(parseFloat(eachProfit) >= 0 ? parseFloat(eachProfit).toFixed(2) + "%" : "-");
+                    $('.profit-value.fill-profit-' + eachMonth + '-' + eachYear + '-' + eachCt + '-' + eachGroup).attr("title", parseFloat(eachProfit) >= 0 ? parseFloat(eachProfit).toFixed(2) + "%" : "-");
+                }
+            }
+        }
+
+        //couting cell budget data by each group
+        function TotalGroup(data) {
+            if (data.TotalGroup != null && data.TotalGroup.length > 0) {
+                for (i = 0 ; i < data.TotalGroup.length; i++) {
+                    var eachData = data.TotalGroup[i];
+                    var eachGroup = eachData.group_id;
+                    var eachMonth = eachData.target_month;
+                    var eachYear = eachData.target_year;
+                    var eachBudget = eachData.tgrBudget;
+                    var eachSales = eachData.tgrSales;
+                    var eachProfit = eachData.tgrProfit;
+                    $('.budget-total-group.month-' + eachMonth + '.year-' + eachYear + '.grId-' + eachGroup).html(convertIntToMoney(eachBudget) != null ? convertIntToMoney(eachBudget) + "円" : "");
+                    $('.budget-total-group.month-' + eachMonth + '.year-' + eachYear + '.grId-' + eachGroup).attr("title", convertIntToMoney(eachBudget) != null ? convertIntToMoney(eachBudget) + "円" : "");
+                    $('.sales-total-group.month-' + eachMonth + '.year-' + eachYear + '.grId-' + eachGroup).html(convertIntToMoney(eachSales) != null ? convertIntToMoney(eachSales) + "円" : "");
+                    $('.sales-total-group.month-' + eachMonth + '.year-' + eachYear + '.grId-' + eachGroup).attr("title", convertIntToMoney(eachSales) != null ? convertIntToMoney(eachSales) + "円" : "");
+                    if (parseFloat(eachProfit) >= 0) {
+                        eachProfit = (eachSales / eachBudget) * 100;
+                    }
+                    $('.profit-total-group.month-' + eachMonth + '.year-' + eachYear + '.grId-' + eachGroup).html(parseFloat(eachProfit) >= 0 ? parseFloat(eachProfit).toFixed(2) + "%" : "-");
+                    $('.profit-total-group.month-' + eachMonth + '.year-' + eachYear + '.grId-' + eachGroup).attr("title", parseFloat(eachProfit) >= 0 ? parseFloat(eachProfit).toFixed(2) + "%" : "-");
+                }
+            }
+        }
+
+        //count budget and budget total of each month
+        function TotalMonth(data) {
+            if (data.TimeList != null && data.TimeList.length > 0) {
+                for (i = 0 ; i < data.TimeList.length; i++) {
+                    var eachData = data.TimeList[i];
+                    var eachMonth = eachData.month;
+                    var eachYear = eachData.year;
+                    var budget_total = 0;
+                    $('.year-' + eachYear + '.month-' + eachMonth + '.budget-total-ct').each(function () {
+                        var data = $(this).html();
+                        data = data.replace(/,/g, '').replace('円', '');
+                        budget_total += (data == null || data == "" || data == "-") ? 0 : parseInt(data);
+                    });
+                    $('.year-' + eachYear + '.month-' + eachMonth + '.budget-total-left').html(convertIntToMoney(budget_total) != null ? convertIntToMoney(budget_total) + "円" : "");
+                    $('.year-' + eachYear + '.month-' + eachMonth + '.budget-total-left').attr("title",convertIntToMoney(budget_total) != null ? convertIntToMoney(budget_total) + "円" : "");
+                    var sales_total = 0;
+                    $('.year-' + eachYear + '.month-' + eachMonth + '.sales-total-ct').each(function () {
+                        var data = $(this).html();
+                        data = data.replace(/,/g, '').replace('円', '');
+                        sales_total += (data == null || data == "" || data == "-") ? 0 : parseInt(data);
+                    });
+                    $('.year-' + eachYear + '.month-' + eachMonth + '.sales-total-left').html(convertIntToMoney(sales_total) != null ? convertIntToMoney(sales_total) + "円" : "");
+                    $('.year-' + eachYear + '.month-' + eachMonth + '.sales-total-left').attr("title", convertIntToMoney(sales_total) != null ? convertIntToMoney(sales_total) + "円" : "");
+
+                    var profit_total = budget_total > 0 ? (sales_total / budget_total) * 100 : -1;
+                    $('.year-' + eachYear + '.month-' + eachMonth + '.profit-total-left').html(profit_total >=0 ? parseFloat(profit_total).toFixed(2) + "%" : "-");
+                    $('.year-' + eachYear + '.month-' + eachMonth + '.profit-total-left').attr("title", profit_total >= 0 ? parseFloat(profit_total).toFixed(2) + "%" : "-");
+                }
+            }
+        }
+
+        //count budget and budget total of each month
+        function TotalGrAll(data) {
+            if (data.TotalGrYearList != null && data.TotalGrYearList.length > 0) {
+                for (i = 0 ; i < data.TotalGrYearList.length; i++) {
+                    var eachData = data.TotalGrYearList[i];
+                    var eachGroup = eachData.group_id;
+                    var eachBudget = eachData.tgrBudget;
+                    var eachSales = eachData.tgrSales;
+                    var eachProfit = eachData.tgrProfit;
+
+                    $('.budget-group-total-year.groupID-' + eachGroup).html(convertIntToMoney(eachBudget) != null ? convertIntToMoney(eachBudget) + "円" : "");
+                    $('.budget-group-total-year.groupID-' + eachGroup).attr("title", convertIntToMoney(eachBudget) != null ? convertIntToMoney(eachBudget) + "円" : "");
+                    
+                    $('.sales-group-total-year.groupID-' + eachGroup).html(convertIntToMoney(eachSales) != null ? convertIntToMoney(eachSales) + "円" : "");
+                    $('.sales-group-total-year.groupID-' + eachGroup).attr("title", convertIntToMoney(eachSales) != null ? convertIntToMoney(eachSales) + "円" : "");
+
+                    if (parseFloat(eachProfit) >= 0) {
+                        eachProfit = (eachSales / eachBudget) * 100;
+                    }
+                    $('.profit-group-total-year.groupID-' + eachGroup).html(parseFloat(eachProfit) >= 0 ? parseFloat(eachProfit).toFixed(2) + "%" : "-");
+                    $('.profit-group-total-year.groupID-' + eachGroup).attr("title", parseFloat(eachProfit) >= 0 ? parseFloat(eachProfit).toFixed(2) + "%" : "-");
+                }
+            }
+        }
+
+        //couting cell budget data by each contract type
+        function TotalContractType(data) {
+            if (data.TotalCT != null && data.TotalCT.length > 0) {
+                var totalCTBudgetbyMonth = 0;
+                var totalCTSalesbyMonth = 0;
+                var totalProfit = 0;
+                for (i = 0 ; i < data.TotalCT.length; i++) {
+                    var eachData = data.TotalCT[i];
+                    var eachCT = eachData.contract_type_id;
+                    var eachMonth = eachData.target_month;
+                    var eachYear = eachData.target_year;
+                    var eachBudget = eachData.tgrBudget;
+                    var eachSales = eachData.tgrSales;
+                    var eachProfit = eachData.tgrProfit;
+                    $('.budget-total-ct.month-' + eachMonth + '.year-' + eachYear + '.ctId-' + eachCT).html(convertIntToMoney(eachBudget) != null ? convertIntToMoney(eachBudget) + "円" : "");
+                    $('.budget-total-ct.month-' + eachMonth + '.year-' + eachYear + '.ctId-' + eachCT).attr("title", convertIntToMoney(eachBudget) != null ? convertIntToMoney(eachBudget) + "円" : "");
+                    totalCTBudgetbyMonth += eachBudget == null ? 0 : parseInt(eachBudget, 10);
+
+                    $('.sales-total-ct.month-' + eachMonth + '.year-' + eachYear + '.ctId-' + eachCT).html(convertIntToMoney(eachSales) != null ? convertIntToMoney(eachSales) + "円" : "");
+                    $('.sales-total-ct.month-' + eachMonth + '.year-' + eachYear + '.ctId-' + eachCT).attr("title",convertIntToMoney(eachSales) != null ? convertIntToMoney(eachSales) + "円" : "");
+                    totalCTSalesbyMonth += eachSales == null ? 0 : parseInt(eachSales, 10);
+
+                    if (parseFloat(eachProfit) >= 0) {
+                        eachProfit = (eachSales / eachBudget) * 100;
+                    }
+                    $('.profit-total-ct.month-' + eachMonth + '.year-' + eachYear + '.ctId-' + eachCT).html(parseFloat(eachProfit) >= 0 ? parseFloat(eachProfit).toFixed(2) + "%" : "-");
+                    $('.profit-total-ct.month-' + eachMonth + '.year-' + eachYear + '.ctId-' + eachCT).attr("title", parseFloat(eachProfit) >= 0 ? parseFloat(eachProfit).toFixed(2) + "%" : "-");
+                }
+                totalProfit = totalCTBudgetbyMonth > 0 ? (totalCTSalesbyMonth / totalCTBudgetbyMonth) * 100 : -1;
+                $('.budget-total-all-year').html(convertIntToMoney(totalCTBudgetbyMonth) != null ? convertIntToMoney(totalCTBudgetbyMonth) + "円" : "");
+                $('.sales-total-all-year').html(convertIntToMoney(totalCTSalesbyMonth) != null ? convertIntToMoney(totalCTSalesbyMonth) + "円" : "");
+                $('.profit-total-all-year').html(totalProfit >= 0 ? parseFloat(totalProfit).toFixed(2) + "%" : "-");
+
+                $('.budget-total-all-year').attr("title",convertIntToMoney(totalCTBudgetbyMonth) != null ? convertIntToMoney(totalCTBudgetbyMonth) + "円" : "");
+                $('.sales-total-all-year').attr("title", convertIntToMoney(totalCTSalesbyMonth) != null ? convertIntToMoney(totalCTSalesbyMonth) + "円" : "");
+                $('.profit-total-all-year').attr("title", totalProfit >= 0 ? parseFloat(totalProfit).toFixed(2) + "%" : "-");
+            }
+        }
+
+        function Counting(data) {
+            TotalContractType(data);
+            TotalGroup(data);
+            TotalMonth(data);
+            TotalGrAll(data);
+        }
+
+        function HideRedundantCt() {
+            $('.budget-total-ct').each(function () {
+                if ($(this).html() == '-' &&
+                    ($(this).parent().children('.profit-total-ct').html() == "hide"
+                    || ($(this).parent().children('.success-rate-total-ct').html() == "hide" && $(this).parent().children('.profit-rate-total-ct').html() == "hide"))) {
+                    $(this).parent('tr').addClass('hidden_tr').removeClass("paint-tr-left");
+                    var id = $(this).parent('tr').attr("id");
+                    $(this).parent('tr').removeClass("trClass-" +id + "");
+                    var ctId = $(this).attr('CtIDAttr');
+                    var year = $(this).attr('Year');
+                    var month = $(this).attr('Month');
+                    $('.budget-eachGr.ctId-' + ctId + '.year-' + year + '.month-' + month).addClass('hidden_tr').removeClass("paint-tr-right");
+                    $('.budget-eachGr.ctId-' + ctId + '.year-' + year + '.month-' + month).removeClass("trClassRight-" + id + "");
+                }
+            });
+            var listMonthStrat = new Array();
+            $('.tbl-left tbody .tr-month').each(function () {
+                if ($(this).attr("month") != 'undefined')
+                {
+                    listMonthStrat.push($(this).attr("month"));
+                }
+            });
+
+            for (var i = 0; i < listMonthStrat.length; i++) {
+                var count = 0;
+                $('.trClass-' + listMonthStrat[i] + '').each(function () {
+                    count % 2 != 0 ? $(this).addClass('even') : $(this).addClass('odd');
+                    count++;
+                });
+            }
+
+            for (var i = 0; i < listMonthStrat.length; i++) {
+                var count = 0;
+                $('.trClassRight-' + listMonthStrat[i] + '').each(function () {
+                    count % 2 != 0 ? $(this).addClass('even') : $(this).addClass('odd');
+                    count++;
+                });
+            }
+        }
+
+        $(".pick-time").on("change", function () {
+            var fromDate = $('#TimeStart').val();
+            var toDate = $('#TimeEnd').val();
+            //auto correct lack input datetime case
+            if ((fromDate === null || fromDate === "" || fromDate.length === 0)
+                && (toDate === null || toDate === "" || toDate.length === 0)) {
+                $('#TimeStart').val($('#TimeStartDefault').val());
+                $('#TimeEnd').val($('#TimeEndDefault').val());
+            }
+            else {
+                if ((fromDate === null || fromDate === "" || fromDate.length === 0)) {
+                    if (toDate.split("/")[1] == "12") {
+                        $('#TimeStart').val(toDate.split("/")[0] + "/01");
+                    }
+                    else {
+                        var monthCorrect = (parseInt(toDate.split("/")[1], 10) + 1);
+                        monthCorrect = monthCorrect < 10 ? "0" + monthCorrect : monthCorrect;
+                        var yearCorrect = (parseInt(toDate.split("/")[0], 10) - 1);
+                        $('#TimeStart').val(yearCorrect + "/" + monthCorrect);
+                    }
+                }
+                if ((toDate === null || toDate === "" || toDate.length === 0)) {
+                    if (fromDate.split("/")[1] == "1" || fromDate.split("/")[1] == "01") {
+                        $('#TimeEnd').val(fromDate.split("/")[0] + "/12");
+                    }
+                    else {
+                        var monthCorrect = (parseInt(fromDate.split("/")[1], 10) - 1);
+                        monthCorrect = monthCorrect < 10 ? "0" + monthCorrect : monthCorrect;
+                        var yearCorrect = (parseInt(fromDate.split("/")[0], 10) + 1);
+                        $('#TimeEnd').val(yearCorrect + "/" + monthCorrect);
+                    }
+                }
+            }
+
+            var year = $(this).val().split("/")[0];
+            var month = $(this).val().split("/")[1];
+            month = month.length == 1 ? "0" + month : month;
+            $(this).val(year + "/" + month);
+        });
+
+//--------------------------------------------------------------------------------------------------------- Profit_Actual
+        //Binding Input data
+        function BindDataProfit() {
+            var dataToSend = JSON.stringify({
+                GroupId: $('#search_group').val(),
+                ContractTypeId: $("#search_contractType").val(),
+                timeStart: $('#TimeStart').val(),
+                timeEnd: $('#TimeEnd').val(),
+                checkSalesType: $('#search_sales_type').val(),
+                tabID: $("#tabId").val()
+            });
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("SearchProfitBudget", "PMS11003")',
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                data: dataToSend,
+                mimeType: "multipart/form-data",
+                cache: false,
+                processData: false,
+                error: function (err) {
+                    if (err.status == 419) { //419: Authentication Timeout
+                        window.location.href = '/PMS01001/Login/timeout';
+                    } else if (err.status == 420) { // out of date license
+                        window.location.href = '/ErrorOutOfDate';
+                    }
+                    else {
+                        window.location.href = '/Error';
+                    }
+                },
+                success: function (data) {
+                    if (data.DataProfitBudget.length == 0 || data.TimeListProfit.length == 0 || data.ContractTypeListProfit.length == 0) {
+                        $('#btnDownload').addClass('disabled').attr('disabled', 'disabled');
+                    }
+                    else {
+                        $('#btnDownload').removeClass('disabled').removeAttr('disabled');
+                    }
+
+                    var htmlLeft = '';
+                    var htmlLeftHeader = '';
+                    var htmlRightHeader = '';
+                    var htmlRightContent = '';
+
+                    if (data.DataProfitBudget.length > 0) {
+                        htmlLeftHeader += '<th>予算</th>';@*Budget at right Site *@
+                        htmlLeftHeader += '<th>実績</th>';@*Actual at right Site *@
+                        htmlLeftHeader += '<th class="targetRate max-width-31">利益率</th>';@*Actual at right Site *@
+                        htmlLeftHeader += '<th class="targetRate max-width-31">達成率</th>';
+                        $('.row-header').empty();
+                        $('.row-header').append(htmlLeftHeader);
+                        $('#allCompanyHeader').attr('colspan', '4');
+                        $(".none-data").addClass('hidden_tr');
+                        $(".main-table").removeClass('hidden_tr');
+                        htmlLeft += '<tr class="tr-total-all-year number-budget">';
+                        htmlLeft += '<td class="left-title-text">合計</td>'; // Total all year
+                        htmlLeft += '<td class="number-budget profit-budget-total-all-year short-text max-width-120 text-overflow">-</td>'; //Total all year of Budget
+                        htmlLeft += '<td class="number-budget profit-actual-total-all-year short-text max-width-120 text-overflow">-</td>';//Total all year of Actual
+                        htmlLeft += '<td class="number-budget profit-rate-total-all-year short-text max-width-31 text-overflow" title="-">-</td>';//Total all year of profit rate
+                        htmlLeft += '<td class="number-budget success-rate-total-all-year short-text max-width-31 text-overflow" title="-">-</td>';//Total all year of success rate
+                        htmlLeft += '</tr>';
+                        if (data.TimeListProfit != null && data.TimeListProfit.length > 0) {
+                            if (data.ContractTypeListProfit != null && data.ContractTypeListProfit.length > 0) {
+                                for (var i = 0; i < data.TimeListProfit.length; i++) {
+                                    htmlLeft += ' <tr class="tr-month left-title-text" month="' + i + '"><td colspan="5" class="clear-border-right">' + data.TimeListProfit[i].year + '年' + data.TimeListProfit[i].month + '月' + '</td></tr>';
+                                    for (var j = 0; j < data.ContractTypeListProfit.length; j++) {
+                                        var ct = data.ContractTypeListProfit[j].contract_type;
+                                        htmlLeft += '<tr class="paint-tr-left trClass-' + i + '" id="' + i + '"><td class="left-title-text max-width-125 short-text text-overflow" title="' + ct + '">' + ct + '</td>'; //max-width-120 short-text and text-overflow are these class to short text
+                                        htmlLeft += '<td class="number-budget max-width-125 short-text text-overflow year-' + data.TimeListProfit[i].year + ' month-' + data.TimeListProfit[i].month + ' ctId-' + data.ContractTypeListProfit[j].contract_type_id + ' budget-total-ct" CtIDAttr="' + data.ContractTypeListProfit[j].contract_type_id + '" Year="' + data.TimeListProfit[i].year + '" Month="' + data.TimeListProfit[i].month + '"  title="-">-</td>';//Number of Budget left site
+                                        htmlLeft += '<td class="number-budget max-width-125 short-text text-overflow clear-border-right year-' + data.TimeListProfit[i].year + ' month-' + data.TimeListProfit[i].month + ' ctId-' + data.ContractTypeListProfit[j].contract_type_id + ' profit-actual-total-ct" title="-">-</td>';//Number of Actual left site
+                                        htmlLeft += '<td class="clear-border-right max-width-31 text-overflow text-align-right year-' + data.TimeListProfit[i].year + ' month-' + data.TimeListProfit[i].month + ' ctId-' + data.ContractTypeListProfit[j].contract_type_id + ' profit-rate-total-ct">hide</td>';//Profit Rate
+                                        htmlLeft += '<td class="clear-border-right max-width-31 text-overflow text-align-right year-' + data.TimeListProfit[i].year + ' month-' + data.TimeListProfit[i].month + ' ctId-' + data.ContractTypeListProfit[j].contract_type_id + ' success-rate-total-ct">hide</td></tr>';//Success Rate
+                                    }
+                                    htmlLeft += '<tr class="total-month number-budget"><td class="left-title-text">小計</td>';
+                                    htmlLeft += '<td class="max-width-125 short-text text-overflow number-budget year-' + data.TimeListProfit[i].year + ' month-' + data.TimeListProfit[i].month + ' profit-budget-total-left"></td>'; //Total left of Profit Budget
+                                    htmlLeft += '<td class="max-width-125 short-text text-overflow clear-border-right number-budget year-' + data.TimeListProfit[i].year + ' month-' + data.TimeListProfit[i].month + ' profit-actual-total-left"></td>';//Total left of Profit Actual
+                                    htmlLeft += '<td class="clear-border-right text-align-right max-width-31 text-overflow year-' + data.TimeListProfit[i].year + ' month-' + data.TimeListProfit[i].month + ' profit-rate-total-left"></td>';//Profit Rate
+                                    htmlLeft += '<td class="clear-border-right text-align-right max-width-31 text-overflow year-' + data.TimeListProfit[i].year + ' month-' + data.TimeListProfit[i].month + ' success-rate-total-left"></td></tr>';//Success Rate
+                                } // end html Left
+                            }
+                        }
+                        // header right
+                        if (data.GroupListProfit != null && data.GroupListProfit.length > 0) {
+                            htmlRightHeader += '<tr>';
+                            for (var i = 0; i < data.GroupListProfit.length; i++) {
+                                var gr = data.GroupListProfit[i].display_name;
+                                htmlRightHeader += '<th colspan="4" class="max-width-240 short-text text-overflow" title="' + gr + '">' + gr + '</th>'; //short-text and text-overflow are these class to short text
+
+                            }
+                            htmlRightHeader += '</tr>';
+                            htmlRightHeader += '<tr>';
+                            for (var i = 0; i < data.GroupListProfit.length; i++) {
+                                htmlRightHeader += '<th>予算</th>';@*Budget at right Site *@
+                                htmlRightHeader += '<th>実績</th>';@*Actual at right Site *@
+                                htmlRightHeader += '<th class="targetRate max-width-31">利益率</th>';@*Actual at right Site *@
+                                htmlRightHeader += '<th class="targetRate max-width-31">達成率</th>';
+                            }
+                            htmlRightHeader += '</tr>';
+
+                            // content
+                            htmlRightContent += '<tr class="tr-total-all-year">'; //total all year
+                            for (var i = 0; i < data.GroupListProfit.length; i++) {
+                                htmlRightContent += '<td><div class="number-budget groupID-' + data.GroupListProfit[i].group_id + ' profit-budget-group-total-year" title="-">-</div></td>'; //number of budget total at right Site
+                                htmlRightContent += '<td><div class="number-budget groupID-' + data.GroupListProfit[i].group_id + ' profit-actual-group-total-year" title="-">-</div></td>'; //number of Actual total at right Site
+                                htmlRightContent += '<td class="targetRate text-align-right"><div class="text-align-right groupID-' + data.GroupListProfit[i].group_id + ' profit-rate-group-total-year" title="-">-</div></td>'; //number of Profit Rate at right Site
+                                htmlRightContent += '<td class="targetRate text-align-right"><div class="text-align-right groupID-' + data.GroupListProfit[i].group_id + ' success-rate-group-total-year" title="-">-</div></td>'; //number of success Rate at right Site
+                            }
+                            htmlRightContent += '</tr>';
+                            if (data.TimeListProfit != null && data.TimeListProfit.length > 0) {
+                                var conlspanCount = data.GroupListProfit.length * 4;
+                                for (var i = 0 ; i < data.TimeListProfit.length; i++) {
+                                    htmlRightContent += '<tr class="tr-month left-title-text"><td colspan=' + conlspanCount + ' class="clear-border-left"></td></tr>';
+                                    if (data.ContractTypeListProfit != null && data.ContractTypeListProfit.length > 0) {
+                                        for (var j = 0; j < data.ContractTypeListProfit.length; j++) {
+                                            //var trClass = j % 2 == 0 ? "odd" : "even";
+                                            htmlRightContent += '<tr class="paint-tr-right trClassRight-' + i + ' input-budget number-budget budget-month-wraper budget-eachGr month-' + data.TimeListProfit[i].month + ' year-' + data.TimeListProfit[i].year + ' ctId-' + data.ContractTypeListProfit[j].contract_type_id + '">';
+                                            if (data.GroupListProfit.length > 0) {
+                                                for (var k = 0; k < data.GroupListProfit.length; k++) {
+                                                    //not data budget
+                                                    var name = data.TimeListProfit[i].month + "," + data.TimeListProfit[i].year + "," + data.ContractTypeListProfit[j].contract_type_id + "," + data.GroupListProfit[k].group_id;
+                                                    htmlRightContent += '<td month = ' + data.TimeListProfit[i].month + ' year = ' + data.TimeListProfit[i].year + ' contract_type_id= ' + data.ContractTypeListProfit[j].contract_type_id + ' group_id = ' + data.GroupListProfit[k].group_id + ' class="sales budget text-align-right">';
+                                                    htmlRightContent += '<span class="data-budget fill-profit-budget-' + data.TimeListProfit[i].month + '-' + data.TimeListProfit[i].year + '-' + data.ContractTypeListProfit[j].contract_type_id + '-' + data.GroupListProfit[k].group_id + ' profit-budget-value" title="-">-</span>' //Budget (indexing monthIndex-? and groupIndex-?)
+                                                    htmlRightContent += '</td>';
+
+                                                    htmlRightContent += '<td month = ' + data.TimeListProfit[i].month + ' year = ' + data.TimeListProfit[i].year + ' contract_type_id= ' + data.ContractTypeListProfit[j].contract_type_id + ' group_id = ' + data.GroupListProfit[k].group_id + ' class="profit budget text-align-right">';
+                                                    htmlRightContent += '<span class="data-budget fill-profit-actual-' + data.TimeListProfit[i].month + '-' + data.TimeListProfit[i].year + '-' + data.ContractTypeListProfit[j].contract_type_id + '-' + data.GroupListProfit[k].group_id + ' profit-actual-value" title="-">-</span>';//Actual (indexing monthIndex-? and groupIndex-?)
+                                                    htmlRightContent += '</td>';
+
+                                                    htmlRightContent += '<td class="targetRate text-align-right">';
+                                                    htmlRightContent += '<span class="data-budget fill-profit-rate-' + data.TimeListProfit[i].month + '-' + data.TimeListProfit[i].year + '-' + data.ContractTypeListProfit[j].contract_type_id + '-' + data.GroupListProfit[k].group_id + ' profit-rate-value" title="-">-</span>';//Profit Rate (indexing monthIndex-? and groupIndex-?)
+                                                    htmlRightContent += '</td>';
+
+                                                    htmlRightContent += '<td class="targetRate text-align-right">';
+                                                    htmlRightContent += '<span class="data-budget fill-success-rate-' + data.TimeListProfit[i].month + '-' + data.TimeListProfit[i].year + '-' + data.ContractTypeListProfit[j].contract_type_id + '-' + data.GroupListProfit[k].group_id + ' success-rate-value" title="-">-</span>';//Success Rate (indexing monthIndex-? and groupIndex-?)
+                                                    htmlRightContent += '</td>';
+                                                }
+                                            }
+                                            htmlRightContent += '</tr>';
+                                        }
+                                        htmlRightContent += '<tr class="total-month number-budget">';
+                                        if (data.GroupListProfit.length > 0) {
+                                            for (var k = 0; k < data.GroupListProfit.length; k++) {
+                                                htmlRightContent += '<td><div class="max-width-125 text-overflow number-budget year-' + data.TimeListProfit[i].year + ' month-' + data.TimeListProfit[i].month + ' grId-' + data.GroupListProfit[k].group_id + ' profit-budget-total-group" title="-">-</div></td>'; //Budget total each month (indexing monthIndex-? and groupIndex-?)
+                                                htmlRightContent += '<td><div class="max-width-125 text-overflow number-budget year-' + data.TimeListProfit[i].year + ' month-' + data.TimeListProfit[i].month + ' grId-' + data.GroupListProfit[k].group_id + ' profit-actual-total-group" title="-">-</div></td>'; //Actual sales total each month (indexing monthIndex-? and groupIndex-?)
+                                                htmlRightContent += '<td class="targetRate text-align-right"><div class="year-' + data.TimeListProfit[i].year + ' month-' + data.TimeListProfit[i].month + ' grId-' + data.GroupListProfit[k].group_id + ' profit-rate-total-group" title="-">-</div></td>'; //target rate total each month (indexing monthIndex-? and groupIndex-?)
+                                                htmlRightContent += '<td class="targetRate text-align-right"><div class="year-' + data.TimeListProfit[i].year + ' month-' + data.TimeListProfit[i].month + ' grId-' + data.GroupListProfit[k].group_id + ' success-rate-total-group" title="-">-</div></td>'; //target rate total each month (indexing monthIndex-? and groupIndex-?)
+                                            }
+                                        }
+                                        htmlRightContent += '</tr>';
+                                    }
+                                }
+                            }
+                        }
+
+                        $('.div-left .tbl-left tbody').empty().append(htmlLeft);
+                        $('.div-right .tbl-right thead').empty().append(htmlRightHeader);
+                        $('.div-right .tbl-right tbody').empty().append(htmlRightContent);
+                        $("p.data-budget").attr('id', '');
+                        BindingInputDataProfit(data);
+                        CountingProfit(data);
+                        HideRedundantCt();
+                    }
+                    else {
+                        $(".none-data").removeClass('hidden_tr');
+                        $(".main-table").addClass('hidden_tr');
+                    }
+
+                    $("#onloadDivSales").hide();
+                    $('.pace.pace-active').addClass('pace-inactive').removeClass('pace-active');
+                    $('#btnSearch').removeAttr('disabled');
+                    $('#btnSwitch').removeAttr('disabled');
+                }
+            });
+        }
+        //counting cell data by group and contractType
+        function BindingInputDataProfit(data) {
+            if (data.DataProfitBudget != null && data.DataProfitBudget.length > 0) {
+                for (i = 0 ; i < data.DataProfitBudget.length; i++) {
+                    var eachData = data.DataProfitBudget[i];
+                    var eachGroup = eachData.group_id;
+                    var eachCt = eachData.contract_type_id;
+                    var eachMonth = eachData.target_month;
+                    var eachYear = eachData.target_year;
+                    var eachProfitBudget = eachData.profit_budget;
+                    var eachProfitActual = eachData.profit_actual;
+                    var eachProfitRate = (eachData.tgrProfitRate != undefined && eachData.tgrProfitRate != "-") ? parseFloat(eachData.tgrProfitRate).toFixed(2) : "-";
+                    if (eachProfitRate == "-0.00") {
+                        eachProfitRate = "0.00";
+                    }
+                    var eachSuccessRate = (eachData.tgrSuccessRate != undefined && eachData.tgrSuccessRate != "-") ? parseFloat(eachData.tgrSuccessRate).toFixed(2) : "-";
+                    if (eachSuccessRate == "-0.00") {
+                        eachSuccessRate = "0.00";
+                    }
+                    $('.profit-budget-value.fill-profit-budget-' + eachMonth + '-' + eachYear + '-' + eachCt + '-' + eachGroup).html(convertIntToMoney(eachProfitBudget) + "円");//profit budget
+                    $('.profit-actual-value.fill-profit-actual-' + eachMonth + '-' + eachYear + '-' + eachCt + '-' + eachGroup).html(convertIntToMoney(eachProfitActual) + "円");//profit actual
+                    $('.profit-rate-value.fill-profit-rate-' + eachMonth + '-' + eachYear + '-' + eachCt + '-' + eachGroup).html(eachProfitRate != "-" ? eachProfitRate + "%" : "-");// profit-rate
+                    $('.success-rate-value.fill-success-rate-' + eachMonth + '-' + eachYear + '-' + eachCt + '-' + eachGroup).html(eachSuccessRate != "-" ? eachSuccessRate + "%" : "-");// success-rate
+                    $('.profit-budget-value.fill-profit-budget-' + eachMonth + '-' + eachYear + '-' + eachCt + '-' + eachGroup).attr("title", convertIntToMoney(eachProfitBudget) + "円");//profit budget
+                    $('.profit-actual-value.fill-profit-actual-' + eachMonth + '-' + eachYear + '-' + eachCt + '-' + eachGroup).attr("title", convertIntToMoney(eachProfitActual) + "円");//profit actual
+                    $('.profit-rate-value.fill-profit-rate-' + eachMonth + '-' + eachYear + '-' + eachCt + '-' + eachGroup).attr("title", eachProfitRate != "-" ? eachProfitRate + "%" : "-");// profit-rate
+                    $('.success-rate-value.fill-success-rate-' + eachMonth + '-' + eachYear + '-' + eachCt + '-' + eachGroup).attr("title", eachSuccessRate != "-" ? eachSuccessRate + "%" : "-");// success-rate
+                }
+            }
+        }
+
+        //couting cell budget data by each group
+        function TotalGroupProfit(data) {
+            if (data.TotalGroupProfit != null && data.TotalGroupProfit.length > 0) {
+                for (i = 0 ; i < data.TotalGroupProfit.length; i++) {
+                    var eachData = data.TotalGroupProfit[i];
+                    var eachGroup = eachData.group_id;
+                    var eachMonth = eachData.target_month;
+                    var eachYear = eachData.target_year;
+                    var eachProfitBudget = eachData.tgrProfitBudget;
+                    var eachProfitActual = eachData.tgrProfitActual;
+                    var eachProfitRate = (eachData.tgrProfitRate != undefined && eachData.tgrProfitRate != "-") ? parseFloat(eachData.tgrProfitRate).toFixed(2) : "-";
+                    if (eachProfitRate == "-0.00") {
+                        eachProfitRate = "0.00";
+                    }
+                    var eachSuccessRate = (eachData.tgrSuccessRate != undefined && eachData.tgrSuccessRate != "-") ? parseFloat(eachData.tgrSuccessRate).toFixed(2) : "-";
+                    if (eachSuccessRate == "-0.00") {
+                        eachSuccessRate = "0.00";
+                    }
+
+                    $('.profit-budget-total-group.month-' + eachMonth + '.year-' + eachYear + '.grId-' + eachGroup).html(convertIntToMoney(eachProfitBudget) + "円");
+                    $('.profit-actual-total-group.month-' + eachMonth + '.year-' + eachYear + '.grId-' + eachGroup).html(convertIntToMoney(eachProfitActual) + "円");
+                    $('.profit-rate-total-group.month-' + eachMonth + '.year-' + eachYear + '.grId-' + eachGroup).html(eachProfitRate != "-" ? eachProfitRate + "%" : "-");
+                    $('.success-rate-total-group.month-' + eachMonth + '.year-' + eachYear + '.grId-' + eachGroup).html(eachSuccessRate != "-" ? eachSuccessRate + "%" : "-");
+                    $('.profit-budget-total-group.month-' + eachMonth + '.year-' + eachYear + '.grId-' + eachGroup).attr("title", convertIntToMoney(eachProfitBudget) + "円");
+                    $('.profit-actual-total-group.month-' + eachMonth + '.year-' + eachYear + '.grId-' + eachGroup).attr("title", convertIntToMoney(eachProfitActual) + "円");
+                    $('.profit-rate-total-group.month-' + eachMonth + '.year-' + eachYear + '.grId-' + eachGroup).attr("title", eachProfitRate != "-" ? eachProfitRate + "%" : "-");
+                    $('.success-rate-total-group.month-' + eachMonth + '.year-' + eachYear + '.grId-' + eachGroup).attr("title", eachSuccessRate != "-" ? eachSuccessRate + "%" : "-");
+                }
+            }
+        }
+
+
+        //count budget and budget total of each month
+        function TotalMonthProfit(data) {
+            if (data.TotalMonthProfit != null && data.TotalMonthProfit.length > 0) {
+                for (i = 0 ; i < data.TotalMonthProfit.length; i++) {
+                    var eachData = data.TotalMonthProfit[i];
+                    var eachGroup = eachData.group_id;
+                    var eachMonth = eachData.target_month;
+                    var eachYear = eachData.target_year;
+                    var eachProfitBudget = eachData.tgrProfitBudget;
+                    var eachProfitActual = eachData.tgrProfitActual;
+                    var strBudgetProfitTotal = "-";
+                    var eachProfitRate = (eachData.tgrProfitRate != undefined && eachData.tgrProfitRate != "-") ? parseFloat(eachData.tgrProfitRate).toFixed(2) : "-";
+                    if (eachProfitRate == "-0.00") {
+                        eachProfitRate = "0.00";
+                    }
+                    var eachSuccessRate = (eachData.tgrSuccessRate != undefined && eachData.tgrSuccessRate != "-") ? parseFloat(eachData.tgrSuccessRate).toFixed(2) : "-";
+                    if (eachSuccessRate == "-0.00") {
+                        eachSuccessRate = "0.00";
+                    }
+                    //calculate profit budget of total month
+                    $('.year-' + eachYear + '.month-' + eachMonth + '.budget-total-ct').each(function () {
+                        var data = $(this).html();
+                        data = data.replace(/,/g, '').replace('円', '');
+                        if (data != "-") {
+                            strBudgetProfitTotal = "";
+                        }
+                    });
+                    if (strBudgetProfitTotal == "") {
+                        $('.year-' + eachYear + '.month-' + eachMonth + '.profit-budget-total-left').html(convertIntToMoney(eachProfitBudget) + "円");
+                    }
+                    else {
+                        $('.year-' + eachYear + '.month-' + eachMonth + '.profit-budget-total-left').html("-");
+                    }
+
+                    //calculate profit actual of total month
+                    $('.year-' + eachYear + '.month-' + eachMonth + '.profit-actual-total-left').html(convertIntToMoney(eachProfitActual) + "円");
+
+                    //calculate profit rate of total month
+                    $('.year-' + eachYear + '.month-' + eachMonth + '.profit-rate-total-left').html(eachProfitRate != "-" ? eachProfitRate + "%" : "-");
+
+                    //calculate profit rate of total month
+                    $('.year-' + eachYear + '.month-' + eachMonth + '.success-rate-total-left').html(eachSuccessRate != "-" ? eachSuccessRate + "%" : "-");
+
+                    //Add title
+                    //calculate profit budget of total month
+                    if (strBudgetProfitTotal == "") {
+                        $('.year-' + eachYear + '.month-' + eachMonth + '.profit-budget-total-left').attr("title", convertIntToMoney(eachProfitBudget) + "円");
+                    }
+                    else {
+                        $('.year-' + eachYear + '.month-' + eachMonth + '.profit-budget-total-left').attr("title", "-");
+                    }
+
+                    //calculate profit actual of total month
+                    $('.year-' + eachYear + '.month-' + eachMonth + '.profit-actual-total-left').attr("title", convertIntToMoney(eachProfitActual) + "円");
+
+                    //calculate profit rate of total month
+                    $('.year-' + eachYear + '.month-' + eachMonth + '.profit-rate-total-left').attr("title", eachProfitRate != "-" ? eachProfitRate + "%" : "-");
+
+                    //calculate profit rate of total month
+                    $('.year-' + eachYear + '.month-' + eachMonth + '.success-rate-total-left').attr("title", eachSuccessRate != "-" ? eachSuccessRate + "%" : "-");
+
+                }
+            }
+        }
+
+        //count budget and budget total of each month
+        function TotalGrAllProfit(data) {
+            var totalCTProfitBudgetbyMonth = 0;
+            var totalCTProfitActualbyMonth = 0;
+            var totalCTSalesActualbyMonth = 0;
+            var totalSuccessRate = null;
+            var totalProfitRate = null;
+            if (data.TotalGrYearListProfit != null && data.TotalGrYearListProfit.length > 0) {
+                for (i = 0 ; i < data.TotalGrYearListProfit.length; i++) {
+                    var eachData = data.TotalGrYearListProfit[i];
+                    var eachGroup = eachData.group_id;
+                    var eachProfitBudget = eachData.tgrProfitBudget;
+                    var eachProfitActual = eachData.tgrProfitActual;
+                    var eachProfitRate = (eachData.tgrProfitRate != undefined && eachData.tgrProfitRate != "-") ? parseFloat(eachData.tgrProfitRate).toFixed(2) : "-";
+                    if (eachProfitRate == "-0.00") {
+                        eachProfitRate = "0.00";
+                    }
+                    var eachSuccessRate = (eachData.tgrSuccessRate != undefined && eachData.tgrSuccessRate != "-") ? parseFloat(eachData.tgrSuccessRate).toFixed(2) : "-";
+                    if (eachSuccessRate == "-0.00") {
+                        eachSuccessRate = "0.00";
+                    }
+                    var eachCost = eachData.tgrCost == 0 ? null : eachData.tgrCost;
+                    var eachSaleActual = eachData.tgrSaleActual == 0 ? null : eachData.tgrSaleActual;
+
+                    $('.profit-budget-group-total-year.groupID-' + eachGroup).html(convertIntToMoney(eachProfitBudget) + "円");
+
+                    totalCTProfitBudgetbyMonth += eachProfitBudget == null ? 0 : eachProfitBudget;
+                    $('.profit-actual-group-total-year.groupID-' + eachGroup).html(convertIntToMoney(eachProfitActual) + "円");
+                    totalCTProfitActualbyMonth += eachProfitActual == null ? 0 : eachProfitActual;
+                    totalCTSalesActualbyMonth += eachSaleActual == null ? 0 : eachSaleActual;
+                    $('.profit-rate-group-total-year.groupID-' + eachGroup).html(eachProfitRate != "-" ? eachProfitRate + "%" : "-");
+                    $('.success-rate-group-total-year.groupID-' + eachGroup).html(eachSuccessRate != "-" ? eachSuccessRate + "%" : "-");
+
+                    //add title
+
+                    $('.profit-budget-group-total-year.groupID-' + eachGroup).attr("title", convertIntToMoney(eachProfitBudget) + "円");                    
+                    $('.profit-actual-group-total-year.groupID-' + eachGroup).attr("title", convertIntToMoney(eachProfitActual) + "円");
+                    $('.profit-rate-group-total-year.groupID-' + eachGroup).attr("title", eachProfitRate != "-" ? eachProfitRate + "%" : "-");
+                    $('.success-rate-group-total-year.groupID-' + eachGroup).attr("title", eachSuccessRate != "-" ? eachSuccessRate + "%" : "-");
+                }
+                if (totalCTProfitBudgetbyMonth != 0) {
+                    totalSuccessRate = (totalCTProfitActualbyMonth / totalCTProfitBudgetbyMonth) * 100;
+                    totalSuccessRate = parseFloat(totalSuccessRate).toFixed(2);
+                    if (totalSuccessRate == "-0.00") {
+                        totalSuccessRate = "0.00";
+                    }
+                }
+                else {
+                    totalSuccessRate = "-";
+                }
+                if (totalCTSalesActualbyMonth != 0) {
+                    totalProfitRate = (totalCTProfitActualbyMonth / totalCTSalesActualbyMonth) * 100;
+                    totalProfitRate = parseFloat(totalProfitRate).toFixed(2);
+                    if (totalProfitRate == "-0.00") {
+                        totalProfitRate = "0.00";
+                    }
+                }
+                else {
+                    totalProfitRate = "-";
+                }
+
+                $('.profit-budget-total-all-year').html(convertIntToMoney(Math.floor(totalCTProfitBudgetbyMonth)) + "円");
+                $('.profit-actual-total-all-year').html(convertIntToMoney(Math.floor(totalCTProfitActualbyMonth)) + "円");
+                $('.success-rate-total-all-year').html(totalSuccessRate != "-" ? totalSuccessRate + "%" : "-");
+                $('.profit-rate-total-all-year').html(totalProfitRate != "-" ? totalProfitRate + "%" : "-");
+
+                $('.profit-budget-total-all-year').attr("title", convertIntToMoney(Math.floor(totalCTProfitBudgetbyMonth)) + "円");
+                $('.profit-actual-total-all-year').attr("title", convertIntToMoney(Math.floor(totalCTProfitActualbyMonth)) + "円");
+                $('.success-rate-total-all-year').attr("title", totalSuccessRate != "-" ? totalSuccessRate + "%" : "-");
+                $('.profit-rate-total-all-year').attr("title", totalProfitRate != "-" ? totalProfitRate + "%" : "-");
+            }
+        }
+
+        //couting cell budget data by each contract type
+        function TotalContractTypeProfit(data) {
+            if (data.TotalCTProfit != null && data.TotalCTProfit.length > 0) {
+                for (i = 0 ; i < data.TotalCTProfit.length; i++) {
+                    var eachData = data.TotalCTProfit[i];
+                    var eachCT = eachData.contract_type_id;
+                    var eachMonth = eachData.target_month;
+                    var eachYear = eachData.target_year;
+                    var eachProfitBudget = eachData.tgrProfitBudget;
+                    var eachProfitActual = eachData.tgrProfitActual;
+                    var eachProfitRate = (eachData.tgrProfitRate != undefined && eachData.tgrProfitRate != "-") ? parseFloat(eachData.tgrProfitRate).toFixed(2) : "-";
+                    if (eachProfitRate == "-0.00") {
+                        eachProfitRate = "0.00";
+                    }
+                    var eachSuccessRate = (eachData.tgrSuccessRate != undefined && eachData.tgrSuccessRate != "-") ? parseFloat(eachData.tgrSuccessRate).toFixed(2) : "-";
+                    if (eachSuccessRate == "-0.00") {
+                        eachSuccessRate = "0.00";
+                    }
+
+                    $('.budget-total-ct.month-' + eachMonth + '.year-' + eachYear + '.ctId-' + eachCT).html(convertIntToMoney(eachProfitBudget) + "円");
+                    $('.budget-total-ct.month-' + eachMonth + '.year-' + eachYear + '.ctId-' + eachCT).attr("title", convertIntToMoney(eachProfitBudget) + "円");
+                    $('.profit-actual-total-ct.month-' + eachMonth + '.year-' + eachYear + '.ctId-' + eachCT).html(convertIntToMoney(eachProfitActual) + "円");
+                    $('.profit-actual-total-ct.month-' + eachMonth + '.year-' + eachYear + '.ctId-' + eachCT).attr("title", convertIntToMoney(eachProfitActual) + "円");
+                    $('.profit-rate-total-ct.month-' + eachMonth + '.year-' + eachYear + '.ctId-' + eachCT).html(eachProfitRate != "-" ? eachProfitRate + "%" : "-");
+                    $('.success-rate-total-ct.month-' + eachMonth + '.year-' + eachYear + '.ctId-' + eachCT).html(eachSuccessRate != "-" ? eachSuccessRate + "%" : "-");
+                    $('.profit-rate-total-ct.month-' + eachMonth + '.year-' + eachYear + '.ctId-' + eachCT).attr("title", eachProfitRate != "-" ? eachProfitRate + "%" : "-");
+                    $('.success-rate-total-ct.month-' + eachMonth + '.year-' + eachYear + '.ctId-' + eachCT).attr("title", eachSuccessRate != "-" ? eachSuccessRate + "%" : "-");
+                }
+            }
+        }
+
+        function CountingProfit(data) {
+            TotalContractTypeProfit(data);
+            TotalGroupProfit(data);
+            TotalMonthProfit(data);
+            TotalGrAllProfit(data);
+        }
+        $("#btnSwitch").click(function () {
+            $('#btnSwitch').attr('disabled', 'disabled');
+            if ($("#hdnMode").val() == "Sales") {
+                $("#hdnMode").val("Profit");
+                $('#title').html("所属別予実一覧（利益予実）");
+                document.title = "所属別予実一覧（利益予実）";
+                $("#onloadDivSales").show();
+                $('.pace.pace-inactive').addClass('pace-active').removeClass('pace-inactive');
+                BindDataProfit();
+            }
+            else if ($("#hdnMode").val() == "Profit") {
+                $("#hdnMode").val("Sales");
+                $('#title').html("所属別予実一覧（売上予実）");
+                document.title = "所属別予実一覧（売上予実）";
+                $("#onloadDivSales").show();
+                $('.pace.pace-inactive').addClass('pace-active').removeClass('pace-inactive');
+                BindData();
+            }
+        });
+
+        // download file csv
+        $('button#btnDownload').click(function () {
+            $("#frmDownloadXlsx").submit();
+        });
+
+        $("#frmDownloadXlsx").submit(function (e) {
+            e.preventDefault();
+            window.onbeforeunload = null;
+            this.submit();
+            setTimeout(function () {
+                SetEventBeforeUnloadOfSalesBudgetScreen();
+            }, 10);
+        });
+    });
+
+    function LoadOldValueOfControls() {
+        var timeStart = $('#timeStart').val();
+        if (timeStart.length > 0) {
+            $('#TimeStart').val(timeStart);
+        }
+
+        var timeEnd = $('#timeEnd').val();
+        if (timeEnd.length > 0) {
+            $('#TimeEnd').val(timeEnd);
+        }
+    }
+
+    function SetEventBeforeUnloadOfSalesBudgetScreen() {
+        window.onbeforeunload = function (e) {
+            $.ajax({
+                type: "GET",
+                url: '/PMS11003/ClearSearchResult',
+                data: {
+                    TAB_ID: $('#tabId').val()
+                },
+                dataType: 'json',
+                async: false,
+                cache: false,
+                success: function (result) {
+                },
+                error: function (err) {
+                }
+            });
+        };
+    }
+</script>

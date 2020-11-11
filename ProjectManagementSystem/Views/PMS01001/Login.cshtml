@@ -1,0 +1,187 @@
+﻿@model ProjectManagementSystem.ViewModels.PMS01001.LoginViewModel
+@using ProjectManagementSystem.Resources;
+@using ProjectManagementSystem.Common;
+
+@{
+    ViewBag.Title = "ログイン";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    bool timeOut = false;
+    try
+    {
+        if (ViewBag.TimeOut != null)
+        {
+            timeOut = ViewBag.TimeOut;
+        }
+    }
+    catch (Exception)
+    {
+    }
+
+    if (timeOut)
+    {
+        <script type="text/javascript">
+        $(function () {
+            // replace url, delete param timeout
+            history.replaceState("Login", "Login", window.location.href.toLowerCase().replace('/timeout', ''));
+
+            // show mess
+            PMS.utility.showMessageDialog("<i class='fa fa-warning'></i>", '接続の有効時間が切れました。再度ログインしなおしてください。', null);
+        });
+        </script>
+    }
+}
+
+@if (@ViewBag.PASSWORD_EXPIRED != null)
+{
+    <script type="text/javascript">
+        PMS.utility.showMessageDialog(PMS.utility.htmlDecode('@Constant.DialogType.WARNING'), '@ViewBag.PASSWORD_EXPIRED', '/PMS01002/PersonalSetting');
+    </script>
+}
+else
+{
+    <div class="top-background"></div>
+    <div class="login-box">
+        @using (Html.BeginForm("Login", "PMS01001", FormMethod.Post,
+                                new { id = "frmLogin" }))
+        {
+            <div class="login-logo">
+                <img src="~/Images/logo_login.png" />
+            </div><!-- /.login-logo -->
+            <div class="login-box-body">
+                <div class="form-group">
+                    <div id="title"></div>
+                    @Html.ValidationSummary(false)
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelTitle("", "企業コード", 1)
+                    @Html.TextBoxFor(m => m.CompanyCode, new { maxlength = 5, @class = "form-control ime-mode" })
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelTitle("", "ユーザーアカウント", 1)
+                    @Html.TextBoxFor(m => m.UserAccount, new { maxlength = 32, @class = "form-control ime-mode" })
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelTitle("", "パスワード", 1)
+                    @Html.PasswordFor(m => m.Password, new { maxlength = 32, @class = "form-control" })
+                </div>
+                <div class="form-button">
+                    <button type="button" id="Login" name="Login" class="btn dark">ログイン</button>
+                </div><!-- /.col -->
+            </div><!-- /.login-box-body -->
+        }
+        <div class="link-reissue">
+            <a href="~/PMS01001/PasswordReissue">> パスワード再発行</a>
+        </div>
+    </div>
+    <input type="hidden" id="ip" value="@ViewBag.CheckServer" />
+
+    <script type="text/javascript" charset="utf-8">
+        $(function () {
+            //check ip server
+            var checkIp = $('#ip').val();
+            if (checkIp === "1") {
+                $('body').css({ 'background-color': '#990000' });
+            }
+
+            $('#CompanyCode').focus();
+            PMS.utility.imeControlNew('#CompanyCode', 'tel');
+            PMS.utility.imeControlNew('#UserAccount', 'tel');
+            PMS.utility.imeControl($("#CompanyCode"), 'disable');
+            PMS.utility.imeControl($("#UserAccount"), 'disable');
+
+            PMS.utility.validateControlInput($("#UserAccount"));
+            PMS.utility.validateControlInput($("#Password"));
+
+            $(window).resize(function () {
+                var minTop = ($(window).height() - $('.login-box').outerHeight()) / 2;
+                if (minTop < 0) {
+                    minTop = -15;
+                }
+                $('.login-box').css({
+                    position: 'absolute',
+                    left: ($(window).width() - $('.login-box').outerWidth()) / 2,
+                    top: minTop
+                });
+            });
+
+            $(document).bind('keypress', function (e) {
+                var code = e.keyCode || e.which;
+                if (code == 13) { //Enter keycode
+                    $('.validation-summary-errors').remove();
+                    var invalidMess = validateData();
+                    if (invalidMess.length > 0) {
+                        PMS.utility.showClientError(invalidMess);
+                        return false;
+                    }
+                    $("#frmLogin").submit();
+                }
+            });
+
+            // To initially run the function:
+            $(window).resize();
+
+            $(document).off('#CompanyCode');
+            $(document).on('focusout', '#CompanyCode', function () {
+                if (this.value.length > 0) {
+                    var content;
+                    content = PMS.utility.Convert_JPCharacters(this.value, 'anC');
+
+                    $(this).val(content);
+                }
+            });
+
+            $(document).off('#Login');
+            $(document).on('click', '#Login', function () {
+                $('.validation-summary-errors').remove();
+                var invalidMess = validateData();
+                if (invalidMess.length > 0) {
+                    PMS.utility.showClientError(invalidMess);
+                    return false;
+                }
+                $("#frmLogin").submit();
+            });
+
+            function validateData() {
+                var invalidMess = [];
+
+                var companyCode = $('#CompanyCode').val();
+                var userAcount = $('#UserAccount').val();
+                var password = $('#Password').val();
+
+                if (companyCode.length === 0) {
+                    invalidMess.push("@string.Format(Messages.E002, "企業コード")");
+                }
+
+                if (userAcount.length === 0) {
+                    invalidMess.push("@string.Format(Messages.E002, "ユーザーアカウント")");
+                }
+
+                if (password.length === 0) {
+                    invalidMess.push("@string.Format(Messages.E002, "パスワード")");
+                }
+                else {
+                    if (companyCode.length > 0 && userAcount.length > 0) {
+                        if (!PMS.utility.validAcount(companyCode)) {
+                            invalidMess.push("@string.Format(Messages.E029)");
+                        }
+                        else if (userAcount.length > 32 || !PMS.utility.validAcount(userAcount)) {
+                            invalidMess.push("@string.Format(Messages.E029)");
+                        } else {
+                            if (password.length > 0) {
+                                if (password.length < 6 || password.length > 32 || !PMS.utility.validAcount(password)) {
+                                    invalidMess.push("@string.Format(Messages.E029)");
+                                }
+                            }
+                        }
+                    }
+                }
+                return invalidMess;
+            }
+        });
+    </script>
+}
+

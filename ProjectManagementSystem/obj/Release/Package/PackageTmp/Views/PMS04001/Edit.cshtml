@@ -1,0 +1,282 @@
+﻿@using ProjectManagementSystem.Resources;
+@using ProjectManagementSystem.Common;
+
+@model ProjectManagementSystem.ViewModels.PMS04001.PMS04001EditViewModel
+@{
+    ViewBag.Title = "フェーズ登録";
+}
+
+<section class="content-header">
+    <h1>
+        @ViewBag.Title
+    </h1>
+</section>
+<section class="content content-edit clearfix phase_regist">
+    @using (Html.BeginForm("EditPhase", "PMS04001", FormMethod.Post, new { @class = "form-horizontal", id = "frmPhaseEdit" }))
+    {
+        <div id="title"></div>
+        @Html.ValidationSummary(false)
+
+        <div class="form-group">
+            <label class="col-sm-2 control-label bold" for="phase_name">フェーズ名<span class="RequiredField">*</span></label>
+            <div class="col-sm-4">
+                @Html.TextBoxFor(m => m.PhaseInfo.phase_name, new { @class = "form-control", maxlength = 100, size = 99 })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-2 control-label bold" for="phase_display_name">フェーズ(表示名)<span class="RequiredField">*</span></label>
+            <div class="col-sm-4">
+                @Html.TextBoxFor(m => m.PhaseInfo.display_name, new { @class = "form-control", maxlength = 100, size = 99 })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-2 control-label bold">備考</label>
+            <div class="col-sm-4">
+                @Html.TextAreaFor(m => m.PhaseInfo.remarks, new { @class = "form-control candy-textArea", maxlength = 200, rows = 5 })
+                <input type="hidden" class="set-max-width" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-2 control-label bold">工数設定対象</label>
+            <div class="col-sm-4">
+                @Html.CheckBoxFor(m => m.EstimateTargetFlag)
+                <input type="hidden" class="set-max-width" />
+            </div>
+        </div>
+
+        <div id="updateTime">
+            <div class="form-group">
+                @Html.LabelFor(m => m.PhaseInfo.ins_date, new { @class = "col-sm-2 control-label bold" })
+                <div class="col-sm-4">
+                    <label class="control-label" id="insDate">
+                        @{ string ins_date = Model.PhaseInfo.ins_date != null ? Model.PhaseInfo.ins_date.Value.ToString("yyyy/MM/dd HH:mm") : ""; }
+                        @ins_date
+                    </label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(m => m.PhaseInfo.ins_user, new { @class = "col-sm-2 control-label bold" })
+                <div class="col-sm-8">
+                    <label class="control-label" id="insUser">@Model.PhaseInfo.ins_user</label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(m => m.PhaseInfo.upd_date, new { @class = "col-sm-2 control-label bold" })
+                <div class="col-sm-4">
+                    <label class="control-label" id="updDate">
+                        @{ string upd_date = Model.PhaseInfo.upd_date != null ? Model.PhaseInfo.upd_date.Value.ToString("yyyy/MM/dd HH:mm") : ""; }
+                        @upd_date
+                    </label>
+
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(m => m.PhaseInfo.upd_user, new { @class = "col-sm-2 control-label bold" })
+                <div class="col-sm-8">
+                    <label class="control-label" id="updUser">@Model.PhaseInfo.upd_user</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group btn-group-edit">
+            <div class="col-sm-4">
+                @Html.HiddenFor(m => m.PhaseInfo.phase_id)
+                <input type="hidden" name="OLD_DEL_FLAG" value="@Model.DeleteFlag.ToString()" />
+                @Html.AntiForgeryToken()
+
+                <button type="button" id="btnBack" name="Back" class="btn light btnNoStyleDisable"><i class="btn-icon btn-back"></i>戻る</button>
+                <button type="button" id="btnSubmit" class="btn green"><i class="btn-icon btn-regist"></i> 登録</button>
+
+                <label class="bold" id="deleteFlag">
+                    @Html.CheckBoxFor(m => m.DeleteFlag)
+                    削除
+                </label>
+            </div>
+        </div>
+    }
+</section>
+
+
+
+<script type="text/javascript">
+    var maxWidth =$(".set-max-width").css("max-width").slice(0, $(".set-max-width").css("max-width").length - 2); // set max-width of textarea
+    $(document).ready(function () {
+        $(".content-wrapper").addClass("content-edit-wrapper");
+        PMS.utility.imeControl($("#PhaseInfo_phase_name, #PhaseInfo_display_name, #PhaseInfo_remarks"), 'active');
+        PMS.utility.focusTextbox();
+
+        if ($('#PhaseInfo_phase_id').val() === '0') {
+            $('#updateTime, #deleteFlag').hide();
+        }
+
+        // get max-width of textarea when resize manu bar left
+        window.addEventListener('resize', function (event) {
+            maxWidth = $(".set-max-width").css("max-width").slice(0, $(".set-max-width").css("max-width").length - 2);
+            //handle change textare when resize menu bar left
+            if ($('body').hasClass('sidebar-collapse') === true) {
+                // case close when page first load
+                $(".candy-textArea").css("max-width",(parseInt(maxWidth,10) + 115)+ "px");
+            }
+            else{
+                $(".candy-textArea").css("max-width",parseInt(maxWidth,10)+ "px");
+            }
+        });
+        //end get max-width of textarea when resize manu bar left
+    });
+    //handle change textare when resize menu bar left
+    if ($('body').hasClass('sidebar-collapse') === true) {
+        // case close when page first load
+        $(".candy-textArea").css("max-width",(parseInt(maxWidth,10) + 115)+ "px");
+    }
+    $(document).off('a.sidebar-toggle i');
+    $(document).on('click', 'a.sidebar-toggle i', function () {
+        if ($('body').hasClass('sidebar-collapse') === true) {
+            // close
+            $(".candy-textArea").css("max-width",(parseInt(maxWidth,10) + 115)+ "px");
+        } else {
+            // open
+            $(".candy-textArea").css("max-width",(parseInt($(".candy-textArea").css("max-width").slice(0, $(".candy-textArea").css("max-width").length - 2),10) - 115)+ "px");
+        }
+    });
+    //end handle change textare when resize menu bar left
+
+    // Validate data input
+    function validateData() {
+        var Constant = {
+            PHASE_NAME: 'フェーズ名',
+            PHASE_DISPLAY_NAME: 'フェーズ(表示名)',
+            REMARK: '備考',
+            ERR_REQUIRED: 'は必須項目です。',
+            ERR_STRING_LENGTH: '{0}は{1}文字以内で入力してください。',
+            MAX_NAME_LENGTH: '100',
+            MAX_REMARK_LENGTH: '200'
+        };
+        var invalidMess = [];
+        var phaseName = $("#PhaseInfo_phase_name").val();
+        var invalidPhaseName = false;
+
+        if (phaseName.length === 0) { // required phase name
+            invalidMess.push(Constant.PHASE_NAME + Constant.ERR_REQUIRED);
+            invalidPhaseName = true;
+        }
+
+        if (phaseName.length > 100) { // valid string length
+            invalidMess.push(Constant.ERR_STRING_LENGTH.replace('{0}', Constant.PHASE_NAME).replace('{1}', Constant.MAX_NAME_LENGTH));
+            invalidPhaseName = true;
+        }
+
+        if (invalidPhaseName)
+            $("label[for='phase_name']").addClass("label-validation-error");
+
+        var phaseDisplayName = $("#PhaseInfo_display_name").val();
+        var invalidPhaseDisplayName = false;
+
+        if (phaseDisplayName.length === 0) { // required display name
+            invalidMess.push(Constant.PHASE_DISPLAY_NAME + Constant.ERR_REQUIRED);
+            invalidPhaseDisplayName = true;
+        }
+
+        if (phaseDisplayName.length > 100) { // valid string length
+            invalidMess.push(Constant.ERR_STRING_LENGTH.replace('{0}', Constant.PHASE_DISPLAY_NAME).replace('{1}', Constant.MAX_NAME_LENGTH));
+            invalidPhaseDisplayName = true;
+        }
+
+        if (invalidPhaseDisplayName)
+            $("label[for='phase_display_name']").addClass("label-validation-error");
+
+        if ($("#PhaseInfo_remarks").val().length > 200) {
+            invalidMess.push(Constant.ERR_STRING_LENGTH.replace('{0}', Constant.REMARK).replace('{1}', Constant.MAX_REMARK_LENGTH));
+            $("label[for='PhaseInfo_remarks']").addClass("label-validation-error");
+        }
+
+        return invalidMess;
+    }
+
+    // Submit register form
+    $('button#btnSubmit').click(function () {
+        PMS.utility.removeValidationError();
+
+        var invalidMess = validateData();
+
+        if (invalidMess.length > 0) {
+            PMS.utility.showClientError(invalidMess);
+            return false;
+        }
+
+        PMS.utility.IsAuthenticateTimeout('@string.Format(Messages.I006)', '#frmPhaseEdit');
+    });
+
+    // submit form
+    $("#frmPhaseEdit").submit(function (e) {
+        var formData = new FormData(this);
+
+        $.ajax({
+            url: $(this).attr("action"),
+            type: 'POST',
+            data: formData,
+            mimeType: "multipart/form-data",
+            contentType: false,
+            cache: false,
+            processData: false,
+            success: function (response) {
+                var data = JSON.parse(response);
+
+                BootstrapDialog.closeAll();
+
+                if (data.statusCode == 201) { // update success
+                    $("#frmPhaseEdit").hide();
+                    PMS.utility.showMessageDialog(PMS.utility.htmlDecode('@Constant.DialogType.INFORMATION'), data.message, null, null, function () {
+                        $('#PhaseInfo_phase_id').val(data.id);
+                        if (data.insDate != null && data.insDate.length > 0) {
+                            $('#insDate').text(data.insDate);
+                        }
+                        if (data.insUser != null && data.insUser.length > 0) {
+                            $('#insUser').text(data.insUser);
+                        }
+                        $('#updDate').text(data.updDate);
+                        $('#updUser').text(data.updUser);
+                        $('#Delete').text(data.updUser);
+                        $("#Delete").prop('checked', data.deleted);
+                        $('input[name="OLD_DEL_FLAG"]').val(data.deleted);
+                        $('#updateTime, #deleteFlag, #frmPhaseEdit').show();
+                    });
+                }
+
+                if (data.statusCode == 500) { // Exception
+                    $("#frmPhaseEdit").hide();
+                    PMS.utility.showMessageDialog(PMS.utility.htmlDecode('@Constant.DialogType.WARNING'), data.message, '/PMS04001');
+                }
+
+                if (typeof (data.ErrorMessages) !== 'undefined') // invalid data
+                    PMS.utility.showClientError(data.ErrorMessages);
+            },
+            error: function (error) {
+                if (error.status == 419) //419: Authentication Timeout
+                    window.location.href = '/PMS01001/Login/timeout';
+            }
+        });
+
+        e.preventDefault(); // prevent Default action
+    });
+
+    $(document).off('#btnBack');
+    $(document).on('click', '#btnBack', function () {
+        $.ajax({
+            type: "POST",
+            url: '/Common/SetButtonBackSession',
+            dataType: 'json',
+            data: null,
+            success: function () {
+                window.location.href = "/PMS04001";
+            },
+            error: function (error) {
+            }
+        });
+    });
+</script>

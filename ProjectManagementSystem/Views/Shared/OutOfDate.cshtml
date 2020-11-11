@@ -1,0 +1,29 @@
+﻿@model System.Web.Mvc.HandleErrorInfo
+@using ProjectManagementSystem.Resources;
+@using ProjectManagementSystem.Common;
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<div class="main-header">
+    <img src="~/Images/ico_service.png" class="logo_left" />
+</div>
+<div class="error-content">
+    <h2>
+        @string.Format(Messages.E066)
+    </h2>
+    <br /><br />
+    <button type="button" id="btnBack" name="btnBack" class="btn light"><i class="btn-icon btn-back"></i>ログインページへ戻る</button>
+</div>
+<script>
+    $('#btnBack').click(function () {
+        window.location.href = '/PMS01001/Login';
+        return false;
+    });
+</script>
+
+@*<script>
+    PMS.utility.showMessageDialog('<i class="fa fa-warning"></i>', '@string.Format(Messages.E066)', '/PMS01001/Login');
+</script>*@

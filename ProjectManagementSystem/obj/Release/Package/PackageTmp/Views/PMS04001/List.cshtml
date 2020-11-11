@@ -1,0 +1,253 @@
+﻿@model ProjectManagementSystem.ViewModels.PMS04001.PMS04001ListViewModel
+@using ProjectManagementSystem.Resources;
+@using ProjectManagementSystem.Common;
+
+@{
+    ViewBag.Title = "フェーズ一覧";
+    var currentUser = HttpContext.Current.Session[Constant.SESSION_LOGIN_USER] as LoginUser;
+}
+
+<section class="content-header">
+    <div class="title">
+        <h1>@ViewBag.Title</h1>
+        @if (currentUser != null && currentUser.PlanFunctionList.Contains(Constant.FunctionID.PhaseRegist) && currentUser.FunctionList.Contains(Constant.FunctionID.PhaseRegist))
+        {
+            <button id="btnCreateNew" class="btn dark btnNew"><i class="btn-icon btn-add"></i>新規作成</button>
+            <input type="hidden" id="roleEdit" value="true" />
+        }
+    </div>
+
+    <div class="search-form">
+        <div class="search-condition row">
+            <div class="row">
+                <label class="width-120">フェーズ名</label>
+                @Html.TextBoxFor(m => m.Condition.PhaseName, new { style = "ime-mode: auto;", @class = "", maxlength = 100 })
+
+                @if (currentUser != null)
+                {
+                    if (currentUser.PlanFunctionList.Contains(Constant.FunctionID.PhaseList_Admin) && currentUser.FunctionList.Contains(Constant.FunctionID.PhaseList_Admin))
+                    {
+                        <label class="width-120">
+                            @Html.CheckBoxFor(m => m.Condition.DeleteFlag, new { @class = "" })
+                            削除済を含む
+                        </label>
+                    }
+                    else
+                    {
+                        @Html.CheckBoxFor(m => m.Condition.DeleteFlag, new { @style = "visibility:hidden" })
+                    }
+                }
+            </div>
+        </div>
+        <div class="right search-action">
+            <button type="button" id="btnSearch" name="btnSearch" class="btn dark"><i class="btn-icon btn-search"></i>検索</button>
+            <button type="button" id="btnClear" name="btnClear" class="btn light"><i class="btn-icon btn-clear"></i>クリア</button>
+        </div>
+    </div>
+</section>
+
+@RenderPage("~/Views/Shared/ShowHideHeaderContent.cshtml")
+
+<div class="data-list phase-list content clearfix" style="visibility:hidden">
+    <table id="InfoTable" class="display tbl-phase-list" width="100%">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>No.</th>
+                <th aria-valuetext="phase_name">フェーズ名</th>
+                <th aria-valuetext="display_name">フェーズ（表示名）</th>
+                <th aria-valuetext="remarks">備考</th>
+                <th aria-valuetext="estimate_target_flg">見積対象</th>
+                <th aria-valuetext="upd_date">更新日時</th>
+                <th aria-valuetext="upd_user">更新者</th>
+                @*<th>編集</th>*@
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+</div>
+
+<div class="search-date">
+    <a id="btnExport" name="btnExport" class="btn dark"><i class="btn-icon btn-output-csv"></i>CSV出力</a>
+</div>
+
+<form method="POST" action="@Url.Action("ExportCsv","PMS04001")" class="frmExport">
+    @Html.Hidden("hdnPhaseName")
+    @Html.Hidden("hdnDelFlag", false)
+    @Html.Hidden("hdnOrderBy", "upd_date")
+    @Html.Hidden("hdnOrderType", "desc")
+    <input id="tabId" name="TAB_ID" type="hidden" />
+</form>
+
+<form method="POST" action="@Url.Action("Edit","PMS04001")" class="frm-edit">
+    <input type="hidden" name="id" value="0" />
+</form>
+
+<input type="hidden" id="table_order_columns" value="" />
+
+<script type="text/javascript" charset="utf-8">
+    $(function () {
+        var uniqueId = "@Guid.NewGuid().ToString()";
+        $("#tabId").val(uniqueId);
+        SetEventBeforeUnload();
+        LoadOldValueOfControls();
+        PMS.utility.imeControl($("#Condition_PhaseName"), 'active');
+
+        var oSorting = {
+            "bSort": true
+        };
+        var oPaginate = {
+            "bPaginate": true,
+            "iDisplayLength": parseInt(@App[ConfigurationKeys.LIST_ITEMS_PER_PAGE]),
+            "bStateSave": false
+        };
+        var oServerSide = {
+            "bServerSide": true,
+            "sAjaxSource": '@Url.Action("Search", "PMS04001")',
+            "fnServerParams": serverParams,
+            "fnDrawCallback": displayComplete,
+            "fnInitComplete": bindData
+        };
+        var aoColumnDefs = [
+            { "bSortable": false, "bVisible": false, "aTargets": [0], "sWidth": "0%", "sClass": "cell_left" },
+            { "bSortable": false, "aTargets": [1], "sWidth": "5%", "sClass": "cell_center" },
+            { "sName": "phase_name", "aTargets": [2], "sWidth": "20%", "sClass": "phase_name cell_left", "mRender": function (data, type, full) { return full[8] == '0' ? buildLinkContent(data, full[0], '') : buildLinkContent(data, full[0], 'delete-row'); } },
+            { "sName": "display_name", "aTargets": [3], "sWidth": "20%", "sClass": "display_name cell_left", "mRender": function (data, type, full) { return PMS.utility.buildColumShortText(data, 'display_name'); } },
+            { "sName": "remarks", "aTargets": [4], "sWidth": "20%", "sClass": "remarks cell_left", "mRender": function (data, type, full) { return PMS.utility.buildColumShortText(data, 'phase-remark'); } },
+            { "sName": "estimate_target_flg", "aTargets": [5], "sWidth": "8%", "sClass": "cell_center" },
+            { "sName": "upd_date", "aTargets": [6], "sWidth": "12%", "sClass": "upd_date cell_center" },
+            { "sName": "upd_user", "aTargets": [7], "sWidth": "13%", "sClass": "cell_left", "mRender": function (data, type, full) { return PMS.utility.buildColumShortText(data, 'phase-update'); } },
+        ];
+
+        var dataTable = CreateDataTable('#InfoTable', oSorting, oPaginate, oServerSide, aoColumnDefs);
+
+        function serverParams(aoData) {
+            aoData.push(
+                { "name": "PhaseName", "value": $("#hdnPhaseName").val() },
+                { "name": "DeleteFlag", "value": $("#hdnDelFlag").val() },
+                { "name": "orderBy", "value": $("#hdnOrderBy").val() },
+                { "name": "orderType", "value": $("#hdnOrderType").val() },
+                { "name": "TAB_ID", "value": $("#tabId").val() }
+            );
+            if (typeof (colReorder) !== 'undefined') {
+                $("#table_order_columns").val(colReorder.fnOrder());
+                colReorder.fnReset();
+            }
+        }
+
+        function bindData(data) {
+            // process status disabled  buttton exportCSV when search data
+            if (data.aaData.length == 0) {
+                $('#btnExport').addClass('disabled').attr('disabled', 'disabled');
+            }
+            else {
+                $('#btnExport').removeClass('disabled').removeAttr('disabled');
+            }
+        }
+
+        function displayComplete() {
+            $('table.tbl-phase-list tr td label.delete-row').each(function () {
+                $(this).parents('tr').removeClass().addClass('delete-row');
+            });
+
+            $('div.phase-list').removeAttr('style');
+            $("#onloadDiv").hide();
+            $('.pace.pace-active').addClass('pace-inactive').removeClass('pace-active');
+            $('#btnSearch').removeAttr('disabled');
+            custom_order('#InfoTable', 2, 0);
+        }
+
+        function buildLinkContent(name, id, classname) {
+
+            if (PMS.utility.checkPermission('#roleEdit')) {
+                var s = '<a title="' + name + '" href="#" phase-id = "' + id + '" class="edit-link">' + '<label class="longtext ' + classname + '">' + name + '</label></a>';
+            } else {
+                var s = '<label class="longtext ' + classname + '">' + name + '</label>';
+            }
+            return s;
+        }
+
+        function searchByCondition() {
+            $('.validation-summary-errors').remove();
+
+            var invalidMess = [];
+
+            if ($('#Condition_PhaseName').val().length > 100)
+                invalidMess.push('@string.Format(Messages.E020, "フェーズ名", "100")');
+
+            if (invalidMess.length > 0) {
+                PMS.utility.showClientError(invalidMess, '.title');
+                return false;
+            }
+
+            $('input[name="hdnPhaseName"]').val($('#Condition_PhaseName').val());
+            $('input[name="hdnDelFlag"]').val($("#Condition_DeleteFlag").prop('checked'));
+
+            $('.pace.pace-inactive').removeClass('pace-inactive').addClass('pace-active');
+            $("#onloadDiv").show(function () {
+                dataTable.fnPageChange('first');
+            });
+            $('#btnSearch').attr('disabled', 'disabled');
+        }
+
+        $(document).bind('keypress', function (e) {
+            var code = e.keyCode || e.which;
+            if (code == 13) { //Enter keycode
+                searchByCondition();
+            }
+        });
+
+        $('button#btnSearch').click(function () {
+            searchByCondition();
+        });
+
+        $('button#btnClear').click(function () {
+            $('#Condition_PhaseName').val("")
+            $("#Condition_DeleteFlag").prop('checked', false);
+            PMS.utility.ClearRestoreData("PMS04001");
+        });
+
+        $(document).off('#InfoTable tr th');
+        $(document).on('click', '#InfoTable tr th', function () {
+            var sort_type = $(this).hasClass('sorting_asc') ? 'asc' : 'desc';
+
+            $('input[name="hdnOrderBy"]').val($(this).attr("aria-valuetext"));
+            $('input[name="hdnOrderType"]').val(sort_type);
+        });
+
+        $(document).off('a.edit-link');
+        $(document).on('click', 'a.edit-link', function () {
+            var $form = $(".frm-edit");
+
+            $form.children('input[name="id"]').val($(this).attr("phase-id"));
+            $form.submit();
+        });
+
+        $('button#btnCreateNew').click(function () {
+            var param = { dataType: '@Constant.LicenseDataType.PHASE' };
+            var valid = PMS.utility.getDataByAjax('/Common/CheckRegistNewData', param);
+
+            if (!valid) {
+                PMS.utility.showMessageDialog('<i class="fa fa-warning"></i>', '@string.Format(Messages.E067, "フェーズ")');
+                return false;
+            }
+
+            var $form = $(".frm-edit");
+
+            $form.children('input[name="id"]').val('0');
+            $form.submit();
+        });
+
+        $('#btnExport').click(function () {
+            $(".frmExport").submit();
+        });
+        PMS.utility.LoadSearchCondition();
+    });
+
+    function LoadOldValueOfControls() {
+        var phaseName = $('#hdnPhaseName').val();
+        if (phaseName.length > 0) {
+            $('#Condition_PhaseName').val(phaseName);
+        }
+    }
+</script>
