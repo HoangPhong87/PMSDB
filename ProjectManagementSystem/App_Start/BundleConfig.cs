@@ -9,7 +9,7 @@ namespace ProjectManagementSystem
         public static void RegisterBundles(BundleCollection bundles)
         {
             // js css cache clear
-            BundleTable.EnableOptimizations = true;
+            BundleTable.EnableOptimizations = false;
 
             bundles.IgnoreList.Clear();
             bundles.Add(new ScriptBundle("~/bundles/jquery").Include(
