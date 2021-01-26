@@ -259,7 +259,7 @@ namespace ProjectManagementSystem.Controllers
             List<string> fixColumns = new List<string>() {
                 "No.",
                 "所属",
-                "ユーザー名"
+                "ユーザー名","gfuhgu"
             };
 
             List<string> listMonth = Utility.getListMonth(listCondition.StartMonth.ToString("yyyy/MM"), listCondition.EndMonth.ToString("yyyy/MM"));
@@ -284,13 +284,17 @@ namespace ProjectManagementSystem.Controllers
                 var values = new object[item.Values.Count];
                 for (int i = 0; i < item.Values.Count; i++)
                 {
-                    if (i <= 2)
+                    if (i <= 3)
                     {
                         values[i] = item.Values.ElementAt(i);
                     }
-                    else if (i >= 3)
+                    else if (i > 4)
+                            {
+                                values[i] = this.FormatData(item.Values.ElementAt(i), isExport: true);
+                            }
+                    else
                     {
-                        values[i] = this.FormatData(item.Values.ElementAt(i), isExport: true);
+                        values[i] = this.FormatData(item.Values.ElementAt(i), isExport: false);
                     }
                 }
                 dataTable.Rows.Add(values);

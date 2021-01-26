@@ -136,6 +136,7 @@ namespace ProjectManagementSystem.Models.Repositories.Impl
                     ROW_NUMBER() OVER (order by " + sort_column_name + " " + sort_type + @") [No], 
                     group_name,
                     user_name,
+user_sys_id,
                 ");
             }
             else
@@ -146,7 +147,7 @@ namespace ProjectManagementSystem.Models.Repositories.Impl
                     user_sys_id, ");
             }
             sb.Append(@"
-            " + cols + @"
+            " + cols + @" 
         FROM
             (
                 SELECT

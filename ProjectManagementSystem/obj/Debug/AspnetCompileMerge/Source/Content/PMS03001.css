@@ -1,0 +1,157 @@
+﻿
+.contractType-list #btnExport {
+    margin-left: 3px;
+}
+
+.contract-regist .ddlPhase, .ddlCategory{
+    width : 200px;
+}
+
+
+.contract_type {
+    min-width: 200px;
+    max-width: 250px;
+}
+
+.remarks {
+    min-width: 50px;
+    max-width: 100px;
+}
+
+.upd_user {
+    min-width: 150px;
+    max-width: 200px;
+}
+
+.upd_date {
+    min-width: 120px;
+}
+
+.longtext {
+    max-width: 100%;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    margin-left: 0px;
+    vertical-align: middle;
+    margin-bottom: 0px;
+}
+
+.contract-regist .col-sm-2 {
+    width: 11% !important;
+}
+
+.lbl-action:hover {
+    color: red;
+}
+
+.display_order_edit {
+    width: 65px;
+}
+
+.display_order_label {
+    padding-left : 25px;
+    padding-right : 2px !important;
+}
+
+.hide_display_order_label{
+    visibility: hidden;
+}
+
+.btnAddPhase{
+    margin-right : 10px;
+    float : left;
+}
+
+.contract-regist hr {
+  margin-left: -5px !important;
+  border-top: 1px solid #CCC;
+}
+
+.contract-list .contract_type a label{
+    cursor:pointer;
+}
+
+.contract-regist .btnAddPhase, .btnAddCategory {
+    margin-right: 10px;
+}
+
+.contract-regist .bt-space {
+    margin-right: 10px;
+    visibility: hidden;
+}
+
+.contract-regist .phase-content, .category-content {
+    margin-bottom: 10px
+}
+
+.contract-regist .phase-list, .contract-regist .title-phase-list {
+    padding: 0;
+}
+
+.contract-regist .title-phase {
+    margin-top: 15px;
+    margin-bottom: 0;
+}
+
+.contract-regist .top-title {
+    width: 220px;
+    text-align: center;
+    font-weight: bold;
+    float: left;
+}
+
+.contract-regist .title-display-order {
+    width: 90px;
+}
+
+/*zoom in common textarea*/
+ @media (max-width: 1300px) {
+    .candy-textArea{
+        max-width: 1015px;
+    }
+    .set-max-width{
+        max-width :1015px;
+    }
+}
+
+@media (max-width: 1100px) {
+    .candy-textArea{
+        max-width: 1015px;
+    }
+    .set-max-width{
+        max-width :1015px;
+    }
+}
+@media (min-width: 1300px) {
+    .candy-textArea{
+        max-width: 1020px;
+    }
+    .set-max-width{
+        max-width :1020px;
+    }
+}
+@media (min-width: 1500px) {
+    .candy-textArea{
+        max-width: 1160px;
+    }
+    .set-max-width{
+        max-width :1160px;
+    }
+}
+@media (min-width: 1700px) {
+    .candy-textArea{
+        max-width:1330px;
+    }
+    .set-max-width{
+        max-width :1330px;
+    }
+}
+@media (min-width: 1800px) {
+    .candy-textArea{
+        max-width:1425px;
+    }
+    .set-max-width{
+        max-width :1425px;
+    }
+}

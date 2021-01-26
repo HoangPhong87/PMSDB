@@ -1,0 +1,2205 @@
+﻿
+/*
+ * Component: Project list
+ * -------------------------
+ */
+
+div.summary-project-list .summary-project-text {
+    float: left;
+    border-left: 1px solid #eaeaea;
+    text-align: center;
+    padding: 0;
+}
+
+    div.summary-project-list .summary-project-text.border-right {
+        border-right: 1px solid #eaeaea;
+    }
+
+    div.summary-project-list .summary-project-text .title, div.summary-project-list .summary-project-text .money {
+        padding: 0;
+    }
+
+div.summary-project-list .width-16-7 {
+    width: 16.7%;
+}
+
+div.summary-project-list .width-16-6 {
+    width: 16.6%;
+}
+
+div.summary-project-list .width-25-0 {
+    width: 25%;
+}
+
+div.summary-project-list {
+    padding: 0 0 40px;
+}
+
+    div.summary-project-list div {
+        padding: 0 20px;
+    }
+
+    div.summary-project-list .col-lg-2,
+    div.summary-project-list .col-lg-1 {
+        border-left: 1px solid #EAEAEA;
+    }
+
+.summary-project-list .col-lg-2 {
+    width: 20%;
+}
+
+div.summary-project-list .col-lg-1 {
+    border-right: 1px solid #EAEAEA;
+}
+
+div.summary-project-list label {
+    width: 100%;
+}
+
+    div.summary-project-list label.money {
+        font-weight: bold;
+        font-size: 16px;
+    }
+
+    div.summary-project-list label.title {
+        color: #1A3ACD;
+    }
+
+div.display-list {
+    width: 100%;
+    display: inline-block;
+}
+
+.project-list div.div-left {
+    float: left;
+    width: 40.5%;
+}
+
+.project-list div.div-center {
+    float: left;
+    min-width: 59.5%;
+    max-width: 59.5%;
+    overflow-x: auto;
+    overflow-y: hidden;
+}
+
+.project-list .dataTables_paginate {
+    position: absolute;
+    margin-top: 39px;
+    text-align: left;
+}
+
+.project-list .dataTables_info {
+    position: absolute;
+    left: 200px;
+    margin-top: -55px;
+}
+
+.project-list .dataTables_length {
+    position: absolute;
+    right: 30px;
+    margin-top: -40px;
+}
+
+.sidebar-collapse .project-list .dataTables_info {
+    left: 70px;
+}
+
+.project-list .th-checkbox {
+    width: 5%;
+}
+
+.project-list .project_name {
+    width: 59%;
+}
+
+.project-list .link-detail {
+    width: 20%;
+}
+
+.project-list .link-plan-detail {
+    width: 16%;
+}
+
+.project-list .tbl-list-center {
+    min-width: 2350px !important;
+    /*margin-left: -1px;*/
+}
+
+@media (min-width: 2026px) {
+    .project-list .tbl-list-center {
+        min-width: 2270px !important;
+    }
+}
+
+.project-list .tbl-list-left td.dataTables_empty {
+    border-right: none;
+}
+
+.project-list .tbl-list-center td.dataTables_empty {
+    border-left: none;
+}
+
+.project-list .tbl-list-center span,
+.project-list .tbl-list-center div {
+    cursor: all-scroll;
+}
+
+.project-list table.dataTable td .short-text {
+    width: 190px;
+}
+
+.project-list table.dataTable td .pic-name {
+    width: 100px;
+}
+
+.project-list table.dataTable td .project-plantype-name {
+    width: 80px;
+}
+
+.sidebar-collapse .project-list table.dataTable td .project-name {
+    min-width: 190px;
+    max-width: 20%;
+}
+
+.project-list table.dataTable td .project-name {
+    margin-top: -10px;
+    min-width: 230px;
+    max-width: 18%;
+    position: absolute;
+    cursor: pointer;
+    vertical-align: middle;
+}
+
+.project-list table.dataTable td .project-name-text {
+    margin-top: -10px;
+    min-width: 200px;
+    max-width: 20%;
+    position: absolute;
+    padding-bottom: 4px;
+    padding-top: 2px;
+}
+
+.project-list table.dataTable td form .detail-link {
+    vertical-align: baseline;
+}
+
+.project-list table td {
+    height: 50px;
+}
+
+.project-list table .plan_profit, .project-list table .actual_profit {
+    width: 180px;
+}
+
+.project-list .check-project {
+    margin: 0 0 0 2px;
+}
+
+.project-list .th-checkbox {
+    padding: 0;
+}
+
+.project-list .check-all-project {
+    margin: 1px 6px 0px 7px;
+}
+
+.project-list #btnSelectCustomer {
+    margin-right: 16px;
+}
+
+.project-list-action {
+    display: flex;
+    margin-top: 50px;
+    text-align: left;
+    background: rgb(242, 242, 242);
+}
+
+    .project-list-action button,
+    .project-list-action select {
+        margin-right: 10px;
+    }
+
+    .project-list-action select {
+        width: 120px;
+    }
+
+.search-condition .condition-project-project-plan-group select {
+    width: 225px;
+}
+
+.search-condition select[id="Condition_TAG_ID"] {
+    width: 155px;
+}
+
+.search-condition .search_customer {
+    width: 223px;
+}
+
+#Condition_TIME_CONDITION_TYPE {
+    width: 130px;
+}
+
+.search-condition .search_project_name {
+    width: 428px;
+}
+
+.search-condition .group-1 {
+    float: left;
+    margin-right: 5px;
+}
+
+.search-condition .col-1 {
+    float: left;
+}
+
+.search-condition #Condition_GROUP_ID {
+    vertical-align: top;
+    width: 244px;
+    height: 75px;
+}
+
+.search-condition #Condition_CONTRACT_TYPE_ID {
+    width: 158px;
+}
+
+.search-condition .lbl-auto {
+    width: 105px !important;
+}
+
+@media (max-width: 1120px) {
+    .search-condition .search_project_name {
+        width: 303px;
+    }
+
+    .search-condition .group-1 {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+
+    .search-condition .group-2 {
+        margin-left: 663px;
+    }
+
+    .search-condition .lbl-auto {
+        width: 60px !important;
+    }
+
+    .search-condition #Condition_GROUP_ID {
+        width: 164px;
+    }
+
+    .sidebar-collapse .search-condition .search_project_name {
+        width: 428px;
+    }
+
+    .sidebar-collapse .search-condition .group-1 {
+        margin-bottom: 0;
+        width: auto;
+    }
+
+    .sidebar-collapse .search-condition .group-2 {
+        margin-left: 0;
+    }
+}
+
+@media (max-width: 1024px) {
+    .sidebar-collapse .search-condition .search_project_name {
+        width: 303px;
+    }
+
+    .sidebar-collapse .search-condition .group-1 {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+
+    .sidebar-collapse .search-condition .group-2 {
+        margin-left: 663px;
+    }
+}
+
+@-moz-document url-prefix() {
+    .project-list .dataTables_paginate {
+        left: 42%;
+    }
+
+    @media (max-width: 1150px) {
+        .project-list .dataTables_paginate {
+            left: 51%;
+        }
+    }
+
+    @media (max-width: 1024px) {
+        .project-list .dataTables_paginate {
+            left: 56%;
+        }
+    }
+
+    @media (min-width: 3400px) {
+        input.checkbox, input[type="checkbox"] {
+            transform: scale(0.5);
+        }
+
+        .dataTable th, .dataTable td {
+            height: 51px !important;
+        }
+    }
+}
+
+@media (max-width: 1150px) {
+
+    .project-list .project_name {
+        width: 44%;
+    }
+
+    .br-right {
+        border-right: none !important;
+    }
+
+    .project-list .link-detail {
+        width: 33%;
+    }
+
+    .project-list table.dataTable td .project-name {
+        min-width: 120px;
+        max-width: 11%;
+    }
+
+    .project-list .dataTables_length {
+        left: 195px;
+        width: 100%;
+    }
+}
+
+@media (max-width: 1024px) {
+    .project-list .project_name {
+        width: 61%;
+    }
+
+    .project-list .link-detail {
+        width: 33%;
+    }
+
+    .project-list table.dataTable td .project-name {
+        min-width: 120px;
+        max-width: 11%;
+    }
+
+    .summary-project-list .col-lg-2 {
+        width: 26%;
+    }
+
+    .project-list .dataTables_length {
+        left: 308px;
+        width: 100%;
+    }
+}
+
+@media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) and (max-width: 1400px) {
+    .project-list .dataTables_length {
+        right: 27px;
+    }
+}
+
+@media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) and (max-width: 1150px) {
+    .project-list .dataTables_length {
+        left: 195px;
+    }
+}
+
+@media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) and (max-width: 1113px) {
+    .project-list .dataTables_length {
+        left: 260px;
+    }
+}
+
+@media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) and (max-width: 1024px) {
+    .project-list .dataTables_length {
+        left: 310px;
+    }
+}
+
+.project-list div.div-left {
+    margin-right: -2px;
+}
+
+/*@media (min-width: 1790px) {
+    .project-list div.div-left {
+        margin-right: -1px;
+    }
+}*/
+
+@media (min-width: 2003px) {
+    .project-list .div-center .rank_order,
+    .project-list .div-center .acceptance_date {
+        min-width: 80px;
+    }
+
+    .project-list .div-center .status_order {
+        min-width: 130px;
+    }
+
+    .project-list .div-center .estimate_man_days,
+    .project-list .div-center .actual_man_day {
+        min-width: 150px;
+    }
+
+    .project-list .div-center .upd_date {
+        min-width: 240px;
+    }
+}
+
+.search-condition .lbl-project-plan-type {
+    margin-right: -10px;
+}
+
+.search-condition .condition-project-project-plan-group {
+    width: 48%;
+}
+
+input.radio, input[type="radio"] {
+    margin-top: 0;
+}
+
+#mdCopyProject .modal-header {
+    font-weight: bold
+}
+
+#mdCopyProject .modal-body {
+    text-align: center;
+}
+
+    #mdCopyProject .modal-body form label {
+        padding: 0 25px;
+        font-weight: bold
+    }
+
+#mdCopyProject .modal .modal-footer button {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+}
+
+
+/*
+ * Component: Project detail
+ * -------------------------
+ */
+.project-detail button[id="exportCSV"] {
+    float: left;
+    margin-left: 15px;
+    height: 29px;
+    margin-top: 1px;
+}
+
+.project-detail button[name="btnBack"] {
+    float: left;
+}
+
+.project-detail-header .search-condition label {
+    min-width: 70px;
+    font-weight: bold;
+}
+
+.project-detail-header .link-project-plan {
+    margin-top: 3px;
+    color: #4D99E0;
+    font-weight: normal !important;
+    cursor: pointer;
+}
+
+.project-detail-header .project-name {
+    /*max-width: 500px !important;*/
+    font-size: 20px;
+    margin-top: -5px;
+}
+
+.project-detail-header .phase-name {
+    min-width: 100px !important;
+    max-width: 100px !important;
+}
+
+.project-detail-header .phase-list .col-xs-3 {
+    width: 25% !important;
+}
+
+.project-detail-header .phase-list .margin-bottom {
+    margin-bottom: 10px;
+}
+
+.project-detail-header .font-normal {
+    font-weight: normal !important;
+}
+
+.project-detail-header .col-xs-3 {
+    width: 20% !important;
+}
+
+.project-detail-header .col-xs-4 {
+    width: 40% !important;
+}
+
+.project-detail-header .text-overflow {
+    /*max-width: 300px;*/
+    margin-bottom: 0;
+    vertical-align: text-top;
+}
+
+.project-detail .col-left {
+    float: left;
+    width: 50%;
+    margin-right: -1px;
+}
+
+.project-detail .col-right {
+    float: left;
+    min-width: 50%;
+    max-width: 50%;
+    overflow-x: auto;
+    overflow-y: hidden;
+}
+
+.project-detail .dataTable a {
+    text-decoration: none;
+}
+
+.project-detail .tb-right .th-month {
+    min-width: 120px;
+}
+
+    .project-detail .tb-right .th-month:last-child {
+        border-right: 2px solid #EAEAEA;
+    }
+
+.project-detail .tb-right tr td:last-child {
+    border-right: 2px solid #EAEAEA;
+}
+
+.project-detail .col-left .dataTables_info {
+    display: none;
+}
+
+.project-detail .tb-right tr td {
+    height: 41px;
+    white-space: nowrap;
+}
+
+.project-detail .tb-left tr td {
+    height: 41px;
+}
+
+    .project-detail .tb-left tr td .total-profit {
+        word-break: keep-all;
+    }
+
+.time-unit {
+    margin-left: 30px;
+    margin-bottom: 30px;
+    width: 81px;
+}
+
+@media (min-width: 3400px) {
+    .project-detail-header .search-condition label {
+        min-width: 120px;
+    }
+}
+
+/*
+ * Component: Project regist summary
+ * -------------------------
+ */
+
+.project-summary {
+    position: relative;
+    float: left;
+    width: 23%;
+    padding-right: 0px;
+    padding-left: 0px;
+    background: rgb(244, 245, 249);
+}
+
+.project-summary-title {
+    height: 45px;
+    font-weight: bold;
+    font-size: 20px;
+    padding: 10px 0 0 15px;
+    border-bottom: 1px solid #CCC;
+    background: rgb(239, 240, 242);
+    color: rgb(41, 51, 102);
+}
+
+    .project-summary-title > i {
+        padding: 24px 28px 0 0;
+        cursor: pointer;
+    }
+
+.project-summary-content {
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+    .project-summary-content p {
+        margin: 0px 15px 0px 15px;
+        padding-bottom: 2px;
+        padding-top: 6px;
+        border-bottom: 1px solid #CCC;
+    }
+
+        .project-summary-content p label.lable-content {
+            padding-right: 0px;
+            float: right;
+        }
+
+.project-summary-small {
+    position: relative;
+    float: left;
+    display: none;
+    width: 3%;
+    padding-right: 0px;
+    padding-left: 0px;
+    background: rgb(244, 245, 249);
+}
+
+.project-summary-title-small {
+    padding-top: 7px;
+    background: rgb(244, 245, 249);
+    font-weight: bold;
+    font-size: 20px;
+    text-align: center;
+}
+
+    .project-summary-title-small > i {
+        padding: 0 5px;
+        cursor: pointer;
+    }
+
+#updateTime .user-name {
+    max-width: 150px;
+}
+
+.center-side #updateTime {
+    padding-right: 0;
+    padding-left: 0;
+}
+
+    .center-side #updateTime label {
+        float: right;
+        padding-right: 0;
+        padding-left: 10px;
+    }
+
+    .center-side #updateTime .user-name {
+        max-width: 200px;
+    }
+
+/*
+ * Component: Project regist
+ * -------------------------
+ */
+
+.project-regist {
+    position: relative;
+    float: left;
+    width: 77%;
+    padding: 40px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+
+    .project-regist .error-compare {
+        color: red;
+        font-weight: bold;
+    }
+
+    .project-regist .display-error {
+        margin-top: -20px;
+    }
+
+        .project-regist .display-error * {
+            padding: 0;
+        }
+
+    .project-regist .title {
+        padding-bottom: 25px;
+    }
+
+    .project-regist h1 {
+        margin-bottom: 5px;
+        padding: 0;
+        font-size: 24px;
+        font-weight: bold;
+    }
+
+    .project-regist label.h1 {
+        font-size: 24px;
+        font-weight: bold;
+    }
+
+.project-plan {
+    margin: 0 !important;
+    padding: 0 !important;
+    color: #4D99E0;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.project-regist .form-group,
+.project-regist .col-input {
+    margin-bottom: 15px;
+    padding: 0;
+}
+
+.project-regist label.col-sm-2 {
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.project-regist label {
+    padding-top: 5px;
+}
+
+.project-regist input[type="text"],
+.project-regist textarea {
+    margin: 0;
+}
+
+.project-regist input[type="checkbox"] {
+    margin: 0 10px 0 0;
+}
+
+.project-regist hr {
+    border-top: 2px solid rgb(48, 65, 134);
+}
+
+    .project-regist hr.form-group {
+        padding-bottom: 20px;
+    }
+
+.project-regist .break-space {
+    padding: 30px;
+}
+
+.project-regist .no-bottom {
+    margin-bottom: 0;
+}
+
+.mar-left {
+    margin-left: 15px;
+}
+
+.project-regist .os-name, .project-regist .eu-name {
+    width: 80% !important;
+}
+
+.project-regist .unit {
+    padding-right: 0;
+}
+
+.project-regist .ddlTagLink {
+    margin: 0;
+    width: 60%;
+}
+
+.project-regist .lbl-action {
+    padding-left: 10px;
+    color: #737373;
+    text-decoration: underline;
+    cursor: pointer;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+    .project-regist .lbl-action:hover {
+        color: red;
+    }
+
+.project-regist .end-user-content .lbl-action {
+    padding-left: 0px;
+}
+
+.project-regist .project-plan-type {
+    width: 153px;
+}
+
+.project-regist .date-range-space {
+    padding-left: 10px;
+}
+
+.project-regist .display-date {
+    width: 110px;
+    text-align: center;
+}
+
+.project-regist .select-phase .lbl-action {
+    padding-left: 0;
+    padding-right: 20px;
+}
+
+.project-regist .phase-list input[type="checkbox"] {
+    margin: 0 10px 15px 0;
+}
+
+.project-regist .short-phase-name {
+    margin: 5px 30px 0 0;
+    width: 90px;
+    display: inline-block;
+}
+
+.project-regist .btnAddCategory {
+    margin-right: 10px;
+}
+
+.project-regist .category-div {
+    width: -moz-calc(83% - 91px);
+    width: -webkit-calc(83% - 91px);
+    width: -o-calc(83% - 91px);
+    width: calc(83% - 91px);
+}
+
+.project-regist .category-list {
+    width: 100%;
+    padding: 15px 0 0;
+    min-height: 62px;
+    max-height: 150px;
+    background: #F4F4F4;
+    border: 1px solid #ccc;
+    overflow: auto;
+}
+
+.project-regist .category-header {
+    height: 35px;
+    background-color: inherit;
+    padding: 10px 0;
+    border: 1px solid #ccc;
+    border-bottom: 0px;
+    margin-bottom: 0;
+    background-color: #F4F4F4;
+}
+
+.project-regist .category-list .category-content {
+    padding: 0 20px;
+}
+
+.project-regist .category-header {
+    padding: 5px 20px 0;
+}
+
+.project-regist .category-list .category-content:not(:first-child) {
+    margin: 15px 0;
+}
+
+.project-regist .category-list .category-content .hidden {
+    visibility: hidden;
+}
+
+.project-regist .category-list select, label.label-category {
+    margin: 0 20px 0 0;
+    overflow: hidden;
+    vertical-align: middle;
+    width: -moz-calc(50% - 60px);
+    width: -webkit-calc(50% - 60px);
+    width: -o-calc(50% - 60px);
+    width: calc(50% - 60px)
+}
+
+.project-regist .value-selected {
+    width: 27%;
+    margin-right: 5px !important;
+}
+
+.project-regist .total-estimate-man-days {
+    margin-top: -11px;
+    margin-right: -6px;
+    color: rgb(246, 156, 0);
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.project-regist .sc-pic-name, .project-regist .sc-payment {
+    margin-left: 10px !important;
+}
+
+.project-regist #btnBack {
+    margin-right: 10px;
+}
+
+.project-regist #btnSubmit {
+    margin-left: 0;
+}
+
+.subproject-planor-content .value-selected {
+    margin-right: 5px !important;
+}
+
+.subproject-planor-content button {
+    margin-right: 10px !important;
+}
+
+.subproject-planor-content .sc-name {
+    width: 35%;
+}
+
+.subproject-planor-content .sc-pic-name {
+    width: 20%;
+}
+
+.subproject-planor-content .sc-payment {
+    width: 15%;
+}
+
+.overheadcost-content select {
+    width: 17%;
+    margin-left: 0;
+}
+
+.overheadcost-content .ovc-detail {
+    width: 25%;
+    margin-right: 10px !important;
+}
+
+.overheadcost-content .ovc-pic-name {
+    width: 20% !important;
+    margin-right: 5px !important;
+}
+
+.overheadcost-content .ovc-total-amount {
+    width: 15% !important;
+    margin-left: 10px !important;
+}
+
+.project-regist .total-sales, .project-regist .total-sales-unit {
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.project-regist .total-sales {
+    width: 250px;
+    height: 40px;
+    padding: 0px;
+}
+
+.project-regist .total-sales-unit {
+    padding: 3px 25px 0 0;
+    vertical-align: middle;
+}
+
+.project-regist .tax-rate-content {
+    padding-top: 7px;
+}
+
+.project-regist .percent {
+    width: 50px;
+}
+
+.project-regist .total-individual-sales label,
+.project-regist .total-payment label {
+    margin-bottom: 0;
+    font-size: 24px;
+}
+
+.project-regist .padding-right {
+    padding-right: 40px;
+}
+
+.project-regist .total-payment .field-validation-error {
+    font-size: 14px !important;
+}
+
+.project-regist .payment-highlight label {
+    font-size: 18px;
+    font-weight: bold;
+    border-left: 5px solid #2E3F82;
+    padding-left: 10px;
+}
+
+.project-regist .payment-highlight button {
+    margin-top: -10px;
+}
+
+.project-regist #PROJECT_INFO_status_id, .project-regist #PROJECT_INFO_rank_id {
+    width: 100px;
+}
+
+.project-regist .btnAddProgress .btn-icon {
+    padding-left: 21px;
+    margin-right: -15px;
+    margin-left: -10px;
+}
+
+.project-regist .progress-remarks {
+    width: 305px;
+}
+
+.project-regist .progress-list {
+    padding: 15px 20px;
+    height: 105px;
+    width: 655px;
+    min-height: 60px;
+    max-height: 313px;
+    background: #F4F4F4;
+    border: 1px solid #ccc;
+    overflow: auto;
+    resize: vertical;
+}
+
+    .project-regist .progress-list .tb-detail {
+        width: 613px !important;
+    }
+
+        .project-regist .progress-list .tb-detail td {
+            white-space: nowrap;
+        }
+
+    .project-regist .progress-list .short-progress-remarks {
+        width: 350px;
+    }
+
+    .project-regist .progress-list .td-remove {
+        border: none;
+        background: #F4F4F4;
+        width: 60px;
+    }
+
+.tb-detail {
+    width: 100% !important;
+}
+
+    .tb-detail tr th {
+        height: 54px;
+        padding: 5px 0 5px 10px;
+        text-align: left;
+        color: #212121;
+        border: 1px solid #ccc;
+        background: rgb(242, 242, 242);
+    }
+
+    .tb-detail tr td {
+        padding: 3px 10px;
+        height: 40px;
+        border: 1px solid #ccc;
+        color: #212121;
+        vertical-align: middle;
+    }
+
+.project-regist .tb-detail tr.tr-total,
+.project-regist #phase-list tr.tr-total-phase {
+    background: rgb(254, 255, 224) !important;
+}
+
+.project-regist #phase-list th.th-select-phase {
+    padding: 0;
+    width: 30px;
+}
+
+.project-regist #phase-list th.th-phase-name {
+    min-width: 250px;
+}
+
+.project-regist #phase-list th.th-est-effort {
+    min-width: 154px;
+}
+
+.project-regist #phase-list tbody tr td {
+    max-width: 250px;
+    white-space: nowrap;
+}
+
+    .project-regist #phase-list tbody tr td.empty-td {
+        border: none;
+        background-color: white;
+    }
+
+    .project-regist #phase-list tbody tr td input[type=text] {
+        width: 100px;
+    }
+
+.tb-detail tr.tr-sum {
+    background: rgb(249, 254, 151) !important;
+}
+
+.project-regist .tb-detail tr th.th-month {
+    min-width: 140px;
+}
+
+.tb-detail tr td a {
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+.project-regist .tb-detail .ma-man-days {
+    width: 85px !important;
+}
+
+.tb-detail input[type="text"] {
+    width: 100px;
+}
+
+.project-regist textarea {
+    min-width: 280px;
+    max-width: 100%;
+    max-height: 200px;
+}
+
+.project-regist table.tbl-rank {
+    width: auto !important;
+}
+
+    .project-regist table.tbl-rank tr td {
+        border: none;
+        background-color: white;
+        font-size: 12px;
+        height: 15px;
+    }
+
+        .project-regist table.tbl-rank tr td:first-child {
+            min-width: 40px;
+        }
+
+.project-regist div.col-left {
+    float: left;
+    width: 233px;
+}
+
+.project-regist div.div-ma-sales {
+    width: 190px;
+}
+
+.project-regist div.col-center {
+    float: left;
+    max-width: 52%;
+    overflow-x: auto;
+    overflow-y: hidden;
+}
+
+.project-regist div.col-right {
+    float: left;
+    width: 155px;
+}
+
+.project-regist div.col-ma-left {
+    width: 233px;
+}
+
+.project-regist div.col-ma-center {
+    max-width: 48%;
+}
+
+.project-regist div.col-ma-right {
+    width: 124px;
+}
+
+.project-regist .tb-ma-sales-left .ma-sales-display-name {
+    width: 210px !important;
+}
+
+.project-regist .tb-ma-left div.ma-display-name {
+    width: 133px;
+}
+
+.project-regist .tb-detail tr {
+    background: rgb(252,252,252);
+}
+
+.tb-ma-center tr th,
+.tb-ma-center tr td,
+.tb-ma-sales-center tr th,
+.tb-ma-sales-center tr td,
+.tb-sc-center tr th,
+.tb-sc-center tr td,
+.tb-ovc-center tr th,
+.tb-ovc-center tr td {
+    border-right: none;
+}
+
+    .tb-ma-center tr th:first-child,
+    .tb-ma-center tr td:first-child,
+    .tb-ma-sales-center tr th:first-child,
+    .tb-ma-sales-center tr td:first-child,
+    .tb-sc-center tr th:first-child,
+    .tb-sc-center tr td:first-child,
+    .tb-ovc-center tr th:first-child,
+    .tb-ovc-center tr td:first-child {
+        border-left: none;
+    }
+
+.tb-ma-center,
+.tb-ma-sales-center,
+.tb-sc-center,
+.tb-ovc-center {
+    margin-bottom: 1px;
+}
+
+    .tb-ma-center tr.tr-total td label.font-normal,
+    .tb-sc-center tr.tr-total td label.font-normal,
+    .tb-ovc-center tr.tr-total td label.font-normal {
+        margin-right: 4px;
+    }
+
+.tb-ma-sales-center {
+    white-space: nowrap;
+}
+
+    .tb-ma-sales-center tr td.td-ma-sales-detail div.div-sales,
+    .tb-ma-sales-center tr.tr-total td div.div-sales,
+    .tb-ma-sales-center tr td div.div-sales,
+    .tb-ma-sales-right tr td div.div-sales {
+        display: flex;
+    }
+
+        .tb-ma-sales-center tr td.td-ma-sales-detail div.div-sales div:first-child, span.plan-cost, label.split {
+            padding-right: 4px;
+        }
+
+        .tb-ma-sales-center tr td.td-ma-sales-detail div.div-sales div:last-child,
+        .tb-ma-sales-center tr.tr-total td div.div-sales div:last-child,
+        .tb-ma-sales-center tr td div.div-sales div:last-child,
+        .tb-ma-sales-right tr td div.div-sales div:last-child {
+            margin-left: auto;
+            text-align: right;
+        }
+
+        .tb-ma-sales-center tr td.td-ma-sales-detail div.div-sales div:last-child {
+            line-height: 30px;
+        }
+
+    .tb-ma-sales-center tr.tr-total td div.div-total-plan-cost {
+        display: inline-block;
+        width: 100px;
+    }
+
+    .tb-ma-sales-center tr.tr-total td label.font-normal:first-child {
+        margin-right: 4px;
+    }
+
+    .tb-ma-sales-center tr td div.div-sales div:first-child label:first-child,
+    .tb-ma-sales-right tr td div.div-sales div:first-child label:first-child {
+        display: inline-block;
+        width: 100px;
+    }
+
+.project-regist .tb-detail tr td label,
+.project-history .tb-detail tr td label {
+    margin: 0;
+    padding: 0;
+}
+
+.project-regist .tb-detail tr.tr-total td {
+    height: 34px;
+}
+
+.project-regist .div-category .category-info,
+.project-regist .div-file-attach .file-attach,
+.project-regist .div-subproject-planor .subproject-planor-info,
+.project-regist .div-overheadcost .overheadcost-info {
+    float: left;
+}
+
+.project-regist .div-category .category-list .category-content:first-child,
+.project-regist .div-file-attach .file-attach-list .file-attach-content:first-child,
+.project-regist .div-subproject-planor .subproject-planor-list .subproject-planor-content:first-child,
+.project-regist .div-overheadcost .overheadcost-list .overheadcost-content:first-child {
+    margin-top: -2px;
+}
+
+.project-regist .div-category .category-list {
+    max-height: 180px;
+    overflow: auto;
+    width: 40%;
+}
+
+.project-regist .div-subproject-planor .subproject-planor-list,
+.project-regist .div-overheadcost .overheadcost-list {
+    display: table-cell;
+}
+
+    .project-regist .div-overheadcost .overheadcost-list .overheadcost-content select {
+        margin-top: 5px;
+        min-width: 100px;
+        max-width: 100px;
+    }
+
+.font-red {
+    color: red;
+}
+
+.data-list fieldset .col_0 {
+    width: 100px;
+}
+
+.col_1 {
+    min-width: 103px;
+}
+
+.data-list select.col_3 {
+    width: 110px;
+}
+
+.data-list select.col_4 {
+    width: 318px;
+}
+
+ul.invalid-members {
+    list-style-type: initial;
+}
+
+    ul.invalid-members li {
+        line-height: 0;
+    }
+
+.project-regist .tb-sc-left td div {
+    width: 210px !important;
+}
+
+.project-regist .tb-ovc-left tr th {
+    width: 270px !important;
+}
+
+.project-regist .tb-ovc-left td div {
+    width: 210px !important;
+}
+
+.project-regist input[type="checkbox"]#check-all-phase,
+.project-regist input[type="checkbox"].target-phase {
+    margin: 0 !important;
+}
+
+.ddlTagLink {
+    width: 218px;
+}
+
+.btnSearchSubproject-planorPic {
+    margin-left: 0px !important;
+    border: 1px solid #ccc;
+    background: rgb(252,252,252); /* Old browsers */
+    background: -moz-linear-gradient(top, rgba(252,252,252,1) 0%, rgba(224,224,224,1) 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(252,252,252,1)), color-stop(100%,rgba(224,224,224,1))); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top, rgba(252,252,252,1) 0%,rgba(224,224,224,1) 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top, rgba(252,252,252,1) 0%,rgba(224,224,224,1) 100%); /* Opera11.10+ */
+    background: linear-gradient(top, rgba(252,252,252,1) 0%,rgba(224,224,224,1) 100%); /* W3C */
+}
+
+.btnSearchOvcPic {
+    border: 1px solid #ccc;
+    background: rgb(252,252,252); /* Old browsers */
+    background: -moz-linear-gradient(top, rgba(252,252,252,1) 0%, rgba(224,224,224,1) 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(252,252,252,1)), color-stop(100%,rgba(224,224,224,1))); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top, rgba(252,252,252,1) 0%,rgba(224,224,224,1) 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top, rgba(252,252,252,1) 0%,rgba(224,224,224,1) 100%); /* Opera11.10+ */
+    background: linear-gradient(top, rgba(252,252,252,1) 0%,rgba(224,224,224,1) 100%); /* W3C */
+}
+
+.display-history {
+    color: #4D99E0;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+@media (min-width: 2100px) {
+    .project-regist div.col-left {
+        float: left;
+        width: 500px;
+    }
+
+    .project-regist div.col-center {
+        float: left;
+        max-width: 37%;
+        overflow-x: auto;
+        overflow-y: hidden;
+    }
+
+    .project-regist div.col-right {
+        float: left;
+        width: 204px;
+    }
+
+    .project-regist .tb-detail tr th.th-month {
+        min-width: 250px;
+    }
+
+    .project-regist .tb-detail tr td {
+        padding: 3px 10px;
+        height: 52px;
+        border: 1px solid #ccc;
+        color: #212121;
+        vertical-align: middle;
+    }
+
+    .project-regist .project-regist .tb-detail tr.tr-total td {
+        height: 40px;
+    }
+
+    .project-regist .project-regist .tb-ma-left div.ma-display-name {
+        width: 230px;
+    }
+
+    .project-regist .tb-detail .ma-man-days {
+        width: 130px !important;
+    }
+
+    .project-regist .tb-detail input[type="text"] {
+        width: 180px;
+    }
+}
+
+
+@media (max-width: 2050px) {
+    .project-regist div.col-center {
+        max-width: 51%;
+    }
+
+    .project-regist div.col-ma-center {
+        max-width: 46%;
+    }
+
+    .project-regist .tb-ma-left div.ma-display-name {
+        width: 130px;
+    }
+
+    .project-regist .tb-detail tr th.th-month {
+        min-width: 140px;
+    }
+
+    .project-regist .tb-ma-sales-left .ma-sales-display-name {
+        width: 168px !important;
+    }
+
+    .tb-ma-sales-right {
+        white-space: nowrap;
+    }
+}
+
+
+/*
+ * Component: Project history
+ * -------------------------
+ */
+#historyContent {
+    display: none;
+}
+
+.project-history {
+    padding: 30px;
+}
+
+    .project-history #title {
+        padding-bottom: 30px;
+        font-size: 24px;
+        font-weight: bold;
+    }
+
+    .project-history label {
+        padding: 5px 0 0;
+    }
+
+    .project-history #endUser {
+        min-height: 19px;
+        padding: 5px 0 0;
+    }
+
+    .project-history .col-md-1 {
+        width: 150px;
+    }
+
+    .project-history hr {
+        margin: 20px 0;
+    }
+
+    .project-history #dllHistory {
+        background: rgb(242, 242, 242);
+        margin: -3px 0 0;
+    }
+
+    .project-history div.col-left {
+        float: left;
+        width: 470px;
+    }
+
+    .project-history div.col-center {
+        float: left;
+        min-width: 0px;
+        max-width: 51%;
+        overflow-x: auto;
+        overflow-y: hidden;
+    }
+
+    .project-history div.col-right {
+        float: left;
+        width: 160px;
+    }
+
+    .project-history .col-ma-sales {
+        min-width: 325px !important;
+    }
+
+    .project-history .tb-detail tr:not(.tb-header):not(.tr-total) {
+        background: #fff;
+    }
+
+    .project-history .tb-ma-left div.ma-display-name {
+        width: 300px;
+    }
+
+    .project-history .tb-ma-sales-left .ma-sales-display-name {
+        width: 430px !important;
+    }
+
+    .project-history .tb-sc-left td div {
+        width: 200px !important;
+    }
+
+    .project-history .tb-ovc-left td div {
+        width: 130px !important;
+    }
+
+    .project-history .tb-detail tr th.th-month {
+        min-width: 131px;
+    }
+
+    .project-history .tb-ma-left tr th:first-child {
+        width: 350px;
+    }
+
+.rise {
+    color: blue;
+}
+
+.reduce {
+    color: red !important;
+}
+
+/*zoom in*/
+@media (max-width: 1300px) {
+    .project-history div.col-center {
+        max-width: 43%;
+    }
+}
+
+@media (max-width: 1280px) {
+    .project-history div.col-center {
+        max-width: 43%;
+    }
+}
+
+@media (max-width: 1150px) {
+    .project-history div.col-center {
+        max-width: 43%;
+    }
+}
+
+@media (max-width: 1138px) {
+    .project-history div.col-center {
+        max-width: 38%;
+    }
+}
+
+@media (max-width: 1100px) {
+    .project-history div.col-center {
+        max-width: 32%;
+    }
+}
+
+@media (max-width: 1024px) {
+    .project-history div.col-center {
+        max-width: 32%;
+    }
+}
+
+
+@media (min-width: 1300px) {
+    .project-history div.col-center {
+        max-width: 48%;
+    }
+}
+
+@media (min-width: 1349px) {
+    .project-history div.col-center {
+        max-width: 51%;
+    }
+}
+
+@media (min-width: 1449px) {
+    .project-history div.col-center {
+        max-width: 54%;
+    }
+}
+
+@media (min-width: 1779px) {
+    .project-history div.col-center {
+        max-width: 62%;
+    }
+
+    .project-history .tb-detail tr th.th-month {
+        min-width: 169px;
+    }
+
+    .project-history div.col-right {
+        width: 190px;
+    }
+}
+
+@media (min-width: 2026px) {
+    .project-history div.col-center {
+        max-width: 65%;
+    }
+
+    .project-history .tb-ma-left tr th:first-child {
+        width: 299px;
+    }
+
+    .project-history .tb-detail tr th.th-month {
+        min-width: 220px;
+    }
+
+    .project-history div.col-right {
+        width: 215px;
+    }
+}
+
+@media (min-width: 2698px) {
+    .project-history div.col-center {
+        max-width: 75%;
+    }
+
+    .project-history div.col-right {
+        width: 188px;
+    }
+
+    .project-history .tb-ma-left tr th:first-child {
+        width: 299px;
+    }
+
+    .project-history .tb-ma-left div.ma-display-name {
+        width: 270px;
+    }
+}
+
+@media (min-width: 4051px) {
+    .project-history div.col-center {
+        max-width: 83%;
+    }
+
+    .project-history .tb-detail tr th.th-month {
+        min-width: 220px;
+    }
+}
+
+@media (min-width: 5464px) {
+    .project-history div.col-center {
+        max-width: 86%;
+    }
+
+    .project-history div.col-right {
+        width: 230px;
+    }
+}
+
+/*
+ * Component: Project plan regist
+ * -------------------------
+ */
+.project-plan-regist hr {
+    margin: 30px 0 25px 0 !important;
+    border-top: 1px solid #CCC;
+}
+
+.project-plan-regist .title-lable {
+    width: 350px;
+}
+
+.project-plan-regist .remark-content {
+    height: 138px;
+    overflow-y: scroll;
+    width: 390px;
+    resize: none;
+}
+
+.project-plan-regist .label-remark-content {
+    width: 390px;
+    word-break: break-all;
+}
+
+.project-plan-regist input.col_2_textbox {
+    width: 320px;
+    margin-left: 37px;
+}
+
+.project-plan-regist label.col_2_textbox {
+    word-break: break-all;
+    width: 320px;
+    margin-bottom: 4px;
+    margin-left: 37px;
+}
+
+.project-plan-regist .short-text {
+    max-width: 420px;
+}
+
+.project-plan-regist .require-project {
+    margin-top: -16px;
+    color: red;
+    margin-bottom: 15px;
+}
+
+.project-plan-regist input.col_3_textbox {
+    width: 380px;
+}
+
+.project-plan-regist label.col_3_textbox {
+    word-break: break-all;
+    width: 395px;
+    margin-left: 12px;
+}
+
+.project-plan-regist .btnAddRisk {
+    margin-left: -15px;
+}
+
+.project-plan-regist .title-concerns,
+.project-plan-regist .title-measure {
+    margin-left: 15px;
+    margin-right: -54px;
+    margin-right: -60px;
+    width: 10%;
+}
+
+.project-plan-regist .remark_plan {
+    margin-bottom: 12px;
+}
+
+.project-plan-regist .target-content .btnDeleteTarget,
+.project-plan-regist .risk-content .btnDeleteRisk {
+    margin-left: -8px;
+}
+
+.project-plan-regist .target-content {
+    margin-left: -23px;
+}
+
+.project-plan-regist .title_chkbox {
+    margin-right: 20px;
+}
+
+.project-plan-regist #btnDownload {
+    margin-left: 10px;
+    margin-right: 15px;
+}
+
+.project-plan-regist #btnSubmit {
+    margin-right: 0px;
+}
+
+.project-plan-regist .lbl-action:hover {
+    color: red;
+}
+
+.project-plan-regist .btnAddRisk {
+    margin-right: 10px;
+}
+
+.project-plan-regist .bt-space {
+    margin-right: 10px;
+    visibility: hidden;
+}
+
+.project-plan-regist .risk-content {
+    margin-bottom: 10px
+}
+
+.project-plan-regist .title-risk {
+    margin-top: 15px;
+    margin-bottom: 0;
+}
+
+.project-plan-regist .top-title {
+    width: 178px;
+    text-align: center;
+    font-weight: bold;
+    float: left;
+}
+
+.project-plan-regist .title-risk-next {
+    width: 325px;
+    text-align: right
+}
+
+.project-plan-regist input[readonly] {
+    cursor: default;
+}
+
+.project-plan-regist #btnCancel {
+    margin-right: 10px;
+}
+
+.project-plan-regist #btnSubmit {
+    margin-left: 0;
+}
+
+/* Actual work */
+.actual-work-header .search-condition label {
+    margin-bottom: 10px;
+}
+
+.actual-work-header .text-overflow {
+    max-width: 230px;
+    margin-bottom: 0;
+    vertical-align: text-top;
+}
+
+.actual-work-detail .col-left .dataTables_info {
+    display: none;
+}
+
+.actual-work-detail .col-left {
+    float: left;
+    width: 30%;
+    margin-right: -1px;
+}
+
+.actual-work-detail .col-right {
+    float: left;
+    min-width: 70%;
+    max-width: 70%;
+    overflow-x: auto;
+    overflow-y: hidden;
+}
+
+
+
+.actual-work-detail .time-unit {
+    margin-left: 0;
+    margin-top: 30px;
+    width: 81px;
+}
+
+.actual-work-detail .tb-right .th-month {
+    min-width: 100px;
+}
+
+@media (min-width: 2100px) {
+    .project-plan-regist label.title-measure {
+        margin-left: -230px;
+    }
+
+    .project-plan-regist .risk-content .col-sm-5 label {
+        margin-left: -100px;
+    }
+
+    .project-plan-regist .risk-content .col-sm-5 input {
+        margin-left: -122px;
+    }
+
+    .project-plan-regist .title-lable {
+        width: 510px;
+    }
+
+    .project-plan-regist .btn-group-edit {
+        margin-top: 103px;
+    }
+
+    .project-plan-regist .btnAddRisk {
+        margin-left: -58px;
+    }
+}
+
+.label_right {
+    margin-left: 61px;
+}
+
+.sWidth_1 {
+    width: 100px;
+}
+
+.sWidth_2 {
+    width: 161px;
+}
+
+.sWidth_3 {
+    width: 280px;
+}
+
+.sWidth_4 {
+    max-width: 31.666666666667%;
+}
+
+.sWidth_5 {
+    max-width: 50%;
+}
+
+.sWidth_6 {
+    min-width: 48.333333333333%;
+}
+
+.sWidth_7 {
+    min-width: 54.666666666667%;
+}
+
+.sWidth_8 {
+    min-width: 65%;
+}
+
+.sWidth_9 {
+    min-width: 73.333333333333%;
+}
+
+.sWidth_10 {
+    min-width: 81.666666666667%;
+}
+
+.sWidth_11 {
+    min-width: 98.5%;
+}
+
+.sWidth_12 {
+    min-width: 1308px;
+}
+
+.tab-right_1 {
+    margin-right: 44px;
+}
+
+.tab-right_2 {
+    margin-right: 65px;
+}
+
+.tab-right_3 {
+    margin-right: 78px;
+}
+
+.tab-right_4 {
+    margin-right: 31.666666666667%;
+}
+
+.tab-right_5 {
+    margin-right: 40%;
+}
+
+.tab-right_6 {
+    margin-right: 48.333333333333%;
+}
+
+.tab-right_7 {
+    margin-right: 56.666666666667%;
+}
+
+.tab-right_8 {
+    margin-right: 65%;
+}
+
+.tab-right_9 {
+    margin-right: 73.333333333333%;
+}
+
+.tab-right_10 {
+    margin-right: 81.666666666667%;
+}
+
+.tab-right_11 {
+    margin-right: 90%;
+}
+
+.tab-right_12 {
+    margin-right: 98.333333333333%;
+}
+
+.tab-left_1 {
+    margin-left: 30px;
+}
+
+.tab-left_2 {
+    margin-left: 70px;
+}
+
+.tab-left_3 {
+    margin-left: 23.333333333333%;
+}
+
+.tab-left_4 {
+    margin-left: 525px !important;
+}
+
+.tab-left_5 {
+    margin-left: 40%;
+}
+
+.tab-left_6 {
+    margin-left: 48.333333333333%;
+}
+
+.tab-left_7 {
+    margin-left: 56.666666666667%;
+}
+
+.tab-left_8 {
+    margin-left: 65%;
+}
+
+.tab-left_9 {
+    margin-left: 73.333333333333%;
+}
+
+.tab-left_10 {
+    margin-left: 81.666666666667%;
+}
+
+.tab-left_11 {
+    margin-left: 90%;
+}
+
+.tab-left_12 {
+    margin-left: 98.333333333333%;
+}
+
+@media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
+    .tbl-list-left {
+        width: 100% !important;
+    }
+
+    .row_plan {
+        width: 100% !important;
+    }
+}
+
+@-moz-document url-prefix() {
+    #Condition_GROUP_ID {
+        margin-right: 21px;
+    }
+}
+
+.br-right {
+    border-right: 1px solid #EAEAEA;
+}
+
+
+/*List Screen*/
+@media (max-width: 1100px) and (min-width: 1000px) { /*125%  resolution 1366x768*/
+    .short-text-resize {
+        max-width: 17% !important;
+    }
+}
+
+@media (min-width: 1510px) { /*less than 75%*/
+    .short-text-resize {
+        max-width: 20% !important;
+    }
+}
+
+@media (min-width: 2390px) { /*Large Screen: less than 75%*/
+    .short-text-resize {
+        max-width: 21% !important;
+    }
+}
+
+@media (max-width: 1540px) and (min-width: 1530px) { /*Large Screen 125%*/
+    .short-text-resize {
+        max-width: 19% !important;
+    }
+}
+
+@media (max-width: 1750px) and (min-width: 1740px) { /*Large Screen 110%*/
+    .short-text-resize {
+        max-width: 19% !important;
+    }
+}
+
+
+/*Details Screen*/
+.project-detail .dataTable .user-name {
+    margin-top: -10px;
+    max-width: 113px;
+    position: absolute;
+    font-size: 14px;
+    cursor: pointer;
+    padding-bottom: 4px;
+    padding-top: 2px;
+}
+
+.project-detail .dataTable td .short-text {
+    width: 120px;
+}
+
+@media (min-width: 1510px) { /* less than or equal 90% resolution 1366x768*/
+    .project-detail .dataTable td .short-text {
+        width: 150px;
+    }
+
+    .project-detail .dataTable .user-name {
+        max-width: 113px;
+    }
+}
+
+@media(min-width: 1700px) { /* less than or equal 80% only resolution 1366x768*/
+    .project-detail .dataTable .user-name {
+        max-width: 165px;
+    }
+}
+
+@media (max-width: 1840px) and (min-width: 1810px) { /*75% only resolution 1366x768*/
+    .project-detail .dataTable td .short-text {
+        width: 173px;
+    }
+}
+
+@media (min-width: 1910px) and (max-width: 1920px) { /*Large Screen 100%*/
+    .project-detail .dataTable td .short-text {
+        width: 180px;
+    }
+
+    .project-detail .dataTable .user-name {
+        max-width: 183px;
+    }
+}
+
+@media (max-width: 2140px) and (min-width: 2130px) { /*Large Screen 90%*/
+    .project-detail .dataTable td .short-text {
+        width: 204px;
+    }
+
+    .project-detail .dataTable .user-name {
+        max-width: 213px;
+    }
+}
+
+@media (max-width: 2560px) and (min-width: 2390px) { /*Large Screen 80% and 75%*/
+    .project-detail .dataTable td .short-text {
+        width: 253px;
+    }
+
+    .project-detail .dataTable .user-name {
+        max-width: 247px;
+    }
+}
+
+.cell_left {
+    max-width: 200px;
+}
+
+.actual-work-header .user_name {
+    max-width: 40%;
+}
+
+.actual-work-header .project_name {
+    max-width: 70%;
+}
+
+.customer_name {
+    max-width: 80%;
+}
+
+.actual-work-header .text-overflow {
+    max-width: 70%;
+}
+
+.tbl-list-left.dataTable td:last-child {
+    border-right: none;
+}
+
+.project-list table.dataTable tbody tr td, .project-list table.dataTable thead tr th {
+    white-space: nowrap;
+}
+
+.btn-left {
+    float: left;
+}

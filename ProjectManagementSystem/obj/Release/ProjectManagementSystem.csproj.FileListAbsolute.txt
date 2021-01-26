@@ -7,3 +7,13 @@ D:\Data\Project\iProGit\ProjectManagementSystem\obj\Release\ProjectManagementSys
 D:\Data\Project\iProGit\ProjectManagementSystem\obj\Release\ProjectManagementSystem.csproj.CopyComplete
 D:\Data\Project\iProGit\ProjectManagementSystem\obj\Release\ProjectManagementSystem.dll
 D:\Data\Project\iProGit\ProjectManagementSystem\obj\Release\ProjectManagementSystem.pdb
+E:\SHIGOTO\ProjectManagementSystem\bin\ProjectManagementSystem.dll.config
+E:\SHIGOTO\ProjectManagementSystem\bin\ProjectManagementSystem.dll
+E:\SHIGOTO\ProjectManagementSystem\bin\ProjectManagementSystem.pdb
+E:\SHIGOTO\ProjectManagementSystem\obj\Release\ProjectManagementSystem.csprojAssemblyReference.cache
+E:\SHIGOTO\ProjectManagementSystem\obj\Release\ProjectManagementSystem.Resources.Messages.resources
+E:\SHIGOTO\ProjectManagementSystem\obj\Release\ProjectManagementSystem.csproj.GenerateResource.cache
+E:\SHIGOTO\ProjectManagementSystem\obj\Release\ProjectManagementSystem.csproj.CoreCompileInputs.cache
+E:\SHIGOTO\ProjectManagementSystem\obj\Release\ProjectManagementSystem.csproj.CopyComplete
+E:\SHIGOTO\ProjectManagementSystem\obj\Release\ProjectManagementSystem.dll
+E:\SHIGOTO\ProjectManagementSystem\obj\Release\ProjectManagementSystem.pdb

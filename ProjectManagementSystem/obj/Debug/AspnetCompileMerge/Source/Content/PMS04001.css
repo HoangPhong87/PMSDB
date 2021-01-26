@@ -1,0 +1,79 @@
+﻿
+
+.phase-list .upd_date {
+    min-width: 170px;
+}
+
+.phase-list td a label{
+    cursor: pointer;
+}
+
+.longtext {
+  max-width: 100%;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  margin-left: 0;
+  vertical-align: middle;
+  margin-bottom: 0;
+
+}
+
+.search-date {
+  text-align: left;
+}
+
+.phase_regist .col-sm-2{
+  width: 14%!important;
+}
+/*zoom in common textarea*/
+ @media (max-width: 1300px) {
+    .candy-textArea{
+        max-width: 980px;
+    }
+}
+
+@media (max-width: 1100px) {
+    .candy-textArea{
+        max-width: 980px;
+    }
+    .set-max-width{
+        max-width :980px;
+    }
+}
+@media (min-width: 1300px) {
+    .candy-textArea{
+        max-width: 980px;
+    }
+    .set-max-width{
+        max-width :980px;
+    }
+}
+@media (min-width: 1500px) {
+    .candy-textArea{
+        max-width: 1100px;
+    }
+    .set-max-width{
+        max-width :1100px;
+    }
+}
+@media (min-width: 1700px) {
+    .candy-textArea{
+        max-width:1270px;
+    }
+    .set-max-width{
+        max-width :1270px;
+    }
+}
+@media (min-width: 1800px) {
+    .candy-textArea{
+        max-width:1365px;
+    }
+    .set-max-width{
+        max-width :1365px;
+    }
+}
+ .cell_left{
+    max-width:250px;
+    min-width:100px;
+ }

@@ -1,0 +1,48 @@
+﻿.content {
+    padding-top: 20px !important;
+    padding-bottom: 20px !important;
+    border-bottom: 1px solid #CCC;
+}
+
+.box-body .publish_start_date {
+    font-weight: bold;
+    padding-right: 25px;
+    margin-bottom: 0px;
+    float: left;
+}
+
+.box-body .top-content {
+    float: left;
+    width: 80%;
+    word-break: break-all;
+    line-height: normal;
+    padding-top: 4px;
+}
+
+h4 {
+    margin-bottom: 15px;
+}
+
+.form-group {
+    line-height: 2.2em;
+    clear: both;
+}
+
+.content-header {
+    background-color: #FFF !important;
+}
+
+.margin_left_15 {
+    margin-left: 15px;
+}
+.project_content, .actual_operate_content {
+    border: 1px solid #ccc;
+}
+
+.border-bottom-none {
+    border-bottom: none !important;
+}
+
+.line_height_17 {
+    line-height: 1.7;
+}

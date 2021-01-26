@@ -25,33 +25,33 @@
             <label class="col-sm-2 control-label label-holiday-type bold @ViewBag.ErrorClass">規定休日</label>
             <div class="col-sm-8">
                 @Html.CheckBoxFor(m => m.HOLIDAY_TYPE_LIST[0].isHoliday, new { @class = "default_holiday_chkbox" })
-                <span class="label_weekday">
-                    @Html.LabelTitle("", "日曜日", 0)
-                </span>
+                <label class="label_weekday" for="HOLIDAY_TYPE_LIST_0__isHoliday">
+                    日曜日
+                </label>
                 @Html.CheckBoxFor(m => m.HOLIDAY_TYPE_LIST[1].isHoliday, new { @class = "default_holiday_chkbox" })
-                <span class="label_weekday">
-                    @Html.LabelTitle("", "月曜日", 0)
-                </span>
+            <label class="label_weekday" for="HOLIDAY_TYPE_LIST_1__isHoliday">
+                月曜日
+            </label>
                 @Html.CheckBoxFor(m => m.HOLIDAY_TYPE_LIST[2].isHoliday, new { @class = "default_holiday_chkbox" })
-                <span class="label_weekday">
-                    @Html.LabelTitle("", "火曜日", 0)
-                </span>
+                <label class="label_weekday" for="HOLIDAY_TYPE_LIST_2__isHoliday">
+                    火曜日
+                </label>
                 @Html.CheckBoxFor(m => m.HOLIDAY_TYPE_LIST[3].isHoliday, new { @class = "default_holiday_chkbox" })
-                <span class="label_weekday">
-                    @Html.LabelTitle("", "水曜日", 0)
-                </span>
+            <label class="label_weekday" for="HOLIDAY_TYPE_LIST_3__isHoliday">
+                水曜日
+            </label>
                 @Html.CheckBoxFor(m => m.HOLIDAY_TYPE_LIST[4].isHoliday, new { @class = "default_holiday_chkbox" })
-                <span class="label_weekday">
-                    @Html.LabelTitle("", "木曜日", 0)
-                </span>
+            <label class="label_weekday" for="HOLIDAY_TYPE_LIST_4__isHoliday">
+                木曜日
+            </label>
                 @Html.CheckBoxFor(m => m.HOLIDAY_TYPE_LIST[5].isHoliday, new { @class = "default_holiday_chkbox" })
-                <span class="label_weekday">
-                    @Html.LabelTitle("", "金曜日", 0)
-                </span>
+            <label class="label_weekday" for="HOLIDAY_TYPE_LIST_5__isHoliday">
+                金曜日
+            </label>
                 @Html.CheckBoxFor(m => m.HOLIDAY_TYPE_LIST[6].isHoliday, new { @class = "default_holiday_chkbox" })
-                <span class="label_weekday">
-                    @Html.LabelTitle("", "土曜日", 0)
-                </span>
+            <label class="label_weekday" for="HOLIDAY_TYPE_LIST_6__isHoliday">
+                土曜日
+            </label>
             </div>
         </div>
 
@@ -60,31 +60,32 @@
             <div class="col-sm-8">
                 @Html.CheckBoxFor(m => m.CHECK_POINT_WEEK_LIST[0].isCheckPointWeek, new { @class = "check_day_chkbox" })
                 <span class="label_weekday">
-                    @Html.LabelTitle("", "日曜日", 0)
+                    @Html.LabelTitle("CHECK_POINT_WEEK_LIST_0__isCheckPointWeek", "日曜日", 0)
                 </span>
+
                 @Html.CheckBoxFor(m => m.CHECK_POINT_WEEK_LIST[1].isCheckPointWeek, new { @class = "check_day_chkbox" })
                 <span class="label_weekday">
-                    @Html.LabelTitle("", "月曜日", 0)
+                    @Html.LabelTitle("CHECK_POINT_WEEK_LIST_1__isCheckPointWeek", "月曜日", 0)
                 </span>
                 @Html.CheckBoxFor(m => m.CHECK_POINT_WEEK_LIST[2].isCheckPointWeek, new { @class = "check_day_chkbox" })
                 <span class="label_weekday">
-                    @Html.LabelTitle("", "火曜日", 0)
+                    @Html.LabelTitle("CHECK_POINT_WEEK_LIST_2__isCheckPointWeek", "火曜日", 0)
                 </span>
                 @Html.CheckBoxFor(m => m.CHECK_POINT_WEEK_LIST[3].isCheckPointWeek, new { @class = "check_day_chkbox" })
                 <span class="label_weekday">
-                    @Html.LabelTitle("", "水曜日", 0)
+                    @Html.LabelTitle("CHECK_POINT_WEEK_LIST_3__isCheckPointWeek", "水曜日", 0)
                 </span>
                 @Html.CheckBoxFor(m => m.CHECK_POINT_WEEK_LIST[4].isCheckPointWeek, new { @class = "check_day_chkbox" })
                 <span class="label_weekday">
-                    @Html.LabelTitle("", "木曜日", 0)
+                    @Html.LabelTitle("CHECK_POINT_WEEK_LIST_4__isCheckPointWeek", "木曜日", 0)
                 </span>
                 @Html.CheckBoxFor(m => m.CHECK_POINT_WEEK_LIST[5].isCheckPointWeek, new { @class = "check_day_chkbox" })
                 <span class="label_weekday">
-                    @Html.LabelTitle("", "金曜日", 0)
+                    @Html.LabelTitle("CHECK_POINT_WEEK_LIST_5__isCheckPointWeek", "金曜日", 0)
                 </span>
                 @Html.CheckBoxFor(m => m.CHECK_POINT_WEEK_LIST[6].isCheckPointWeek, new { @class = "check_day_chkbox" })
                 <span class="label_weekday">
-                    @Html.LabelTitle("", "土曜日", 0)
+                    @Html.LabelTitle("CHECK_POINT_WEEK_LIST_6__isCheckPointWeek", "土曜日", 0)
                 </span>
             </div>
         </div>

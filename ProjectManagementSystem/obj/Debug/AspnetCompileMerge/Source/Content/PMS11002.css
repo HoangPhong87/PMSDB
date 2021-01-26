@@ -1,0 +1,157 @@
+﻿/* Common css for 2 screen*/
+.search-condition select{
+    width:240px;
+    vertical-align:top;
+}
+
+.search-condition label {
+    vertical-align:top;
+}
+
+div.selectboxBlock{
+    margin-bottom:10px !important;
+}
+
+.budget-setting{
+    padding: 20px 30px 10px !important;
+}
+
+.budget-setting div.div-left {
+    float: left;
+    width: 40%;
+}
+
+.budget-setting div.div-right {
+    float: left;
+    width: 59%;
+    margin-left: -1px;
+    overflow-x: scroll;
+    overflow-y: hidden;
+}
+
+.budget-setting div.div-left .tbl-left,
+.budget-setting div.div-right .tbl-right
+{
+    width:100%;
+}
+
+.budget-setting .table-wrapper{
+    float:left;
+    width:100%
+}
+
+.tr-month{
+    background-color:#97d8d5;
+}
+
+.tr-total-all{
+    background-color:#ffd988;
+}
+
+.left-title-text{
+    font-weight:bold;
+}
+
+.total-month{
+    background-color:#feffe0;
+}
+
+.clear-border-right{
+    border-right:none;
+}
+
+.clear-border-left{
+    border-left:none;
+}
+
+.input-budget input{
+    width: 100%;
+    text-align: right;
+    margin: 0;
+}
+
+.number-budget{
+    text-align:right;
+}
+
+.diagonalHead{
+    background: linear-gradient(to right top, #F2F2F2 0%,#F2F2F2 49.9%,#EAEAEA 50%,#EAEAEA 51%,#F2F2F2 51.1%,#F2F2F2 100%);
+}
+
+.diagonalHead .groupHeader{
+    text-align:right;
+    padding-right:10px;
+}
+
+.diagonalHead .ctHeader{
+    text-align:left;
+    padding-left:10px;
+}
+label#display-budget{
+    display:none;
+}
+label.data-budget{
+     margin: 5px 0 5px !important;
+     /*text-align:right;*/
+     float:right;
+     color:black;
+}
+
+.table-wrapper .div-right .tbl-right tr td{
+    min-width:180px;
+    padding: 0 20px;
+}
+
+.max-width-120{
+    max-width:119px;
+}
+
+.max-width-154{
+    max-width:154px;
+}
+
+.max-width-240{
+    max-width:240px;
+}
+
+tr.even td{
+    background-color: whitesmoke;
+}
+
+.quarter{
+    padding-left:30px;
+}
+
+.selectbox.sl-quarter{
+    margin-right:50px;
+}
+
+.tr-total-all-year{
+    background-color:#fdb00b;
+    color:black;
+}
+
+.tbl-right.header th{
+    min-width:180px;
+    border-bottom:none;
+}
+.selectboxBlock{
+    margin-top:10px !important;
+}
+.label-budget{
+    font-weight:bold;
+}
+@-moz-document url-prefix()  {
+    .data-list table {
+        margin: 0px 0 0px 0 !important;
+        border-collapse: collapse  !important;
+    }
+
+   .data-list table th {
+            border-right: none !important;
+            border-bottom: 0px solid #ccc !important;
+            border-top: 1px solid #ccc !important;
+            border-left: 1px solid #ccc !important;
+    }
+
+}

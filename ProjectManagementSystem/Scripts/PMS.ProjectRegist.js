@@ -3072,10 +3072,18 @@ $(document).on('click', 'button.btnAddProgress', function () {
     }
 
     var isExist = false;
+    var isUpd = false;
     $('.hdnProgressRegistDate').each(function (index, element) {
         if ($(element).val() == newRegistDate) {
-            isExist = true;
-            return false;
+            if ($(element).closest('tr').hasClass('deleted')) {
+                isUpd = true;
+                return;
+            }
+            else {
+                isExist = true;
+                return false;
+            }
+            
         }
     })
 
@@ -3123,7 +3131,13 @@ $(document).on('click', 'button.btnAddProgress', function () {
         + ' <td class="td-remove">'
         + ' <input class="hdnIsNew" type="hidden" value="True"><label class="lbl-action btnDeleteProgress">削除</label></td>'
         + ' </tr>';
+    if (isUpd) {
+        scrollToNewDataPosition();
 
+        $contentElement.find('input').val('').attr('value', '');
+        return;
+
+    }
     if ($('.progress-list .tb-detail tr').length == 0)
         $('.progress-list .tb-detail tbody').append(html);
     else {
@@ -3149,11 +3163,21 @@ $(document).on('click', 'button.btnAddProgress', function () {
     $('.progress-latest label').first().text($('.hdnProgressRegistDate').first().val());
     $('.progress-latest label').last().text($('.hdnProgressPercent').first().val() + '%');
     $('#lblProgressInfo').html($('.hdnProgressPercent').first().val() + '%');
-
+    scrollToNewDataPosition();
     resetArrProgress();
 
     $contentElement.find('input').val('').attr('value', '');
     $('#hdnUserChangeValue').val(true);
+    function scrollToNewDataPosition() {
+        progressContentArr = $('.progress-list .tb-detail tr');
+        for (var i = 0; i < progressContentArr.length; i++) {
+            if ($(progressContentArr[i]).find('.hdnProgressRegistDate').val() == registDate) {
+                var ypos = $('.progress-list .tb-detail tr:eq(' + i + ')').offset().top;
+                $('.progress-list').animate({ scrollTop: ypos - $('.progress-list .tb-detail').offset().top });
+            }
+        }
+    }
+
 });
 
 // Event delete a progress
