@@ -187,7 +187,7 @@ namespace ProjectManagementSystem.Common
             public const int CheckProjectStatus = 65;
             public const int CheckOperationInputStatus = 66;
 
-            public const int ActualWorkListByIndividualPhase = 69;
+            public const int ActualWorkListByIndividualPhase = 72;
             public const int CheckBranchListIndividual = 70;
             public const int INCLUEDE_DELETED_RETIREMENT = 71;
         }

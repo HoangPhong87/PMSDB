@@ -1,0 +1,223 @@
+﻿/*  Login screen   */
+body { background: rgb(38, 50, 100); }
+
+.error-content {
+    width: 100%;
+    vertical-align: middle;
+    text-align: center;
+    position: absolute;
+    height: 100%;
+    background: #fff;
+    padding-top: 10%;
+}
+
+.top-background {
+    content:"";
+    background: rgb(248, 248, 248);
+    position:fixed;
+    top:0;
+    bottom:50%;
+    right:0;
+    left:0;
+    content:" ";
+    z-index:-1;
+}
+
+.logo_left {
+    margin-top: 13.5px;
+    margin-left : 7px;
+}
+
+.logo_right {
+    float:right;
+    margin-top: 14px;
+    margin-right:60px;
+}
+
+.main-header .logo_right img {
+    height: 35px;
+    margin-top: 7px;
+}
+
+.login-box{
+    width: 325px;
+    overflow: hidden;
+    margin: 0px;
+}
+
+.login-logo {
+    text-align: center;
+    margin-bottom:30px;
+}
+
+.login-box-body {
+    background: #fff;
+    padding:7px 40px;;
+    color: #444;
+    border-top: 0;
+    color: #666;
+    border-radius: 4px;
+    box-shadow: 0px 0px 5px 0px #CCC;
+}
+
+div.login-box-body .validation-summary-errors {
+    margin-bottom: 11px;
+    margin-left: -4px;
+    color: red;
+    font-weight: bold;
+    padding:0px;
+}
+
+div.login-box-body input{
+    box-shadow: 0px 2px 4px -1px #CCC inset;
+    height:30px;
+}
+
+@media only screen and (max-width: 400px){
+    .login-box {
+        width: 90%;
+    }
+    .login-logo img{
+        width: 100%;
+    }
+}
+
+div.form-button{
+    text-align:center;
+}
+
+div.link-reissue {
+    text-align:center;
+    margin-top: 23px;
+    margin-bottom: 82px;
+}
+
+div.link-reissue a{
+    color: #FFF;
+}
+
+#Login {
+    width: 100px;
+    margin: auto;
+    margin-top: 9px;
+    font-weight: bold;
+    margin-bottom:12px;
+    font-weight: bold;
+}
+
+/* CSS Password Reissue*/
+div.main-header{
+    min-height: 50px;
+    z-index: -1;
+}
+
+.box {
+    padding: 35px;
+}
+
+div.box .content{
+    background-color: #FFFFFF;
+    margin-left: -27px;
+}
+
+.box label.lable-bold {
+    font-weight:bold;
+}
+
+ .box-title {
+    font-size: 30px;
+}
+
+div.box .box-body{
+    margin-top: 40px;
+}
+
+div.box input{
+    margin: 0px;
+    height: 28px;
+    width: 300px;
+    box-shadow: 0px 2px 4px -1px #CCC inset;
+}
+
+@media only screen and (max-width: 400px){
+    div.box input{
+        margin: 0px;
+        height: 30px;
+        width: 200px;
+        box-shadow: 0px 2px 4px -1px #CCC inset;
+        margin-bottom: 20px;
+    }
+
+    .btn-margin1 {
+       margin-left: 1px !important;
+    }
+}
+
+.btn-margin1{
+     margin-left:8px;
+}
+
+.btn-margin2{
+     margin-left:220px;
+}
+
+
+div.box .validation-summary-errors {
+	position: absolute;
+    margin-left:-1px;
+}
+
+div.box .content-control{
+    margin-top: 10px;
+}
+
+
+/*  Set new screen   */
+div.set-new-pass .requiredField{
+    color:red;
+}
+
+div.set-new-pass label{
+    min-width:210px;
+}
+
+div.set-new-pass .form-button{
+    width: 31.7%;
+}
+
+div.box .set-new-pass{
+    margin-top: 80px;
+}
+
+div.box .error-set-pass{
+    margin-top: 32px;
+}
+
+button
+{
+    border: 1px solid rgb(33, 45, 89);
+    color: #fff;
+    background: -webkit-linear-gradient(rgb(48, 65, 134), rgb(37, 51, 100));
+    background: -o-linear-gradient(rgb(48, 65, 134), rgb(37, 51, 100));
+    background: -moz-linear-gradient(rgb(48, 65, 134), rgb(37, 51, 100));
+    background: linear-gradient(rgb(48, 65, 134), rgb(37, 51, 100));
+    padding: 4px 15px;
+}
+
+.box.box-primary h1{
+    font-size: 24px;
+    font-weight: bold;
+}
+
+/* Input Company Code Screen*/
+.input-company .label-company-code{
+    width: 90px;
+}
+
+.input-company input#CompanyCode{
+    width: 245px;
+}
+
+.input-company button#Transmission{
+    width: 90px;
+}

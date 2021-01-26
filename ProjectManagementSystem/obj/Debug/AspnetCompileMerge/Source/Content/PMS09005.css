@@ -1,0 +1,294 @@
+﻿
+.sales-personal-list {
+    padding: 15px 30px 30px;
+}
+
+.search-condition .group-1 {
+    float: left;
+    margin-right: 10px;
+}
+
+@media (max-width: 1125px) {
+    .search-condition .group-1 {
+        float: left;
+        width: 100%;
+        margin-bottom: 15px;
+    }
+
+    .lbl-duration {
+        width: 120px !important;
+    }
+
+    .sidebar-collapse .search-condition .group-1 {
+        float: left;
+        width: auto;
+        margin-bottom: 0px;
+    }
+
+    .sidebar-collapse .lbl-duration {
+        width: 100px !important;
+    }
+}
+
+@media (max-width: 1024px) {
+    .sidebar-collapse .search-condition .group-1 {
+        float: left;
+        width: 100%;
+        margin-bottom: 15px;
+    }
+
+    .sidebar-collapse .lbl-duration {
+        width: 120px !important;
+    }
+}
+
+#Condition_CONTRACT_TYPE_ID {
+    vertical-align: top;
+    width: 240px;
+    height: 90px;
+}
+
+.lbl-include {
+    margin-left: 20px;
+}
+
+.sales-personal-list .col-left .short-text {
+    width: 110px;
+}
+
+.sales-personal-list .dataTable a {
+    cursor: pointer;
+}
+
+div.col-left {
+    display: none;
+}
+
+div.col-center {
+    float: left;
+    width: 20%;
+}
+
+div.col-right {
+    float: left;
+    min-width: 80%;
+    max-width: 80%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    margin-left: -2px;
+}
+
+    div.col-center table tbody tr td, div.col-right table tbody tr td {
+        height: 36px;
+        padding: 0px 10px;
+        vertical-align: middle;
+    }
+
+    div.col-right table thead tr th {
+        min-width: 137px;
+    }
+
+#tableCenter tbody tr td.total {
+    border-left: 1px solid #EAEAEA;
+}
+
+@media (max-width: 1150px) {
+    .search-condition .condition-group,
+    .search-condition .condition-name,
+    .search-condition .condition-time,
+    .search-condition .condition-contract,
+    .search-condition .condition-delete {
+        width: 100%;
+        margin-bottom: 15px;
+    }
+
+    .search-condition .lbl-auto-break {
+        width: 70px;
+    }
+}
+
+.search-date {
+    text-align: right;
+    background: rgb(242, 242, 242);
+    padding: 7px 30px;
+}
+
+.sales-personal-list .col-left .dataTables_paginate {
+    position: absolute;
+    margin-top: 45px;
+    margin-left: 29%;
+}
+
+.sales-personal-list .col-left .dataTables_info {
+    position: absolute;
+    left: 200px;
+    margin-top: -55px;
+}
+
+.sales-personal-list .col-left .dataTables_length {
+    position: absolute;
+    right: 32px;
+    margin-top: -40px;
+}
+
+.sidebar-collapse .sales-personal-list .dataTables_info {
+    left: 70px;
+}
+
+
+#tableLeft td:not(.dataTables_empty) {
+    border-top: none;
+    border-bottom: none;
+}
+
+#tableLeft tr.td-up td {
+    border-top: 1px solid #EAEAEA;
+}
+
+#tableLeft tr.td-down td {
+    border-bottom: 1px solid #EAEAEA;
+}
+
+#tableLeft td.dataTables_empty {
+    border-right: none;
+}
+
+#tableCenter td.empty-data {
+    border-left: none;
+    border-right: none;
+}
+
+#tableRight td.empty-data {
+    border-left: none;
+}
+
+#tableCenter th:first-child {
+    min-width: 10px;
+}
+
+@-moz-document url-prefix() { /*Firefox*/
+    div.col-left {
+        margin-right: 0px !important;
+    }
+}
+
+#Condition_CONTRACT_TYPE_ID {
+    vertical-align: top;
+}
+
+.personal-detail-sales #dateRange, .sales-personal-list #dateRange {
+    font-weight: bold;
+    text-align: center;
+    display: inline-block;
+    padding: 0px 7px;
+}
+
+.personal-detail-sales .search-date {
+    margin-top: 20px;
+    text-align: right;
+    background: rgb(242, 242, 242);
+    padding: 7px 0px;
+}
+
+button[name="btnExport"] {
+    margin-left: 10px;
+}
+
+.personal-detail-sales-header label.col-xs-4 {
+    width: 34%;
+}
+
+.personal-detail-sales-header .col-xs-8 {
+    width: 66%;
+}
+
+.personal-detail-sales-header .first {
+    padding: 0;
+}
+
+.personal-detail-sales-header .contact-type-title {
+    width: 5.8%;
+}
+
+.personal-detail-sales .dataTables_info {
+    display: none;
+}
+
+@media (min-width: 2624px) {
+    div.col-right table tbody tr td {
+        min-width: 200px;
+    }
+
+    div.col-right table thead tr th {
+        min-width: 200px;
+    }
+}
+
+@media (min-width: 1970px) {
+    div.col-right table tbody tr td {
+        min-width: 200px;
+    }
+
+    div.col-right table thead tr th {
+        min-width: 200px;
+    }
+}
+
+
+@media (max-width: 1150px) {
+    .sales-personal-list .col-left .dataTables_length {
+        right: -195px;
+    }
+}
+
+@media (max-width: 1024px) {
+    div.col-center {
+        float: left;
+        width: 25%;
+    }
+
+    div.col-right {
+        float: left;
+        min-width: 47%;
+        max-width: 47%;
+        overflow-x: auto;
+        overflow-y: hidden;
+        margin-left: -1px;
+    }
+
+        div.col-right table thead tr th {
+            min-width: 120px;
+        }
+
+        div.col-center table tbody tr td,
+        div.col-right table tbody tr td {
+            min-width: 125px;
+        }
+
+    .sales-personal-list .col-left .dataTables_length {
+        right: -307px;
+    }
+}
+
+
+@media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) and (max-width: 1210px) {
+    .sales-personal-list .col-left .dataTables_length {
+        right: -130px;
+    }
+}
+
+@media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) and (max-width: 1150px) {
+    .sales-personal-list .col-left .dataTables_length {
+        right: -195px;
+    }
+}
+
+@media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) and (max-width: 1024px) {
+    .sales-personal-list .col-left .dataTables_length {
+        right: -307px;
+    }
+}
+
+.dataTables_info, .dataTables_length, .dataTables_paginate {
+    display: none;
+}

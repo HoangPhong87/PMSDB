@@ -1,0 +1,78 @@
+﻿
+table.dataTable td .group-remark {
+    width: 250px;
+}
+
+table.dataTable td .group-update {
+    width: 110px;
+}
+
+.group-regist label.col-sm-2 {
+    width: 14%;
+}
+/*zoom in common textarea*/
+ @media (max-width: 1300px) {
+    .candy-textArea{
+        max-width: 905px;
+    }
+    .set-max-width{
+        max-width :905px;
+    }
+}
+
+@media (max-width: 1100px) {
+    .candy-textArea{
+        max-width: 760px;
+    }
+    .set-max-width{
+        max-width :760px;
+    }
+}
+@media (min-width: 1300px) {
+    .candy-textArea{
+        max-width: 1030px;
+    }
+    .set-max-width{
+        max-width :1030px;
+    }
+}
+@media (min-width: 1500px) {
+    .candy-textArea{
+        max-width: 1163px;
+    }
+    .set-max-width{
+        max-width :1163px;
+    }
+}
+@media (min-width: 1700px) {
+    .candy-textArea{
+        max-width:1332px;
+    }
+    .set-max-width{
+        max-width :1332px;
+    }
+}
+@media (min-width: 1800px) {
+    .candy-textArea{
+        max-width:1432px;
+    }
+    .set-max-width{
+        max-width :1432px;
+    }
+}
+/*end zoom in textarea*/
+
+ .longtext {
+    max-width: 100%;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    margin-left: 0px;
+    vertical-align: middle;
+    margin-bottom: 0px;
+}
+
+ .cell_left{
+    max-width:250px;
+    min-width:100px;
+ }
